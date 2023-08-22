@@ -5,3 +5,5 @@ https://files.catbox.moe/5s7tc0.m3u8
 https://files.catbox.moe/0kzy91.m3u8
 #EXTINF: -1 tvg-chno="3" tvg-logo="https://i.imgur.com/YVzf17F.png" group-title="Ungrouped", Fancode
 https://dai.fancode.com/linear/hls/pb/event/mxKKlKU8SPa_Tn30c3UyQg/stream/23e36d63-acbf-4f02-996b-91e5ad7d19b9:SIN/variant/0fadccbbdbba611468976f3c68740df4/bandwidth/3800296.m3u8
+#EXTINF: -1 tvg-chno="4" tvg-logo="https://i.imgur.com/dujHLt3.jpg" group-title="Ungrouped", Made By Sanuj
+https://files.catbox.moe/d8fg7h.mp4
