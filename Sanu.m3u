@@ -1,7 +1,7 @@
-#EXTM3U
-#EXTINF:0,Discovery channel
+#EXTM3U 
+#EXTINF: -1 tvg-chno="1" tvg-logo="https://i.imgur.com/aZ5Lze8.png" group-title="Ungrouped", Discovery channel
 https://files.catbox.moe/5s7tc0.m3u8
-#EXTINF:0,Animal planet
+#EXTINF: -1 tvg-chno="2" tvg-logo="https://i.imgur.com/AyWZbLn.png" group-title="Ungrouped", Animal planet
 https://files.catbox.moe/0kzy91.m3u8
-#EXTINF:0,Fancode
+#EXTINF: -1 tvg-chno="3" tvg-logo="https://i.imgur.com/YVzf17F.png" group-title="Ungrouped", Fancode
 https://dai.fancode.com/linear/hls/pb/event/mxKKlKU8SPa_Tn30c3UyQg/stream/23e36d63-acbf-4f02-996b-91e5ad7d19b9:SIN/variant/0fadccbbdbba611468976f3c68740df4/bandwidth/3800296.m3u8
