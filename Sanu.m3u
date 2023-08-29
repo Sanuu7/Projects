@@ -19,3 +19,5 @@ https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg02537-skandhamediaser-koreantv-sa
 https://dai.google.com/linear/hls/event/x7rXWd2ERZ2tvyQWPmO1HA/master.m3u8
 #EXTINF: -1 tvg-chno="10" tvg-logo="https://i.imgur.com/XjB8yO7.png" group-title="Ungrouped", Sony Max FHD
 https://dai.google.com/linear/hls/event/UcjHNJmCQ1WRlGKlZm73QA/master.m3u8
+#EXTINF: -1 tvg-chno="11" tvg-logo="https://i.imgur.com/YLS2v0X.png" group-title="Ungrouped", Star Gold HD
+http://144.217.70.181:9587/hin2/STARGOLDUK/tracks-v1a1/mono.m3u8?token=test
