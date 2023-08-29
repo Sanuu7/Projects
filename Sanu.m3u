@@ -5,10 +5,13 @@ https://files.catbox.moe/5s7tc0.m3u8
 https://files.catbox.moe/0kzy91.m3u8
 #EXTINF: -1 tvg-chno="3" tvg-logo="https://i.imgur.com/YVzf17F.png" group-title="Ungrouped", Fancode
 https://dai.fancode.com/linear/hls/pb/event/CYfNk6xRRmiIklm2JPhCmQ/stream/57e7c8b7-ca97-4af4-8933-ee9ec2c28fd1:TPE/variant/3d3aa8130499bb1656631ed6b22127fe/bandwidth/3800296.m3u8
-https://files.catbox.moe/d8fg7h.mp4
 #EXTINF: -1 tvg-chno="4" tvg-logo="https://i.imgur.com/CGZ9hz8.jpg" group-title="Ungrouped", Eurosport HD
 https://files.catbox.moe/hk3dx1.m3u8
-#EXTINF: -1 tvg-chno="6" tvg-logo="https://i.imgur.com/LlwP5zC.jpg" group-title="Ungrouped", Discovery Science
+#EXTINF: -1 tvg-chno="5" tvg-logo="https://i.imgur.com/LlwP5zC.jpg" group-title="Ungrouped", Discovery Science
 https://cdn.discordapp.com/attachments/1143753744195002398/1143753874604314696/Discovery_Science.m3u8
-#EXTINF: -1 tvg-chno="7" tvg-logo="https://i.imgur.com/4ySjedp.jpg" group-title="Ungrouped", Investigation Discovery HD
+#EXTINF: -1 tvg-chno="6" tvg-logo="https://i.imgur.com/4ySjedp.jpg" group-title="Ungrouped", Investigation Discovery HD
 https://cdn.discordapp.com/attachments/1143753744195002398/1143759277996118057/Investigation_Discovery.m3u8
+#EXTINF: -1 tvg-chno="7" tvg-logo="https://www.logotypes101.com/logos/441/93B57FB108E9BF746E85D398B26E628B/kbsworld.png" group-title="Ungrouped", KBS WORLD
+https://kbsworld-ott.akamaized.net/hls/live/2002341/kbsworld/master.m3u8
+#EXTINF: -1 tvg-chno="8" tvg-logo="https://i.imgur.com/MwVXZBm.jpg" group-title="Ungrouped", Korean TV Hindi
+https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg02537-skandhamediaser-koreantv-samsungin/playlist.m3u8
