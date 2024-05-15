@@ -1,45 +1,61 @@
-```html
 <!DOCTYPE html>
 <html>
 <head>
   <title>Roulette Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       text-align: center;
       font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .dark-mode {
+      background-color: #333;
+      color: #f0f0f0;
     }
     button {
       margin: 10px;
       padding: 10px 20px;
       font-size: 16px;
     }
+    input {
+      margin: 10px;
+      padding: 5px;
+      font-size: 16px;
+      width: 100px;
+    }
   </style>
 </head>
 <body>
   <h1>Roulette Game</h1>
   <p>Your Points: <span id="points">1000</span></p>
-  <p>Bet Amount:
-    <button onclick="setBetAmount(10)">10</button>
-    <button onclick="setBetAmount(50)">50</button>
-    <button onclick="setBetAmount(100)">100</button>
-    <button onclick="setBetAmount(1000)">1000</button>
+  <p>
+    Bet Amount: <input type="number" id="betAmount" min="1" max="1000" value="10">
   </p>
-  <p>Current Bet: <span id="betAmount">0</span></p>
+  <p>
+    Select Number (1-36): <input type="number" id="selectedNumber" min="1" max="36" value="1">
+  </p>
   <button onclick="spinRoulette()">Spin Roulette</button>
   <p id="result"></p>
+  <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
   <script>
     let points = 1000;
-    let betAmount = 0;
-
-    function setBetAmount(amount) {
-      betAmount = amount;
-      document.getElementById("betAmount").textContent = betAmount;
-    }
 
     function spinRoulette() {
-      if (betAmount === 0) {
-        document.getElementById("result").textContent = "Please select a bet amount.";
+      const betAmount = parseInt(document.getElementById("betAmount").value);
+      const selectedNumber = parseInt(document.getElementById("selectedNumber").value);
+
+      if (isNaN(betAmount) || betAmount < 1 || betAmount > 1000) {
+        document.getElementById("result").textContent = "Please enter a valid bet amount between 1 and 1000.";
+        return;
+      }
+
+      if (isNaN(selectedNumber) || selectedNumber < 1 || selectedNumber > 36) {
+        document.getElementById("result").textContent = "Please enter a valid number between 1 and 36.";
         return;
       }
 
@@ -51,17 +67,19 @@
       const rouletteNumber = Math.floor(Math.random() * 36) + 1;
       points -= betAmount;
 
-      if (rouletteNumber % 2 === 0) {
+      if (rouletteNumber === selectedNumber) {
         points += betAmount * 20;
         document.getElementById("result").textContent = "Congratulations! You won " + (betAmount * 20) + " points!";
       } else {
-        document.getElementById("result").textContent = "Sorry, you lost. Better luck next time!";
+        document.getElementById("result").textContent = "Sorry, you lost. The roulette number was " + rouletteNumber + ".";
       }
 
       document.getElementById("points").textContent = points;
     }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
   </script>
 </body>
 </html>
-
-```
