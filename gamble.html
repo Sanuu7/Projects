@@ -4,26 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Slots Game</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
     :root {
-      --primary: #6200EE;
-      --on-primary: #FFFFFF;
-      --surface: #FFFFFF;
-      --on-surface: #000000;
+      --md-sys-color-primary: #006A6A;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #6FF7F6;
+      --md-sys-color-on-primary-container: #002020;
+      --md-sys-color-secondary: #4A6363;
+      --md-sys-color-on-secondary: #FFFFFF;
+      --md-sys-color-secondary-container: #CCE8E7;
+      --md-sys-color-on-secondary-container: #051F1F;
+      --md-sys-color-surface: #FAFDFC;
+      --md-sys-color-on-surface: #191C1C;
+      --md-sys-color-surface-variant: #DAE5E4;
+      --md-sys-color-on-surface-variant: #3F4948;
+      --md-sys-color-background: #FAFDFC;
+      --md-sys-color-on-background: #191C1C;
     }
 
     body {
+      background-color: var(--md-sys-color-background);
+      color: var(--md-sys-color-on-background);
+      font-family: Roboto, sans-serif;
       margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: var(--surface);
-      color: var(--on-surface);
+      padding: 0;
     }
 
     body.dark-mode {
-      --surface: #121212;
-      --on-surface: #FFFFFF;
+      --md-sys-color-primary: #6FF7F6;  
+      --md-sys-color-on-primary: #003737;
+      --md-sys-color-primary-container: #004F4F;
+      --md-sys-color-on-primary-container: #6FF7F6;
+      --md-sys-color-secondary: #B1CBCB;
+      --md-sys-color-on-secondary: #1C3434;
+      --md-sys-color-secondary-container: #324B4B;
+      --md-sys-color-on-secondary-container: #CCE8E7;
+      --md-sys-color-surface: #191C1C;
+      --md-sys-color-on-surface: #E0E3E3;
+      --md-sys-color-surface-variant: #3F4948;
+      --md-sys-color-on-surface-variant: #BFC8C8;
+      --md-sys-color-background: #191C1C;
+      --md-sys-color-on-background: #E0E3E3;
     }
 
     .container {
@@ -34,36 +56,28 @@
     }
 
     h1 {
-      color: var(--primary);
+      color: var(--md-sys-color-primary);
+      font-size: 24px;
+      margin-bottom: 20px;
     }
 
     .reels {
       display: flex;
       justify-content: center;
+      gap: 10px;
       margin-bottom: 20px;
     }
 
     .reel {
       width: 100px;
       height: 100px;
-      margin: 0 5px;
-      overflow: hidden;
-      border: 4px solid var(--primary);
+      background-color: var(--md-sys-color-surface-variant);
       border-radius: 8px;
-    }
-
-    .icons {
-      width: 100%;
-      height: 300%;
-      background: url('icons.png') repeat-y;
-      background-size: contain;
-      animation: slide 0.5s cubic-bezier(.5,0,.5,1) infinite;
-      animation-play-state: paused;
-    }
-
-    @keyframes slide {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-200%); }  
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+      color: var(--md-sys-color-on-surface-variant);
     }
 
     .controls {
@@ -71,62 +85,53 @@
     }
 
     #bet {
-      padding: 8px;
-      width: 80px;
-      border: 2px solid var(--primary);
-      border-radius: 4px;
-      color: var(--on-surface);
-      background: var(--surface);
+      padding: 8px 16px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: var(--md-sys-color-surface-variant);
+      color: var(--md-sys-color-on-surface-variant);
     }
 
     #spin {
       padding: 8px 24px;
       font-size: 18px;
-      color: var(--on-primary);
-      background-color: var(--primary);
+      border-radius: 8px;
       border: none;
-      border-radius: 4px;
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
       cursor: pointer;
+      display: block;
+      margin: 0 auto;
     }
 
     .score {
-      font-size: 24px;
-      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
     }
 
-    #darkMode {
-      display: none;
+    #result {
+      font-size: 16px;
+      color: var(--md-sys-color-on-surface-variant);
     }
 
-    .darkModeToggle {
+    #darkModeToggle {
       position: fixed;
       bottom: 20px;
       left: 20px;
-      width: 60px;
-      height: 30px;
-      background-color: #ccc;
-      border-radius: 30px;
+      padding: 8px;
+      border: none;
+      background-color: var(--md-sys-color-secondary);
+      color: var(--md-sys-color-on-secondary);
+      border-radius: 8px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
     }
 
-    .darkModeToggle::before {
-      content: '';
-      position: absolute;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background-color: white;
-      top: 2px;
-      left: 2px;
-      transition: left 0.3s;
-    }
-
-    #darkMode:checked + .darkModeToggle::before {
-      left: 32px;
-    }
-
-    #darkMode:checked + .darkModeToggle {
-      background-color: var(--primary);  
+    #darkModeToggle .material-symbols-outlined {
+      font-size: 18px;
+      margin-right: 4px;
     }
   </style>
 </head>
@@ -135,15 +140,9 @@
     <h1>Slots Game</h1>
     
     <div class="reels">
-      <div class="reel">
-        <div class="icons"></div>
-      </div>
-      <div class="reel">
-        <div class="icons"></div>
-      </div>
-      <div class="reel">  
-        <div class="icons"></div>
-      </div>
+      <div class="reel" id="reel1"></div>
+      <div class="reel" id="reel2"></div>
+      <div class="reel" id="reel3"></div>
     </div>
 
     <div class="controls">
@@ -152,18 +151,23 @@
     </div>
 
     <div class="score">Points: <span id="points">1000</span></div>
+    <div id="result"></div>
   </div>
 
-  <input type="checkbox" id="darkMode">
-  <label for="darkMode" class="darkModeToggle"></label>
+  <button id="darkModeToggle">
+    <span class="material-symbols-outlined">dark_mode</span>
+    Dark Mode
+  </button>
 
   <script>
     const reels = document.querySelectorAll('.reel');
-    const icons = document.querySelectorAll('.icons');
     const spinButton = document.getElementById('spin');
     const betInput = document.getElementById('bet');
     const pointsSpan = document.getElementById('points');
-    const darkModeCheckbox = document.getElementById('darkMode');
+    const resultDiv = document.getElementById('result');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+
+    const symbols = ['🍒', '🍊', '🍋', '🍉', '🍇', '🍓'];
 
     let points = 1000;
     let spinning = false;
@@ -176,12 +180,13 @@
     }
 
     spinButton.addEventListener('click', spin);
+    darkModeToggle.addEventListener('click', toggleDarkMode);
 
     function spin() {
       const bet = parseInt(betInput.value);
 
       if (bet > points) {
-        alert("You don't have enough points!");
+        resultDiv.textContent = "You don't have enough points!";
         return;
       }
 
@@ -190,36 +195,27 @@
       spinning = true;
       points -= bet;
       pointsSpan.textContent = points;
+      resultDiv.textContent = '';
       
-      icons.forEach(icon => {
-        icon.style.animationPlayState = 'running';
-        icon.style.animationDuration = '1s';
+      const results = [];
+
+      reels.forEach((reel) => {
+        const symbolIndex = Math.floor(Math.random() * symbols.length);
+        reel.textContent = symbols[symbolIndex];
+        results.push(symbolIndex);
       });
 
       setTimeout(() => {
-        icons.forEach(icon => {
-          icon.style.animationPlayState = 'paused';
-        });
-
-        const positions = [0, 100, 200];
-        const results = [];
-
-        reels.forEach((reel, index) => {
-          const position = positions[Math.floor(Math.random() * 3)];
-          reel.querySelector('.icons').style.transform = `translateY(-${position}%)`;
-          results.push(position / 100);
-        });
-
         const uniqueResults = new Set(results);
 
         if (uniqueResults.size === 1) {
           points += bet * 10;
-          alert(`Jackpot! You won ${bet * 10} points!`);
+          resultDiv.textContent = `Jackpot! You won ${bet * 10} points!`;
         } else if (uniqueResults.size === 2) {
           points += bet * 3;
-          alert(`You won ${bet * 3} points!`);
+          resultDiv.textContent = `You won ${bet * 3} points!`;
         } else {
-          alert('Better luck next time!');
+          resultDiv.textContent = 'Better luck next time!';
         }
 
         pointsSpan.textContent = points;
@@ -228,10 +224,9 @@
       }, 1000);
     }
 
-    // Dark mode toggle
-    darkModeCheckbox.addEventListener('change', () => {
+    function toggleDarkMode() {
       document.body.classList.toggle('dark-mode');
-    });
+    }
   </script>
 </body>
 </html>
