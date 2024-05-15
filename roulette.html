@@ -1,0 +1,67 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Roulette Game</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Roulette Game</h1>
+  <p>Your Points: <span id="points">1000</span></p>
+  <p>Bet Amount:
+    <button onclick="setBetAmount(10)">10</button>
+    <button onclick="setBetAmount(50)">50</button>
+    <button onclick="setBetAmount(100)">100</button>
+    <button onclick="setBetAmount(1000)">1000</button>
+  </p>
+  <p>Current Bet: <span id="betAmount">0</span></p>
+  <button onclick="spinRoulette()">Spin Roulette</button>
+  <p id="result"></p>
+
+  <script>
+    let points = 1000;
+    let betAmount = 0;
+
+    function setBetAmount(amount) {
+      betAmount = amount;
+      document.getElementById("betAmount").textContent = betAmount;
+    }
+
+    function spinRoulette() {
+      if (betAmount === 0) {
+        document.getElementById("result").textContent = "Please select a bet amount.";
+        return;
+      }
+
+      if (points < betAmount) {
+        document.getElementById("result").textContent = "Insufficient points. Please lower your bet.";
+        return;
+      }
+
+      const rouletteNumber = Math.floor(Math.random() * 36) + 1;
+      points -= betAmount;
+
+      if (rouletteNumber % 2 === 0) {
+        points += betAmount * 20;
+        document.getElementById("result").textContent = "Congratulations! You won " + (betAmount * 20) + " points!";
+      } else {
+        document.getElementById("result").textContent = "Sorry, you lost. Better luck next time!";
+      }
+
+      document.getElementById("points").textContent = points;
+    }
+  </script>
+</body>
+</html>
+
+```
