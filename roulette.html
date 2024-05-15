@@ -4,79 +4,104 @@
   <title>Not The Botrix Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <style>
     body {
       font-family: 'Roboto', sans-serif;
       background-color: #f5f5f5;
-      color: #333;
+      color: #212121;
       margin: 0;
       padding: 20px;
     }
     .dark-mode {
       background-color: #121212;
-      color: #fff;
+      color: #ffffff;
     }
     .card {
-      background-color: #fff;
-      border-radius: 4px;
+      background-color: #ffffff;
+      border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .dark-mode .card {
+      background-color: #1f1f1f;
     }
     .card-title {
       font-size: 24px;
       font-weight: 500;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
     .card-content {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
     .text-field {
       width: 100%;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
     }
     .text-field label {
       display: block;
       font-size: 16px;
       font-weight: 500;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      color: #757575;
+    }
+    .dark-mode .text-field label {
+      color: #bdbdbd;
     }
     .text-field input {
       width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .button {
-      padding: 10px 20px;
+      padding: 12px;
       font-size: 16px;
       border: none;
       border-radius: 4px;
-      background-color: #6750A4;
-      color: #fff;
+      background-color: #f5f5f5;
+      color: #212121;
+    }
+    .dark-mode .text-field input {
+      background-color: #2c2c2c;
+      color: #ffffff;
+    }
+    .button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #6200ee;
+      color: #ffffff;
       cursor: pointer;
       transition: background-color 0.3s;
     }
     .button:hover {
-      background-color: #7D6AE7;
+      background-color: #3700b3;
+    }
+    .dark-mode .button {
+      background-color: #bb86fc;
+    }
+    .dark-mode .button:hover {
+      background-color: #a255ff;
     }
     .points {
       font-size: 24px;
       font-weight: 500;
-      color: #6750A4;
+      color: #6200ee;
+    }
+    .dark-mode .points {
+      color: #bb86fc;
     }
     .result {
-      margin-top: 20px;
+      margin-top: 24px;
       font-size: 18px;
     }
     .watermark {
       position: fixed;
-      bottom: 5px;
-      left: 5px;
+      bottom: 8px;
+      left: 8px;
       font-size: 12px;
-      color: #999;
+      color: #757575;
+    }
+    .dark-mode .watermark {
+      color: #bdbdbd;
     }
   </style>
 </head>
@@ -93,11 +118,17 @@
         <label for="selectedNumber">Select Number (1-36):</label>
         <input type="number" id="selectedNumber" min="1" max="36" value="1">
       </div>
-      <button id="spinBtn" class="button">Spin Roulette</button>
+      <button id="spinBtn" class="button">
+        <i class="material-icons">casino</i> Spin Roulette
+      </button>
       <p id="result" class="result"></p>
     </div>
-    <button id="darkModeBtn" class="button">Toggle Dark Mode</button>
-    <button id="resetBtn" class="button" style="display: none;">Reset Points</button>
+    <button id="darkModeBtn" class="button">
+      <i class="material-icons">brightness_6</i> Toggle Dark Mode
+    </button>
+    <button id="resetBtn" class="button" style="display: none;">
+      <i class="material-icons">refresh</i> Reset Points
+    </button>
   </div>
   <div class="watermark">Made by Sanu</div>
 
