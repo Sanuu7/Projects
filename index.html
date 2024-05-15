@@ -130,6 +130,32 @@
     .theme-toggle .material-symbols-outlined {
       font-size: 24px;
     }
+
+    .audio-toggle {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s;
+    }
+
+    .audio-toggle:hover {
+      background-color: #523E87;
+    }
+
+    .audio-toggle .material-symbols-outlined {
+      font-size: 24px;
+    }
   </style>
 </head>
 <body>
@@ -142,13 +168,13 @@
         <a href="https://notthebotrix.com" class="card-link">Play Now</a>
       </div>
       <div class="card">
-        <h2 class="card-title">Project Gamblinb</h2>
-        <p class="card-text">Gambling at its peak!</p>
+        <h2 class="card-title">Project Zephyr</h2>
+        <p class="card-text">A revolutionary app that will change the world.</p>
         <a href="#" class="card-link disabled">Coming Soon</a>
       </div>
       <div class="card">
-        <h2 class="card-title">Slots Machine</h2>
-        <p class="card-text">Dive into the Casino!</p>
+        <h2 class="card-title">Quantum Leap</h2>
+        <p class="card-text">Dive into the fascinating world of quantum computing.</p>
         <a href="#" class="card-link disabled">Coming Soon</a>
       </div>
     </div>
@@ -158,6 +184,12 @@
     <span class="material-symbols-outlined">light_mode</span>
   </button>
 
+  <button class="audio-toggle" id="audio-toggle">
+    <span class="material-symbols-outlined">play_arrow</span>
+  </button>
+
+  <audio id="audio-player" src="path/to/your/audio.m4a"></audio>
+
   <script>
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
@@ -166,6 +198,20 @@
     themeToggle.addEventListener('click', () => {
       body.classList.toggle('dark-mode');
       icon.textContent = body.classList.contains('dark-mode') ? 'dark_mode' : 'light_mode';
+    });
+
+    const audioToggle = document.getElementById('audio-toggle');
+    const audioPlayer = document.getElementById('audio-player');
+    const audioIcon = audioToggle.querySelector('.material-symbols-outlined');
+
+    audioToggle.addEventListener('click', () => {
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        audioIcon.textContent = 'pause';
+      } else {
+        audioPlayer.pause();
+        audioIcon.textContent = 'play_arrow';
+      }
     });
   </script>
 </body>
