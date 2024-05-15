@@ -7,7 +7,75 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
-        /* ... (previous styles remain the same) ... */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.5s;
+            font-family: 'Roboto', sans-serif;
+        }
+        .container {
+            text-align: center;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        h1 {
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+        .button {
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 400px;
+            height: 60px;
+            line-height: 60px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .button:nth-child(1) {
+            animation-delay: 1s;
+        }
+        .button:nth-child(2) {
+            animation-delay: 1.5s;
+        }
+        .button:nth-child(3) {
+            animation-delay: 2s;
+        }
+        .button:nth-child(4) {
+            animation-delay: 2.5s;
+        }
+        .switch {
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out 3s forwards;
+            margin-top: 2rem;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .dark-mode {
+            background-color: #212121;
+            color: #fff;
+        }
+        .dark-mode .button {
+            background-color: #424242;
+        }
+        @media screen and (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .button {
+                height: 50px;
+                line-height: 50px;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -40,7 +108,6 @@
             body.classList.toggle('dark-mode');
         });
 
-        // Play background music when the page loads
         window.addEventListener('load', function() {
             backgroundMusic.play();
         });
