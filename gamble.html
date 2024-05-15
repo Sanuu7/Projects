@@ -81,6 +81,9 @@
     }
 
     .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-bottom: 20px;
     }
 
@@ -91,18 +94,21 @@
       border: none;
       background-color: var(--md-sys-color-surface-variant);
       color: var(--md-sys-color-on-surface-variant);
+      margin-right: 10px;
     }
 
     #spin {
-      padding: 8px 24px;
+      width: 80px;
+      height: 80px;
       font-size: 18px;
-      border-radius: 8px;
+      border-radius: 50%;
       border: none;
       background-color: var(--md-sys-color-primary);
       color: var(--md-sys-color-on-primary);
       cursor: pointer;
-      display: block;
-      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .score {
