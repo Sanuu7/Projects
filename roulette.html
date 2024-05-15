@@ -3,45 +3,73 @@
 <head>
   <title>Not The Botrix Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css">
   <style>
     body {
-      text-align: center;
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
       color: #333;
       margin: 0;
       padding: 20px;
     }
     .dark-mode {
-      background-color: #000;
+      background-color: #121212;
       color: #fff;
     }
-    button {
-      margin: 10px;
-      padding: 12px 24px;
-      font-size: 18px;
-      border: none;
+    .card {
+      background-color: #fff;
       border-radius: 4px;
-      background-color: #4CAF50;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
     }
-    button:hover {
-      background-color: #45a049;
+    .card-title {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 20px;
     }
-    input {
-      margin: 10px;
-      padding: 8px;
-      font-size: 18px;
-      width: 120px;
+    .card-content {
+      margin-bottom: 20px;
+    }
+    .text-field {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .text-field label {
+      display: block;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    .text-field input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #6750A4;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #7D6AE7;
+    }
     .points {
       font-size: 24px;
-      font-weight: bold;
-      color: #4CAF50;
+      font-weight: 500;
+      color: #6750A4;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
     }
     .watermark {
       position: fixed;
@@ -50,30 +78,27 @@
       font-size: 12px;
       color: #999;
     }
-    @media screen and (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-      button, input {
-        margin: 5px;
-        padding: 10px 20px;
-        font-size: 16px;
-      }
-    }
   </style>
 </head>
 <body>
-  <h1>Not The Botrix Game</h1>
-  <p>Your Points: <span id="points" class="points">1000</span></p>
-  <p>Bet Amount:</p>
-  <input type="number" id="betAmount" min="1" max="1000" value="10">
-  <p>Select Number (1-36):</p>
-  <input type="number" id="selectedNumber" min="1" max="36" value="1">
-  <button id="spinBtn">Spin Roulette</button>
-  <p id="result"></p>
-  <button id="darkModeBtn">Toggle Dark Mode</button>
-  <br>
-  <button id="resetBtn" style="display: none;">Reset Points</button>
+  <div class="card">
+    <div class="card-title">Not The Botrix Game</div>
+    <div class="card-content">
+      <p>Your Points: <span id="points" class="points">1000</span></p>
+      <div class="text-field">
+        <label for="betAmount">Bet Amount:</label>
+        <input type="number" id="betAmount" min="1" max="1000" value="10">
+      </div>
+      <div class="text-field">
+        <label for="selectedNumber">Select Number (1-36):</label>
+        <input type="number" id="selectedNumber" min="1" max="36" value="1">
+      </div>
+      <button id="spinBtn" class="button">Spin Roulette</button>
+      <p id="result" class="result"></p>
+    </div>
+    <button id="darkModeBtn" class="button">Toggle Dark Mode</button>
+    <button id="resetBtn" class="button" style="display: none;">Reset Points</button>
+  </div>
   <div class="watermark">Made by Sanu</div>
 
   <script>
