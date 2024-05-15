@@ -1,7 +1,8 @@
+html
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Roulette Game</title>
+  <title>Not The Botrix Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -43,6 +44,13 @@
       font-weight: bold;
       color: #4CAF50;
     }
+    .watermark {
+      position: fixed;
+      bottom: 5px;
+      left: 5px;
+      font-size: 12px;
+      color: #999;
+    }
     @media screen and (max-width: 600px) {
       body {
         padding: 10px;
@@ -56,19 +64,18 @@
   </style>
 </head>
 <body>
-  <h1>Roulette Game</h1>
+  <h1>Not The Botrix Game</h1>
   <p>Your Points: <span id="points" class="points">1000</span></p>
-  <p>
-    Bet Amount: <input type="number" id="betAmount" min="1" max="1000" value="10">
-  </p>
-  <p>
-    Select Number (1-36): <input type="number" id="selectedNumber" min="1" max="36" value="1">
-  </p>
+  <p>Bet Amount:</p>
+  <input type="number" id="betAmount" min="1" max="1000" value="10">
+  <p>Select Number (1-36):</p>
+  <input type="number" id="selectedNumber" min="1" max="36" value="1">
   <button id="spinBtn">Spin Roulette</button>
   <p id="result"></p>
   <button id="darkModeBtn">Toggle Dark Mode</button>
   <br>
-  <button id="resetBtn">Reset Points</button>
+  <button id="resetBtn" style="display: none;">Reset Points</button>
+  <div class="watermark">Made by Sanu</div>
 
   <script>
     let points = 1000;
@@ -105,13 +112,19 @@
 
       if (rouletteNumber === selectedNumber) {
         points += betAmount * 20;
-        document.getElementById("result").textContent = "Congratulations! You won " + (betAmount * 20) + " points!";
+        document.getElementById("result").textContent = "🎉 Congratulations! You won " + (betAmount * 20) + " points! 🎉";
       } else {
-        document.getElementById("result").textContent = "Sorry, you lost. The roulette number was " + rouletteNumber + ".";
+        document.getElementById("result").textContent = "😔 Sorry, you lost. The roulette number was " + rouletteNumber + ". 😔";
       }
 
       document.getElementById("points").textContent = points;
       saveProgress();
+
+      if (points === 0) {
+        resetBtn.style.display = "inline-block";
+      } else {
+        resetBtn.style.display = "none";
+      }
     }
 
     function toggleDarkMode() {
@@ -124,6 +137,7 @@
       document.getElementById("points").textContent = points;
       saveProgress();
       document.getElementById("result").textContent = "Points have been reset to 1000.";
+      resetBtn.style.display = "none";
     }
 
     function saveProgress() {
@@ -143,6 +157,12 @@
         document.body.classList.add('dark-mode');
       } else {
         document.body.classList.remove('dark-mode');
+      }
+
+      if (points === 0) {
+        resetBtn.style.display = "inline-block";
+      } else {
+        resetBtn.style.display = "none";
       }
     }
 
