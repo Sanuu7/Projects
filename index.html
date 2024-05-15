@@ -4,125 +4,159 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projects by Sanu</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <style>
+    :root {
+      --md-sys-color-primary: #6750A4;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #EADDFF;
+      --md-sys-color-on-primary-container: #21005D;
+      --md-sys-color-background: #FFFBFE;
+      --md-sys-color-on-background: #1C1B1F;
+      --md-sys-color-surface: #FFFBFE;
+      --md-sys-color-on-surface: #1C1B1F;
+      --md-sys-color-surface-variant: #E7E0EC;
+      --md-sys-color-on-surface-variant: #49454F;
+    }
+
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: #f5f5f5;
+      background-color: var(--md-sys-color-background);
+      color: var(--md-sys-color-on-background);
       margin: 0;
       padding: 0;
-      transition: background-color 0.3s ease;
     }
-    body.dark-mode {
-      background-color: #000;
-      color: #fff;
-    }
+
     .container {
-      max-width: 600px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 1rem;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--md-sys-color-primary);
+      margin-bottom: 2rem;
       text-align: center;
     }
-    h1 {
-      color: #1a237e;
-      font-size: 2rem;
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background-color: var(--md-sys-color-surface);
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+      margin-bottom: 1rem;
+    }
+
+    .card-text {
+      font-size: 1rem;
+      color: var(--md-sys-color-on-surface-variant);
       margin-bottom: 1.5rem;
     }
-    .dark-mode h1 {
-      color: #fff;
+
+    .card-link {
+      display: inline-block;
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      font-weight: 500;
+      transition: background-color 0.3s;
     }
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.5rem;
+
+    .card-link:hover {
+      background-color: #523E87;
     }
-    .button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      opacity: 0;
-      animation: fadeIn 0.5s ease-in-out forwards;
+
+    .card-link.disabled {
+      background-color: var(--md-sys-color-surface-variant);
+      color: var(--md-sys-color-on-surface-variant);
+      cursor: not-allowed;
     }
-    .button-primary {
-      background-color: #1a237e;
-      color: #fff;
-      border: none;
-    }
-    .button-secondary {
-      background-color: #fff;
-      color: #1a237e;
-      border: 2px solid #1a237e;
-    }
-    .dark-mode .button-primary {
-      background-color: #fff;
-      color: #1a237e;
-    }
-    .dark-mode .button-secondary {
-      background-color: #1a237e;
-      color: #fff;
-    }
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    .button:nth-child(1) {
-      animation-delay: 0.2s;
-    }
-    .button:nth-child(2) {
-      animation-delay: 0.4s;
-    }
-    .button:nth-child(3) {
-      animation-delay: 0.6s;
-    }
+
     .theme-toggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
       border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      color: #1a237e;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s;
     }
-    .dark-mode .theme-toggle {
-      color: #fff;
+
+    .theme-toggle:hover {
+      background-color: var(--md-sys-color-surface-variant);
     }
-    @media (min-width: 600px) {
-      .button-container {
-        flex-direction: row;
-        justify-content: center;
-      }
+
+    .theme-toggle .material-symbols-outlined {
+      font-size: 24px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Projects by Sanu</h1>
-    <div class="button-container">
-      <a href="https://notthebotrix.com" class="button button-primary">Not the Botrix Game</a>
-      <button class="button button-secondary">Coming Soon</button>
-      <button class="button button-secondary">Coming Soon</button>
+    <div class="card-grid">
+      <div class="card">
+        <h2 class="card-title">Not the Botrix Game</h2>
+        <p class="card-text">An exciting new game that's definitely not Botrix!</p>
+        <a href="https://notthebotrix.com" class="card-link">Play Now</a>
+      </div>
+      <div class="card">
+        <h2 class="card-title">Project Zephyr</h2>
+        <p class="card-text">A revolutionary app that will change the world.</p>
+        <a href="#" class="card-link disabled">Coming Soon</a>
+      </div>
+      <div class="card">
+        <h2 class="card-title">Quantum Leap</h2>
+        <p class="card-text">Dive into the fascinating world of quantum computing.</p>
+        <a href="#" class="card-link disabled">Coming Soon</a>
+      </div>
     </div>
   </div>
 
   <button class="theme-toggle" id="theme-toggle">
-    <span class="material-icons">brightness_6</span>
+    <span class="material-symbols-outlined">light_mode</span>
   </button>
 
   <script>
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
+    const icon = themeToggle.querySelector('.material-symbols-outlined');
 
     themeToggle.addEventListener('click', () => {
       body.classList.toggle('dark-mode');
+      icon.textContent = body.classList.contains('dark-mode') ? 'dark_mode' : 'light_mode';
     });
   </script>
 </body>
