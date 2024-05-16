@@ -153,6 +153,67 @@
     .dark-mode .floating-button:hover {
       background-color: #a255ff;
     }
+    .stats-button {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: #6200ee;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s;
+    }
+    .stats-button:hover {
+      background-color: #3700b3;
+    }
+    .dark-mode .stats-button {
+      background-color: #bb86fc;
+    }
+    .dark-mode .stats-button:hover {
+      background-color: #a255ff;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      padding: 24px;
+      z-index: 9999;
+      max-width: 400px;
+      width: 90%;
+    }
+    .dark-mode .popup {
+      background-color: #1f1f1f;
+    }
+    .popup-title {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .popup-content {
+      margin-bottom: 24px;
+    }
+    .popup-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 24px;
+      color: #757575;
+      cursor: pointer;
+    }
+    .dark-mode .popup-close {
+      color: #bdbdbd;
+    }
   </style>
 </head>
 <body>
@@ -178,17 +239,38 @@
   <button id="darkModeBtn" class="floating-button">
     <i class="material-icons">brightness_6</i>
   </button>
+  <button id="statsBtn" class="stats-button">
+    <i class="material-icons">insert_chart</i>
+  </button>
+
+  <div id="statsPopup" class="popup">
+    <div class="popup-title">Game Stats</div>
+    <div class="popup-content">
+      <p>Total Earned: <span id="totalEarned">0</span></p>
+      <p>Total Lost: <span id="totalLost">0</span></p>
+      <p>Total Times Played: <span id="totalPlayed">0</span></p>
+      <p>Total Time Played: <span id="totalTime">00:00:00</span></p>
+    </div>
+    <span class="popup-close" onclick="closeStatsPopup()">&times;</span>
+  </div>
 
   <script>
     let points = 1000;
+    let totalEarned = 0;
+    let totalLost = 0;
+    let totalPlayed = 0;
+    let startTime;
 
     const spinBtn = document.getElementById("spinBtn");
     const darkModeBtn = document.getElementById("darkModeBtn");
+    const statsBtn = document.getElementById("statsBtn");
     const betAmountInput = document.getElementById("betAmount");
     const selectedNumberInput = document.getElementById("selectedNumber");
+    const statsPopup = document.getElementById("statsPopup");
 
     spinBtn.addEventListener("click", spinRoulette);
     darkModeBtn.addEventListener("click", toggleDarkMode);
+    statsBtn.addEventListener("click", openStatsPopup);
     document.addEventListener("keydown", handleKeyDown);
 
     function handleKeyDown(event) {
@@ -218,22 +300,25 @@
 
       const rouletteNumber = Math.floor(Math.random() * 36) + 1;
       points -= betAmount;
+      totalLost += betAmount;
 
       if (rouletteNumber === selectedNumber) {
-        points += betAmount * 20;
-        document.getElementById("result").textContent = "🎉 Congratulations! You won " + (betAmount * 20) + " points! 🎉";
+        const winAmount = betAmount * 20;
+        points += winAmount;
+        totalEarned += winAmount;
+        document.getElementById("result").textContent = "🎉 Congratulations! You won " + winAmount + " points! 🎉";
       } else {
         document.getElementById("result").textContent = "😔 Sorry, you lost. The roulette number was " + rouletteNumber + ". 😔";
       }
 
       document.getElementById("points").textContent = points;
+      totalPlayed++;
       saveProgress();
 
       if (points === 0) {
         document.getElementById("result").textContent += " You have no points left. Refresh the page to start over.";
       }
 
-      // Clear the selected number input field
       selectedNumberInput.value = "";
     }
 
@@ -242,23 +327,74 @@
       saveProgress();
     }
 
+    function openStatsPopup() {
+      document.getElementById("totalEarned").textContent = totalEarned;
+      document.getElementById("totalLost").textContent = totalLost;
+      document.getElementById("totalPlayed").textContent = totalPlayed;
+      document.getElementById("totalTime").textContent = formatTime(Date.now() - startTime);
+      statsPopup.style.display = "block";
+    }
+
+    function closeStatsPopup() {
+      statsPopup.style.display = "none";
+    }
+
+    function formatTime(milliseconds) {
+      const totalSeconds = Math.floor(milliseconds / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      return `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+    }
+
+    function padZero(number) {
+      return number.toString().padStart(2, "0");
+    }
+
     function saveProgress() {
-      localStorage.setItem('roulettePoints', points);
-      localStorage.setItem('rouletteDarkMode', document.body.classList.contains('dark-mode'));
+      localStorage.setItem("roulettePoints", points);
+      localStorage.setItem("rouletteTotalEarned", totalEarned);
+      localStorage.setItem("rouletteTotalLost", totalLost);
+      localStorage.setItem("rouletteTotalPlayed", totalPlayed);
+      localStorage.setItem("rouletteStartTime", startTime);
+      localStorage.setItem("rouletteDarkMode", document.body.classList.contains("dark-mode"));
     }
 
     function loadProgress() {
-      const savedPoints = localStorage.getItem('roulettePoints');
+      const savedPoints = localStorage.getItem("roulettePoints");
       if (savedPoints !== null) {
         points = parseInt(savedPoints);
         document.getElementById("points").textContent = points;
       }
 
-      const darkMode = localStorage.getItem('rouletteDarkMode');
-      if (darkMode === 'true') {
-        document.body.classList.add('dark-mode');
+      const savedTotalEarned = localStorage.getItem("rouletteTotalEarned");
+      if (savedTotalEarned !== null) {
+        totalEarned = parseInt(savedTotalEarned);
+      }
+
+      const savedTotalLost = localStorage.getItem("rouletteTotalLost");
+      if (savedTotalLost !== null) {
+        totalLost = parseInt(savedTotalLost);
+      }
+
+      const savedTotalPlayed = localStorage.getItem("rouletteTotalPlayed");
+      if (savedTotalPlayed !== null) {
+        totalPlayed = parseInt(savedTotalPlayed);
+      }
+
+      const savedStartTime = localStorage.getItem("rouletteStartTime");
+      if (savedStartTime !== null) {
+        startTime = parseInt(savedStartTime);
       } else {
-        document.body.classList.remove('dark-mode');
+        startTime = Date.now();
+      }
+
+      const darkMode = localStorage.getItem("rouletteDarkMode");
+      if (darkMode === "true") {
+        document.body.classList.add("dark-mode");
+      } else {
+        document.body.classList.remove("dark-mode");
       }
     }
 
