@@ -165,7 +165,7 @@
         <label for="betAmount">Bet Amount</label>
       </div>
       <div class="text-field">
-        <input type="number" id="selectedNumber" min="1" max="36" value="1" required>
+        <input type="number" id="selectedNumber" min="1" max="36" required>
         <label for="selectedNumber">Select Number (1-36)</label>
       </div>
       <button id="spinBtn" class="spin-button">
@@ -232,6 +232,9 @@
       if (points === 0) {
         document.getElementById("result").textContent += " You have no points left. Refresh the page to start over.";
       }
+
+      // Clear the selected number input field
+      selectedNumberInput.value = "";
     }
 
     function toggleDarkMode() {
