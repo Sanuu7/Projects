@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Streaming</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    input {
+      padding: 5px;
+      width: 200px;
+    }
+    button {
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Movie Streaming</h1>
+  <input type="text" id="imdbId" placeholder="Enter IMDb ID">
+  <button onclick="loadMovie()">Watch Movie</button>
+  <div id="movieContainer"></div>
+
+  <script>
+    function loadMovie() {
+      const imdbId = document.getElementById('imdbId').value.trim();
+      if (imdbId) {
+        const movieUrl = `http://vidsrc.to/embed/movie/t${imdbId}`;
+        const movieContainer = document.getElementById('movieContainer');
+        movieContainer.innerHTML = `<iframe src="${movieUrl}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
+      }
+    }
+  </script>
+</body>
+</html>
