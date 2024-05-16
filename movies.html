@@ -17,21 +17,26 @@
     button {
       padding: 5px 10px;
     }
+    #videoPlayer {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <h1>Movie Streaming</h1>
   <input type="text" id="imdbId" placeholder="Enter IMDb ID">
   <button onclick="loadMovie()">Watch Movie</button>
-  <div id="movieContainer"></div>
+  <div id="videoPlayer"></div>
 
   <script>
     function loadMovie() {
       const imdbId = document.getElementById('imdbId').value.trim();
       if (imdbId) {
-        const movieUrl = `http://vidsrc.to/embed/movie/t${imdbId}`;
-        const movieContainer = document.getElementById('movieContainer');
-        movieContainer.innerHTML = `<iframe src="${movieUrl}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
+        const videoPlayer = document.getElementById('videoPlayer');
+        videoPlayer.innerHTML = `
+          <iframe src="http://vidsrc.to/embed/movie/t${imdbId}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+        `;
+        videoPlayer.style.display = 'block';
       }
     }
   </script>
