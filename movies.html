@@ -1,44 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movie Streaming</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    input {
-      padding: 5px;
-      width: 200px;
-    }
-    button {
-      padding: 5px 10px;
-    }
-    #videoPlayer {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <h1>Movie Streaming</h1>
-  <input type="text" id="imdbId" placeholder="Enter IMDb ID">
-  <button onclick="loadMovie()">Watch Movie</button>
-  <div id="videoPlayer"></div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Watcher</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+        }
 
-  <script>
-    function loadMovie() {
-      const imdbId = document.getElementById('imdbId').value.trim();
-      if (imdbId) {
-        const videoPlayer = document.getElementById('videoPlayer');
-        videoPlayer.innerHTML = `
-          <iframe src="http://vidsrc.to/embed/movie/t${imdbId}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
-        `;
-        videoPlayer.style.display = 'block';
-      }
-    }
-  </script>
+        .light-theme {
+            --primary-color: #6200ee;
+            --secondary-color: #03dac6;
+            --background-color: #ffffff;
+            --text-color: #000000;
+        }
+
+        .dark-theme {
+            --primary-color: #bb86fc;
+            --secondary-color: #03dac6;
+            --background-color: #121212;
+            --text-color: #ffffff;
+        }
+
+        body.light-theme {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        body.dark-theme {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <nav class="nav-wrapper deep-purple darken-3">
+        <a href="#" class="brand-logo center">Movie Watcher</a>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <form class="col s12" id="movieForm">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="imdb_id" type="text" class="validate">
+                        <label for="imdb_id">Enter IMDb ID</label>
+                    </div>
+                </div>
+                <button class="btn waves-effect waves-light deep-purple darken-3" type="submit" name="action">Watch Movie
+                    <i class="material-icons right">movie</i>
+                </button>
+            </form>
+        </div>
+        <div id="moviePlayer" class="row" style="margin-top: 20px; display: none;">
+            <div class="col s12">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">Now Playing</span>
+                        <div id="player"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#movieForm').on('submit', function(e) {
+                e.preventDefault();
+                const imdbId = $('#imdb_id').val().trim();
+                if (imdbId) {
+                    fetchMovie(imdbId);
+                } else {
+                    M.toast({html: 'Please enter a valid IMDb ID'});
+                }
+            });
+
+            function fetchMovie(imdbId) {
+                const apiUrl = `https://api.vidsrc.to/embed/imdb/${imdbId}`;
+                $('#player').html(`<iframe src="${apiUrl}" width="100%" height="480" frameborder="0" allowfullscreen></iframe>`);
+                $('#moviePlayer').fadeIn();
+            }
+        });
+    </script>
 </body>
 </html>
