@@ -103,7 +103,7 @@
             });
 
             function fetchMovie(imdbId) {
-                const apiUrl = `https://api.vidsrc.to/embed/imdb/${imdbId}`;
+                const apiUrl = `https://v2.vidsrc.me/embed/${imdbId}`;
                 $('#player').html(`<iframe src="${apiUrl}" width="100%" height="480" frameborder="0" allowfullscreen></iframe>`);
                 $('#moviePlayer').fadeIn();
             }
