@@ -16,17 +16,8 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-        }
-
-        .header {
-            text-align: center;
-            margin-top: 20px;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
-            color: #6200ea;
-            font-size: 2.5rem;
+            padding: 20px;
+            transition: background-color 0.3s;
         }
 
         .card {
@@ -38,6 +29,7 @@
             background-color: white;
             margin-bottom: 20px;
             text-align: center;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .card .card-title {
@@ -52,10 +44,11 @@
 
         .btn {
             background-color: #6200ea;
-            border-radius: 28px; /* Squircle shape */
+            border-radius: 8px; /* Slightly rounded corners */
             padding: 10px 20px;
             font-size: 1rem;
             display: inline-block;
+            margin-top: 20px;
         }
 
         .btn i {
@@ -97,13 +90,29 @@
             background-color: var(--primary-color);
             color: var(--primary-text-color);
         }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #6200ea;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .floating-btn i {
+            color: white;
+            font-size: 24px;
+        }
     </style>
 </head>
 <body class="dynamic-theme light-theme">
-    <div class="header">
-        <h1>Projects by Sanu</h1>
-    </div>
-
     <div class="card">
         <span class="card-title">Watch a Movie</span>
         <div class="card-content">
@@ -123,6 +132,10 @@
     <div id="moviePlayer" class="card" style="display: none;">
         <span class="card-title">Now Playing</span>
         <div id="player"></div>
+    </div>
+
+    <div class="floating-btn" id="toggleTheme">
+        <i class="material-icons">brightness_6</i>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -165,8 +178,7 @@
                 }
             });
 
-            // Toggle theme (for demonstration purposes)
-            // You can set the theme based on user preferences or system settings
+            // Toggle theme (light/dark mode)
             $('#toggleTheme').on('click', function() {
                 $('body').toggleClass('light-theme dark-theme');
             });
