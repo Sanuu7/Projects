@@ -148,13 +148,20 @@
 </head>
 <body>
     <div class="card">
-        <span class="card-title">A Project By Sanu.</span>
+        <span class="card-title">Watch a Movie</span>
         <div class="card-content">
             <p>Enter the IMDb ID of the movie you want to watch and click "Watch Movie".</p>
             <form id="movieForm">
                 <div class="input-field">
                     <input id="imdb_id" type="text" class="validate">
                     <label for="imdb_id">Enter IMDb ID</label>
+                </div>
+                <div class="input-field">
+                    <select id="api_server">
+                        <option value="https://v2.vidsrc.me/embed/">vidsrc.me</option>
+                        <option value="https://vidsrc.to/embed/">vidsrc.to</option>
+                    </select>
+                    <label>Select API Server</label>
                 </div>
                 <button class="btn" type="submit" name="action">
                     <i class="material-icons">play_arrow</i>
@@ -177,18 +184,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         $(document).ready(function() {
+            $('select').formSelect();
+
             $('#movieForm').on('submit', function(e) {
                 e.preventDefault();
                 const imdbId = $('#imdb_id').val().trim();
+                const apiServer = $('#api_server').val();
                 if (imdbId) {
-                    fetchMovie(imdbId);
+                    fetchMovie(imdbId, apiServer);
                 } else {
                     M.toast({html: 'Please enter a valid IMDb ID'});
                 }
             });
 
-            function fetchMovie(imdbId) {
-                const apiUrl = `https://v2.vidsrc.me/embed/${imdbId}`;
+            function fetchMovie(imdbId, apiServer) {
+                const apiUrl = `${apiServer}${imdbId}`;
                 $('#player').html(`
                     <iframe id="movieIframe" 
                         src="${apiUrl}" 
