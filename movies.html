@@ -150,16 +150,16 @@
     <div class="card">
         <span class="card-title">Watch a Movie</span>
         <div class="card-content">
-            <p>Enter the IMDb ID of the movie you want to watch and click "Watch Movie".</p>
+            <p>Enter the IMDb ID or TMDB ID of the movie you want to watch and click "Watch Movie".</p>
             <form id="movieForm">
                 <div class="input-field">
-                    <input id="imdb_id" type="text" class="validate">
-                    <label for="imdb_id">Enter IMDb ID</label>
+                    <input id="movie_id" type="text" class="validate">
+                    <label for="movie_id">Enter IMDb ID or TMDB ID</label>
                 </div>
                 <div class="input-field">
                     <select id="api_server">
-                        <option value="https://v2.vidsrc.me/embed/">vidsrc.me</option>
-                        <option value="https://vidsrc.to/embed/">vidsrc.to</option>
+                        <option value="vidsrc.me">vidsrc.me</option>
+                        <option value="vidsrc.to">vidsrc.to</option>
                     </select>
                     <label>Select API Server</label>
                 </div>
@@ -188,17 +188,23 @@
 
             $('#movieForm').on('submit', function(e) {
                 e.preventDefault();
-                const imdbId = $('#imdb_id').val().trim();
+                const movieId = $('#movie_id').val().trim();
                 const apiServer = $('#api_server').val();
-                if (imdbId) {
-                    fetchMovie(imdbId, apiServer);
+                if (movieId) {
+                    fetchMovie(movieId, apiServer);
                 } else {
-                    M.toast({html: 'Please enter a valid IMDb ID'});
+                    M.toast({html: 'Please enter a valid IMDb ID or TMDB ID'});
                 }
             });
 
-            function fetchMovie(imdbId, apiServer) {
-                const apiUrl = `${apiServer}${imdbId}`;
+            function fetchMovie(movieId, apiServer) {
+                let apiUrl;
+                if (apiServer === 'vidsrc.me') {
+                    apiUrl = `https://v2.vidsrc.me/embed/${movieId}`;
+                } else if (apiServer === 'vidsrc.to') {
+                    const idType = isNaN(movieId) ? 'tt' : '';
+                    apiUrl = `https://vidsrc.to/embed/movie/${idType}${movieId}`;
+                }
                 $('#player').html(`
                     <iframe id="movieIframe" 
                         src="${apiUrl}" 
