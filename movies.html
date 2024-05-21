@@ -7,6 +7,48 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <style>
+        :root {
+            --md-sys-color-primary: #6750A4;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #EADDFF;
+            --md-sys-color-on-primary-container: #21005D;
+            --md-sys-color-secondary: #625B71;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-secondary-container: #E8DEF8;
+            --md-sys-color-on-secondary-container: #1D192B;
+            --md-sys-color-tertiary: #7D5260;
+            --md-sys-color-on-tertiary: #FFFFFF;
+            --md-sys-color-tertiary-container: #FFD8E4;
+            --md-sys-color-on-tertiary-container: #31111D;
+            --md-sys-color-surface: #FFFBFE;
+            --md-sys-color-on-surface: #1C1B1F;
+            --md-sys-color-surface-variant: #E7E0EC;
+            --md-sys-color-on-surface-variant: #49454F;
+            --md-sys-color-background: #FFFBFE;
+            --md-sys-color-on-background: #1C1B1F;
+        }
+
+        .dark-theme {
+            --md-sys-color-primary: #D0BCFF;
+            --md-sys-color-on-primary: #381E72;
+            --md-sys-color-primary-container: #4F378B;
+            --md-sys-color-on-primary-container: #EADDFF;
+            --md-sys-color-secondary: #CCC2DC;
+            --md-sys-color-on-secondary: #332D41;
+            --md-sys-color-secondary-container: #4A4458;
+            --md-sys-color-on-secondary-container: #E8DEF8;
+            --md-sys-color-tertiary: #EFB8C8;
+            --md-sys-color-on-tertiary: #492532;
+            --md-sys-color-tertiary-container: #633B48;
+            --md-sys-color-on-tertiary-container: #FFD8E4;
+            --md-sys-color-surface: #1C1B1F;
+            --md-sys-color-on-surface: #E6E1E5;
+            --md-sys-color-surface-variant: #49454F;
+            --md-sys-color-on-surface-variant: #CAC4D0;
+            --md-sys-color-background: #1C1B1F;
+            --md-sys-color-on-background: #E6E1E5;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--md-sys-color-background);
@@ -22,56 +64,48 @@
         }
 
         .card {
-            border-radius: 28px;
-            padding: 24px;
-            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%), 0 2px 6px 2px rgb(0 0 0 / 10%);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             max-width: 500px;
             width: 100%;
             background-color: var(--md-sys-color-surface);
             color: var(--md-sys-color-on-surface);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             text-align: center;
             transition: background-color 0.3s, color 0.3s;
         }
 
         .card .card-title {
-            font-size: 24px;
-            font-weight: 500;
+            font-size: 1.5rem;
             color: var(--md-sys-color-on-surface);
         }
 
         .card .card-content p {
             color: var(--md-sys-color-on-surface-variant);
-            font-size: 16px;
+            font-size: 1rem;
         }
 
         .btn {
-            border-radius: 20px;
-            padding: 10px 24px;
-            font-size: 16px;
-            font-weight: 500;
-            margin-top: 24px;
             background-color: var(--md-sys-color-primary);
             color: var(--md-sys-color-on-primary);
-        }
-
-        .btn.outlined {
-            background-color: transparent;
-            border: 2px solid var(--md-sys-color-outline);
-            color: var(--md-sys-color-primary);
-        }
-
-        .btn.tonal {
-            background-color: var(--md-sys-color-secondary-container);
-            color: var(--md-sys-color-on-secondary-container);
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-size: 1rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            transition: background-color 0.3s;
         }
 
         .btn i {
-            line-height: inherit;
+            margin-right: 8px;
         }
 
         #player {
-            margin-top: 24px;
+            margin-top: 20px;
             position: relative;
             padding-bottom: 56.25%;
             height: 0;
@@ -88,8 +122,8 @@
 
         .floating-btn {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
+            bottom: 20px;
+            right: 20px;
             background-color: var(--md-sys-color-tertiary);
             color: var(--md-sys-color-on-tertiary);
             border-radius: 50%;
@@ -99,7 +133,8 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
         }
 
         .floating-btn i {
@@ -117,8 +152,9 @@
                     <input id="imdb_id" type="text" class="validate">
                     <label for="imdb_id">Enter IMDb ID</label>
                 </div>
-                <button class="btn" type="submit" name="action">Watch Movie
-                    <i class="material-icons right">movie</i>
+                <button class="btn" type="submit" name="action">
+                    <i class="material-icons">play_arrow</i>
+                    Watch Movie
                 </button>
             </form>
         </div>
@@ -172,8 +208,15 @@
             });
 
             $('#toggleTheme').on('click', function() {
-                $('body').toggleClass('light-theme dark-theme');
+                $('body').toggleClass('dark-theme');
+                localStorage.setItem('theme', $('body').hasClass('dark-theme') ? 'dark' : 'light');
             });
+
+            // Load saved theme on page load
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                $('body').addClass('dark-theme');
+            }
         });
     </script>
 </body>
