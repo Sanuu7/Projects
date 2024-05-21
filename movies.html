@@ -144,41 +144,34 @@
         .floating-btn i {
             font-size: 24px;
         }
-
-        #movieDetails {
-            margin-top: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #moviePoster {
-            width: 200px;
-            height: auto;
-            margin-bottom: 16px;
-        }
-
-        #movieSynopsis {
-            text-align: justify;
-            color: var(--md-sys-color-on-surface-variant);
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        .dark-theme #movieSynopsis {
-            color: var(--md-sys-color-on-surface);
-        }
     </style>
 </head>
 <body>
     <div class="card">
-        <span class="card-title">Watch a Movie</span>
+        <span class="card-title">Watch a Movie or Series</span>
         <div class="card-content">
-            <p>Enter the IMDb ID or movie title of the movie you want to watch and click "Watch Movie".</p>
-            <form id="movieForm">
+            <p>Select whether you want to watch a movie or a series, and enter the required details.</p>
+            <form id="mediaForm">
                 <div class="input-field">
-                    <input id="movie_id" type="text" class="validate">
-                    <label for="movie_id">Enter IMDb ID or Movie Title</label>
+                    <select id="media_type">
+                        <option value="movie">Movie</option>
+                        <option value="series">Series</option>
+                    </select>
+                    <label>Select Media Type</label>
+                </div>
+                <div class="input-field">
+                    <input id="imdb_id" type="text" class="validate">
+                    <label for="imdb_id">Enter IMDb ID</label>
+                </div>
+                <div id="seriesFields" style="display: none;">
+                    <div class="input-field">
+                        <input id="season" type="number" class="validate">
+                        <label for="season">Enter Season Number</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="episode" type="number" class="validate">
+                        <label for="episode">Enter Episode Number</label>
+                    </div>
                 </div>
                 <div class="input-field">
                     <select id="api_server">
@@ -189,20 +182,15 @@
                 </div>
                 <button class="btn" type="submit" name="action">
                     <i class="material-icons">play_arrow</i>
-                    Watch Movie
+                    Watch
                 </button>
             </form>
         </div>
     </div>
 
-    <div id="moviePlayer" class="card" style="display: none;">
+    <div id="mediaPlayer" class="card" style="display: none;">
         <span class="card-title">Now Playing</span>
         <div id="player"></div>
-    </div>
-
-    <div id="movieDetails" style="display: none;">
-        <img id="moviePoster" src="" alt="Movie Poster">
-        <p id="movieSynopsis"></p>
     </div>
 
     <div class="floating-btn" id="toggleTheme">
@@ -215,53 +203,53 @@
         $(document).ready(function() {
             $('select').formSelect();
 
-            $('#movieForm').on('submit', function(e) {
-                e.preventDefault();
-                const movieId = $('#movie_id').val().trim();
-                const apiServer = $('#api_server').val();
-                if (movieId) {
-                    fetchMovie(movieId, apiServer);
-                    fetchMovieDetails(movieId);
+            $('#media_type').on('change', function() {
+                if ($(this).val() === 'series') {
+                    $('#seriesFields').show();
                 } else {
-                    M.toast({html: 'Please enter a valid IMDb ID or movie title'});
+                    $('#seriesFields').hide();
                 }
             });
 
-            function fetchMovie(movieId, apiServer) {
+            $('#mediaForm').on('submit', function(e) {
+                e.preventDefault();
+                const mediaType = $('#media_type').val();
+                const imdbId = $('#imdb_id').val().trim();
+                const apiServer = $('#api_server').val();
+                const season = $('#season').val();
+                const episode = $('#episode').val();
+
+                if (imdbId) {
+                    fetchMedia(mediaType, imdbId, apiServer, season, episode);
+                } else {
+                    M.toast({html: 'Please enter a valid IMDb ID'});
+                }
+            });
+
+            function fetchMedia(mediaType, imdbId, apiServer, season, episode) {
                 let apiUrl;
-                if (apiServer === 'vidsrc.me') {
-                    apiUrl = `https://v2.vidsrc.me/embed/${movieId}`;
-                } else if (apiServer === 'vidsrc.to') {
-                    apiUrl = `https://vidsrc.to/embed/movie/${movieId}`;
+                if (mediaType === 'movie') {
+                    if (apiServer === 'vidsrc.me') {
+                        apiUrl = `https://v2.vidsrc.me/embed/${imdbId}`;
+                    } else if (apiServer === 'vidsrc.to') {
+                        apiUrl = `https://vidsrc.to/embed/movie/${imdbId}`;
+                    }
+                } else if (mediaType === 'series') {
+                    if (apiServer === 'vidsrc.me') {
+                        apiUrl = `https://v2.vidsrc.me/embed/tv?imdb=${imdbId}&season=${season}&episode=${episode}`;
+                    } else if (apiServer === 'vidsrc.to') {
+                        apiUrl = `https://vidsrc.to/embed/tv/${imdbId}/${season}/${episode}`;
+                    }
                 }
                 $('#player').html(`
-                    <iframe id="movieIframe" 
+                    <iframe id="mediaIframe" 
                         src="${apiUrl}" 
                         frameborder="0" 
                         allowfullscreen
                         sandbox="allow-scripts allow-same-origin">
                     </iframe>
                 `);
-                $('#moviePlayer').fadeIn();
-            }
-
-            function fetchMovieDetails(movieId) {
-                const apiUrl = `https://www.omdbapi.com/?t=${movieId}&plot=full&apikey=fd2a1ac2`;
-
-                $.getJSON(apiUrl, function(data) {
-                    const posterUrl = data.Poster;
-                    const synopsis = data.Plot;
-
-                    if (posterUrl !== "N/A") {
-                        $('#moviePoster').attr('src', posterUrl);
-                    }
-
-                    if (synopsis !== "N/A") {
-                        $('#movieSynopsis').text(synopsis);
-                    }
-
-                    $('#movieDetails').fadeIn();
-                });
+                $('#mediaPlayer').fadeIn();
             }
 
             $('#toggleTheme').on('click', function() {
