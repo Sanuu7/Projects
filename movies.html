@@ -94,7 +94,7 @@
             font-weight: 500;
             margin-top: 24px;
             background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
+            color: var (--md-sys-color-on-primary);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -309,12 +309,13 @@
                         apiUrl = `https://multiembed.mov/?video_id=${imdbId}&s=${season}&e=${episode}`;
                     }
                 }
+                const sandboxAttr = apiServer === 'multiembed' ? '' : 'sandbox="allow-scripts allow-same-origin"';
                 $('#player').html(`
                     <iframe id="mediaIframe" 
                         src="${apiUrl}" 
                         frameborder="0" 
                         allowfullscreen
-                        sandbox="allow-scripts allow-same-origin">
+                        ${sandboxAttr}>
                     </iframe>
                 `);
                 $('#mediaPlayer').fadeIn();
