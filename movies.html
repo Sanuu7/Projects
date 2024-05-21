@@ -127,10 +127,6 @@
         .floating-btn {
             position: fixed;
             bottom: 24px;
-            right: 24px;
-            background-color: var(--md-sys-color-tertiary);
-            color: var(--md-sys-color-on-tertiary);
-            border-radius: 50%;
             width: 56px;
             height: 56px;
             display: flex;
@@ -139,33 +135,43 @@
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s;
+            border-radius: 50%;
         }
 
         .floating-btn i {
             font-size: 24px;
         }
 
+        .floating-btn#toggleTheme {
+            right: 24px;
+            background-color: var(--md-sys-color-tertiary);
+            color: var(--md-sys-color-on-tertiary);
+        }
+
+        .floating-btn#showDisclaimer {
+            left: 24px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+        }
+
         .modal {
             display: none;
             position: fixed;
             z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background-color: var(--md-sys-color-surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            padding: 20px;
         }
 
         .modal-content {
-            background-color: var(--md-sys-color-surface);
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 12px;
-            text-align: center;
+            color: var(--md-sys-color-on-surface);
         }
 
         .close {
@@ -185,7 +191,7 @@
 </head>
 <body>
     <div class="card">
-        <span class="card-title">Watch a Movie or Series</span>
+        <span class="card-title">A Project by Sanu</span>
         <div class="card-content">
             <p>Select whether you want to watch a movie or a series, and enter the required details.</p>
             <form id="mediaForm">
@@ -232,6 +238,10 @@
 
     <div class="floating-btn" id="toggleTheme">
         <i class="material-icons">brightness_6</i>
+    </div>
+
+    <div class="floating-btn" id="showDisclaimer">
+        <i class="material-icons">info</i>
     </div>
 
     <div id="disclaimerModal" class="modal">
@@ -308,6 +318,10 @@
             $('#toggleTheme').on('click', function() {
                 $('body').toggleClass('dark-theme');
                 localStorage.setItem('theme', $('body').hasClass('dark-theme') ? 'dark' : 'light');
+            });
+
+            $('#showDisclaimer').on('click', function() {
+                $('#disclaimerModal').show();
             });
 
             // Load saved theme on page load
