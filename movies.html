@@ -144,6 +144,43 @@
         .floating-btn i {
             font-size: 24px;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: var(--md-sys-color-surface);
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .close {
+            color: var(--md-sys-color-on-surface);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -175,8 +212,8 @@
                 </div>
                 <div class="input-field">
                     <select id="api_server">
-                        <option value="vidsrc.me">vidsrc.me</option>
-                        <option value="vidsrc.to">vidsrc.to</option>
+                        <option value="vidsrc.me">ME</option>
+                        <option value="vidsrc.to">TO</option>
                     </select>
                     <label>Select API Server</label>
                 </div>
@@ -195,6 +232,15 @@
 
     <div class="floating-btn" id="toggleTheme">
         <i class="material-icons">brightness_6</i>
+    </div>
+
+    <div id="disclaimerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h4>Disclaimer</h4>
+            <p>This site does not host any movies or series. All content is hosted on third-party servers.</p>
+            <p>To watch a movie or series, select the type, enter the IMDb ID, and choose the server.</p>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -262,6 +308,17 @@
             if (savedTheme === 'dark') {
                 $('body').addClass('dark-theme');
             }
+
+            // Show disclaimer modal once per user
+            if (!localStorage.getItem('disclaimerShown')) {
+                $('#disclaimerModal').show();
+                localStorage.setItem('disclaimerShown', 'true');
+            }
+
+            // Close disclaimer modal
+            $('.close').on('click', function() {
+                $('#disclaimerModal').hide();
+            });
         });
     </script>
 </body>
