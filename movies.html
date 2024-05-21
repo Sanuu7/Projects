@@ -144,6 +144,30 @@
         .floating-btn i {
             font-size: 24px;
         }
+
+        #movieDetails {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #moviePoster {
+            width: 200px;
+            height: auto;
+            margin-bottom: 16px;
+        }
+
+        #movieSynopsis {
+            text-align: justify;
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .dark-theme #movieSynopsis {
+            color: var(--md-sys-color-on-surface);
+        }
     </style>
 </head>
 <body>
@@ -176,6 +200,11 @@
         <div id="player"></div>
     </div>
 
+    <div id="movieDetails" style="display: none;">
+        <img id="moviePoster" src="" alt="Movie Poster">
+        <p id="movieSynopsis"></p>
+    </div>
+
     <div class="floating-btn" id="toggleTheme">
         <i class="material-icons">brightness_6</i>
     </div>
@@ -192,6 +221,7 @@
                 const apiServer = $('#api_server').val();
                 if (movieId) {
                     fetchMovie(movieId, apiServer);
+                    fetchMovieDetails(movieId);
                 } else {
                     M.toast({html: 'Please enter a valid IMDb ID or TMDB ID'});
                 }
@@ -213,6 +243,27 @@
                     </iframe>
                 `);
                 $('#moviePlayer').fadeIn();
+            }
+
+            function fetchMovieDetails(movieId) {
+                const apiKey = 'YOUR_API_KEY';
+                const apiUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+
+                $.getJSON(apiUrl, function(data) {
+                    const posterPath = data.poster_path;
+                    const synopsis = data.overview;
+
+                    if (posterPath) {
+                        const posterUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
+                        $('#moviePoster').attr('src', posterUrl);
+                    }
+
+                    if (synopsis) {
+                        $('#movieSynopsis').text(synopsis);
+                    }
+
+                    $('#movieDetails').fadeIn();
+                });
             }
 
             $('#toggleTheme').on('click', function() {
