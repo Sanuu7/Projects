@@ -202,8 +202,7 @@
                 if (apiServer === 'vidsrc.me') {
                     apiUrl = `https://v2.vidsrc.me/embed/${movieId}`;
                 } else if (apiServer === 'vidsrc.to') {
-                    const idType = isNaN(movieId) ? 'tt' : '';
-                    apiUrl = `https://vidsrc.to/embed/movie/${idType}${movieId}`;
+                    apiUrl = `https://vidsrc.to/embed/movie/${movieId}`;
                 }
                 $('#player').html(`
                     <iframe id="movieIframe" 
