@@ -174,11 +174,11 @@
     <div class="card">
         <span class="card-title">Watch a Movie</span>
         <div class="card-content">
-            <p>Enter the IMDb ID or TMDB ID of the movie you want to watch and click "Watch Movie".</p>
+            <p>Enter the IMDb ID or movie title of the movie you want to watch and click "Watch Movie".</p>
             <form id="movieForm">
                 <div class="input-field">
                     <input id="movie_id" type="text" class="validate">
-                    <label for="movie_id">Enter IMDb ID or TMDB ID</label>
+                    <label for="movie_id">Enter IMDb ID or Movie Title</label>
                 </div>
                 <div class="input-field">
                     <select id="api_server">
@@ -223,7 +223,7 @@
                     fetchMovie(movieId, apiServer);
                     fetchMovieDetails(movieId);
                 } else {
-                    M.toast({html: 'Please enter a valid IMDb ID or TMDB ID'});
+                    M.toast({html: 'Please enter a valid IMDb ID or movie title'});
                 }
             });
 
@@ -246,19 +246,17 @@
             }
 
             function fetchMovieDetails(movieId) {
-                const apiKey = 'YOUR_API_KEY';
-                const apiUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+                const apiUrl = `https://www.omdbapi.com/?t=${movieId}&plot=full&apikey=fd2a1ac2`;
 
                 $.getJSON(apiUrl, function(data) {
-                    const posterPath = data.poster_path;
-                    const synopsis = data.overview;
+                    const posterUrl = data.Poster;
+                    const synopsis = data.Plot;
 
-                    if (posterPath) {
-                        const posterUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
+                    if (posterUrl !== "N/A") {
                         $('#moviePoster').attr('src', posterUrl);
                     }
 
-                    if (synopsis) {
+                    if (synopsis !== "N/A") {
                         $('#movieSynopsis').text(synopsis);
                     }
 
