@@ -9,7 +9,8 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -17,38 +18,52 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .card {
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%), 0 2px 6px 2px rgb(0 0 0 / 10%);
             max-width: 500px;
             width: 100%;
-            background-color: white;
-            margin-bottom: 20px;
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 24px;
             text-align: center;
             transition: background-color 0.3s, color 0.3s;
         }
 
         .card .card-title {
-            font-size: 1.5rem;
-            color: #6200ea;
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
         }
 
         .card .card-content p {
-            color: #555;
-            font-size: 1rem;
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 16px;
         }
 
         .btn {
-            background-color: #6200ea;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            display: inline-block;
-            margin-top: 20px;
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 24px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+        }
+
+        .btn.outlined {
+            background-color: transparent;
+            border: 2px solid var(--md-sys-color-outline);
+            color: var(--md-sys-color-primary);
+        }
+
+        .btn.tonal {
+            background-color: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
         }
 
         .btn i {
@@ -56,7 +71,7 @@
         }
 
         #player {
-            margin-top: 20px;
+            margin-top: 24px;
             position: relative;
             padding-bottom: 56.25%;
             height: 0;
@@ -71,42 +86,12 @@
             height: 100%;
         }
 
-        .light-theme {
-            --primary-color: #6200ea;
-            --primary-text-color: #ffffff;
-            --background-color: #f5f5f5;
-            --card-background-color: #ffffff;
-            --card-text-color: #000000;
-        }
-
-        .dark-theme {
-            --primary-color: #bb86fc;
-            --primary-text-color: #000000;
-            --background-color: #121212;
-            --card-background-color: #1f1f1f;
-            --card-text-color: #ffffff;
-        }
-
-        .dynamic-theme {
-            background-color: var(--background-color);
-            color: var(--primary-text-color);
-        }
-
-        .dynamic-theme .card {
-            background-color: var(--card-background-color);
-            color: var(--card-text-color);
-        }
-
-        .dynamic-theme .btn {
-            background-color: var(--primary-color);
-            color: var(--primary-text-color);
-        }
-
         .floating-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #6200ea;
+            bottom: 24px;
+            right: 24px;
+            background-color: var(--md-sys-color-tertiary);
+            color: var(--md-sys-color-on-tertiary);
             border-radius: 50%;
             width: 56px;
             height: 56px;
@@ -114,16 +99,15 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .floating-btn i {
-            color: white;
             font-size: 24px;
         }
     </style>
 </head>
-<body class="dynamic-theme light-theme">
+<body>
     <div class="card">
         <span class="card-title">Watch a Movie</span>
         <div class="card-content">
@@ -133,7 +117,7 @@
                     <input id="imdb_id" type="text" class="validate">
                     <label for="imdb_id">Enter IMDb ID</label>
                 </div>
-                <button class="btn waves-effect waves-light" type="submit" name="action">Watch Movie
+                <button class="btn" type="submit" name="action">Watch Movie
                     <i class="material-icons right">movie</i>
                 </button>
             </form>
