@@ -346,6 +346,26 @@
             $('.close').on('click', function() {
                 $('#disclaimerModal').hide();
             });
+
+            // Block pop-up ads
+            $(document).on('click', 'iframe', function() {
+                setTimeout(function() {
+                    $('iframe').each(function() {
+                        let iframeSrc = $(this).attr('src');
+                        if (iframeSrc && iframeSrc.includes('ads.')) {
+                            $(this).remove();
+                        }
+                    });
+                }, 500);
+            });
+
+            // Block new window pop-ups
+            $(document).on('click', 'a', function(event) {
+                let link = $(this).attr('href');
+                if (link && link.includes('ads.')) {
+                    event.preventDefault();
+                }
+            });
         });
     </script>
 </body>
