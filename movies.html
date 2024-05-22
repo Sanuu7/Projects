@@ -298,7 +298,7 @@
                     } else if (apiServer === 'vidsrc.to') {
                         apiUrl = `https://vidsrc.to/embed/movie/${imdbId}`;
                     } else if (apiServer === 'multiembed') {
-                        apiUrl = `https://multiembed.mov/?video_id=${imdbId}`;
+                        apiUrl = `https://multiembed.mov/directstream.php?video_id=${imdbId}`;
                     }
                 } else if (mediaType === 'series') {
                     if (apiServer === 'vidsrc.me') {
@@ -306,7 +306,7 @@
                     } else if (apiServer === 'vidsrc.to') {
                         apiUrl = `https://vidsrc.to/embed/tv/${imdbId}/${season}/${episode}`;
                     } else if (apiServer === 'multiembed') {
-                        apiUrl = `https://multiembed.mov/?video_id=${imdbId}&s=${season}&e=${episode}`;
+                        apiUrl = `https://multiembed.mov/directstream.php?video_id=${imdbId}&s=${season}&e=${episode}`;
                     }
                 }
                 const sandboxAttr = apiServer === 'multiembed' ? '' : 'sandbox="allow-scripts allow-same-origin"';
