@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leo's Exclusive Subscription Plans</title>
+    <style>
+        :root {
+            --primary-color: #6200ea;
+            --primary-color-light: #bb86fc;
+            --surface-color: #ffffff;
+            --background-color: #f4f4f4;
+            --text-color: #000000;
+            --button-background: #6200ea;
+            --button-text: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --surface-color: #121212;
+            --background-color: #000000;
+            --text-color: #ffffff;
+            --button-background: #bb86fc;
+            --button-text: #000000;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            color: var(--primary-color);
+        }
+
+        .plan {
+            border: 2px solid var(--primary-color-light);
+            border-radius: 10px;
+            background-color: var(--surface-color);
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .plan-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+
+        .description {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .subscribe-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            color: var(--button-text);
+            background-color: var(--button-background);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .subscribe-button:hover {
+            background-color: var(--primary-color-light);
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode-toggle span {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <h1>Leo's Exclusive Subscription Plans</h1>
+    <div class="plan">
+        <div class="plan-title">Free Tier</div>
+        <div class="price">FREE</div>
+        <div class="description">Get ignored and experience top-notch attitude. Because why not?</div>
+        <a href="#" class="subscribe-button">Get Ignored</a>
+    </div>
+    <div class="plan">
+        <div class="plan-title">$50 Tier</div>
+        <div class="price">$50</div>
+        <div class="description">Talk with Leo. Yes, you read that right. Actual words from the man himself.</div>
+        <a href="#" class="subscribe-button">Talk with Leo</a>
+    </div>
+    <div class="plan">
+        <div class="plan-title">$100 Tier</div>
+        <div class="price">$100</div>
+        <div class="description">Talk with Leo while he smiles. Because you deserve a little happiness.</div>
+        <a href="#" class="subscribe-button">Talk with a Smile</a>
+    </div>
+    <div class="plan">
+        <div class="plan-title">$200 Tier</div>
+        <div class="price">$200</div>
+        <div class="description">Get thanks along with other perks. Finally, some recognition!</div>
+        <a href="#" class="subscribe-button">Get Thanks</a>
+    </div>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()"><span>🌙</span></button>
+    <script>
+        function toggleDarkMode() {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            if (currentTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "light");
+            } else {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        }
+    </script>
+</body>
+</html>
