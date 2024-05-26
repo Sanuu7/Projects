@@ -7,12 +7,26 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #6200ea;
+            --secondary-color: #03dac5;
+            --background-color-light: #ffffff;
+            --background-color-dark: #121212;
+            --text-color-light: #000000;
+            --text-color-dark: #ffffff;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            background-color: var(--md-sys-color-background);
-            color: var(--md-sys-color-on-background);
+            background-color: var(--background-color-light);
+            color: var(--text-color-light);
             transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: var(--background-color-dark);
+            color: var(--text-color-dark);
         }
 
         .container {
@@ -37,9 +51,35 @@
         .mdc-button {
             margin-top: 20px;
         }
+
+        .progress-bar {
+            width: 80%;
+            height: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            width: 0;
+            transition: width 0.5s;
+        }
+
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <div class="dark-mode-toggle">
+        <span class="material-icons">brightness_4</span>
+    </div>
     <div class="container">
         <header>
             <h1>Data Eater</h1>
@@ -49,7 +89,10 @@
                 <p id="points">Points: 0</p>
             </div>
             <div class="speed-display">
-                <p id="speed">Consuming Speed: 0 MB/s</p>
+                <p id="speed">Consuming Speed: 0 Mbps / 0 MB/s</p>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-bar-fill"></div>
             </div>
             <button id="start-button" class="mdc-button mdc-button--raised">
                 <span class="mdc-button__label">Start Consuming</span>
@@ -63,28 +106,36 @@
             const pointsDisplay = document.getElementById('points');
             const speedDisplay = document.getElementById('speed');
             const startButton = document.getElementById('start-button');
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const darkModeToggle = document.querySelector('.dark-mode-toggle');
+            const body = document.body;
 
             let points = 0;
-            let consumingSpeed = 0;
             let intervalId;
             let startTime;
+            let dataSizeTotal = 0;
 
             // Initialize Material Components
             mdc.ripple.MDCRipple.attachTo(startButton);
 
             function consumeData() {
                 const xhr = new XMLHttpRequest();
-                xhr.open('GET', 'https://archive.org/download/testmp3testfile/mpthreetest.mp3', true);
+                xhr.open('GET', 'https://speed.hetzner.de/100MB.bin', true);
                 xhr.responseType = 'blob';
                 xhr.onload = function () {
                     if (xhr.status === 200) {
                         const dataSize = xhr.response.size / (1024 * 1024); // size in MB
                         const elapsed = (Date.now() - startTime) / 1000; // time in seconds
-                        consumingSpeed = dataSize / elapsed;
+                        const speedMbps = (dataSize * 8) / elapsed;
+                        const speedMBps = dataSize / elapsed;
 
                         points += dataSize;
+                        dataSizeTotal += dataSize;
+                        const progressPercentage = (dataSizeTotal / 100) % 100;
+
                         pointsDisplay.textContent = `Points: ${Math.floor(points)}`;
-                        speedDisplay.textContent = `Consuming Speed: ${consumingSpeed.toFixed(2)} MB/s`;
+                        speedDisplay.textContent = `Consuming Speed: ${speedMbps.toFixed(2)} Mbps / ${speedMBps.toFixed(2)} MB/s`;
+                        progressBarFill.style.width = `${progressPercentage}%`;
 
                         // Restart consuming data to simulate continuous consumption
                         startConsuming();
@@ -101,6 +152,12 @@
             }
 
             startButton.addEventListener('click', startConsuming);
+
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const icon = darkModeToggle.querySelector('.material-icons');
+                icon.textContent = body.classList.contains('dark-mode') ? 'brightness_7' : 'brightness_4';
+            });
         });
     </script>
 </body>
