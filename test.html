@@ -36,20 +36,23 @@
             justify-content: center;
             height: 100vh;
             text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         header h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
         }
 
         .points-display, .speed-display {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             margin: 10px;
         }
 
         .mdc-button {
             margin-top: 20px;
+            padding: 0 16px;
         }
 
         .progress-bar {
@@ -70,8 +73,8 @@
         }
 
         .dark-mode-toggle {
-            position: absolute;
-            top: 20px;
+            position: fixed;
+            bottom: 20px;
             right: 20px;
             cursor: pointer;
         }
@@ -79,7 +82,7 @@
         .stats {
             display: flex;
             justify-content: space-around;
-            width: 80%;
+            width: 100%;
             margin-top: 20px;
         }
 
@@ -99,7 +102,9 @@
 </head>
 <body>
     <div class="dark-mode-toggle">
-        <span class="material-icons">brightness_4</span>
+        <button class="mdc-fab" aria-label="Toggle dark mode">
+            <span class="mdc-fab__icon material-icons">brightness_4</span>
+        </button>
     </div>
     <div class="container">
         <header>
@@ -137,18 +142,30 @@
             const sessionTimeDisplay = document.getElementById('session-time');
             const body = document.body;
 
-            let points = 0;
+            let points = parseFloat(localStorage.getItem('points')) || 0;
+            let totalData = parseFloat(localStorage.getItem('totalData')) || 0;
             let intervalId;
             let startTime;
             let sessionStart;
-            let totalData = 0;
 
             // Initialize Material Components
             mdc.ripple.MDCRipple.attachTo(startButton);
+            mdc.ripple.MDCRipple.attachTo(darkModeToggle);
+
+            function updateDisplay() {
+                pointsDisplay.textContent = `Points: ${Math.floor(points)}`;
+                totalDataDisplay.textContent = `Total Data: ${totalData.toFixed(2)} MB`;
+                sessionTimeDisplay.textContent = `Session Time: ${Math.floor((Date.now() - sessionStart) / 1000)} s`;
+            }
+
+            function saveProgress() {
+                localStorage.setItem('points', points);
+                localStorage.setItem('totalData', totalData);
+            }
 
             function consumeData() {
                 const xhr = new XMLHttpRequest();
-                xhr.open('GET', 'http://mirror.kent.ac.uk/sites/rsync.opensuse.org/distribution/openSUSE-current/iso/openSUSE-Leap-15.4-DVD-x86_64.iso', true);
+                xhr.open('GET', 'https://speed.hetzner.de/100MB.bin', true);
                 xhr.responseType = 'blob';
                 xhr.onload = function () {
                     if (xhr.status === 200) {
@@ -161,11 +178,11 @@
                         totalData += dataSize;
                         const progressPercentage = (points % 100);
 
-                        pointsDisplay.textContent = `Points: ${Math.floor(points)}`;
                         speedDisplay.textContent = `Consuming Speed: ${speedMbps.toFixed(2)} Mbps / ${speedMBps.toFixed(2)} MB/s`;
                         progressBarFill.style.width = `${progressPercentage}%`;
-                        totalDataDisplay.textContent = `Total Data: ${totalData.toFixed(2)} MB`;
-                        sessionTimeDisplay.textContent = `Session Time: ${Math.floor((Date.now() - sessionStart) / 1000)} s`;
+
+                        saveProgress();
+                        updateDisplay();
 
                         // Restart consuming data to simulate continuous consumption
                         startConsuming();
@@ -193,7 +210,11 @@
                 body.classList.toggle('dark-mode');
                 const icon = darkModeToggle.querySelector('.material-icons');
                 icon.textContent = body.classList.contains('dark-mode') ? 'brightness_7' : 'brightness_4';
+                saveProgress();
             });
+
+            // Restore progress
+            updateDisplay();
         });
     </script>
 </body>
