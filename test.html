@@ -55,23 +55,6 @@
             padding: 0 16px;
         }
 
-        .progress-bar {
-            width: 80%;
-            height: 20px;
-            background-color: var(--secondary-color);
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background-color: var(--primary-color);
-            border-radius: 10px;
-            width: 0;
-            transition: width 0.5s;
-        }
-
         .dark-mode-toggle {
             position: fixed;
             bottom: 20px;
@@ -98,6 +81,31 @@
         .dark-mode .stats div {
             background: var(--primary-color);
         }
+
+        .history, .leaderboard {
+            margin-top: 20px;
+            padding: 10px;
+            width: 80%;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .history h2, .leaderboard h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .history ul, .leaderboard ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .history ul li, .leaderboard ul li {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid var(--primary-color);
+        }
     </style>
 </head>
 <body>
@@ -117,15 +125,23 @@
             <div class="speed-display">
                 <p id="speed">Consuming Speed: 0 Mbps / 0 MB/s</p>
             </div>
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progress-bar-fill"></div>
-            </div>
             <button id="start-button" class="mdc-button mdc-button--raised">
                 <span class="mdc-button__label">Start Consuming</span>
+            </button>
+            <button id="stop-button" class="mdc-button mdc-button--raised" style="display:none;">
+                <span class="mdc-button__label">Stop Consuming</span>
             </button>
             <div class="stats">
                 <div id="total-data">Total Data: 0 MB</div>
                 <div id="session-time">Session Time: 0 s</div>
+            </div>
+            <div class="history">
+                <h2>Consumption History</h2>
+                <ul id="history-list"></ul>
+            </div>
+            <div class="leaderboard">
+                <h2>Leaderboard</h2>
+                <ul id="leaderboard-list"></ul>
             </div>
         </main>
     </div>
@@ -136,20 +152,25 @@
             const pointsDisplay = document.getElementById('points');
             const speedDisplay = document.getElementById('speed');
             const startButton = document.getElementById('start-button');
-            const progressBarFill = document.getElementById('progress-bar-fill');
+            const stopButton = document.getElementById('stop-button');
             const darkModeToggle = document.querySelector('.dark-mode-toggle');
             const totalDataDisplay = document.getElementById('total-data');
             const sessionTimeDisplay = document.getElementById('session-time');
+            const historyList = document.getElementById('history-list');
+            const leaderboardList = document.getElementById('leaderboard-list');
             const body = document.body;
 
             let points = parseFloat(localStorage.getItem('points')) || 0;
             let totalData = parseFloat(localStorage.getItem('totalData')) || 0;
+            let consumptionHistory = JSON.parse(localStorage.getItem('consumptionHistory')) || [];
+            let leaderboards = JSON.parse(localStorage.getItem('leaderboards')) || [];
             let intervalId;
             let startTime;
             let sessionStart;
 
             // Initialize Material Components
             mdc.ripple.MDCRipple.attachTo(startButton);
+            mdc.ripple.MDCRipple.attachTo(stopButton);
             mdc.ripple.MDCRipple.attachTo(darkModeToggle);
 
             function updateDisplay() {
@@ -161,11 +182,32 @@
             function saveProgress() {
                 localStorage.setItem('points', points);
                 localStorage.setItem('totalData', totalData);
+                localStorage.setItem('consumptionHistory', JSON.stringify(consumptionHistory));
+                localStorage.setItem('leaderboards', JSON.stringify(leaderboards));
+            }
+
+            function loadHistory() {
+                historyList.innerHTML = '';
+                consumptionHistory.forEach((entry, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `Session ${index + 1}: ${entry.data.toFixed(2)} MB in ${entry.time} seconds`;
+                    historyList.appendChild(li);
+                });
+            }
+
+            function loadLeaderboards() {
+                leaderboardList.innerHTML = '';
+                leaderboards.sort((a, b) => b.data - a.data);
+                leaderboards.forEach((entry, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `Rank ${index + 1}: ${entry.data.toFixed(2)} MB by ${entry.user}`;
+                    leaderboardList.appendChild(li);
+                });
             }
 
             function consumeData() {
                 const xhr = new XMLHttpRequest();
-                xhr.open('GET', 'https://speed.hetzner.de/100MB.bin', true);
+                xhr.open('GET', 'https://archive.org/download/10mbtestfile/10mbtestfile.bin', true);
                 xhr.responseType = 'blob';
                 xhr.onload = function () {
                     if (xhr.status === 200) {
@@ -176,10 +218,8 @@
 
                         points += dataSize;
                         totalData += dataSize;
-                        const progressPercentage = (points % 100);
 
                         speedDisplay.textContent = `Consuming Speed: ${speedMbps.toFixed(2)} Mbps / ${speedMBps.toFixed(2)} MB/s`;
-                        progressBarFill.style.width = `${progressPercentage}%`;
 
                         saveProgress();
                         updateDisplay();
@@ -195,27 +235,42 @@
                 if (intervalId) clearInterval(intervalId);
                 startTime = Date.now();
                 consumeData();
-                intervalId = setInterval(consumeData, 5000); // Every 5 seconds, consume data
-            }
+                intervalId = setInterval(consumeData, 5000); // Every 5 seconds
+                    }
 
-            startButton.addEventListener('click', () => {
-                if (!intervalId) {
-                    sessionStart = Date.now();
-                    startConsuming();
-                    startButton.querySelector('.mdc-button__label').textContent = 'Consuming...';
-                }
-            });
+        function stopConsuming() {
+            clearInterval(intervalId);
+            const sessionTime = Math.floor((Date.now() - sessionStart) / 1000);
+            consumptionHistory.push({ data: points, time: sessionTime });
+            leaderboards.push({ user: 'User', data: points });
+            saveProgress();
+            loadHistory();
+            loadLeaderboards();
+        }
 
-            darkModeToggle.addEventListener('click', () => {
-                body.classList.toggle('dark-mode');
-                const icon = darkModeToggle.querySelector('.material-icons');
-                icon.textContent = body.classList.contains('dark-mode') ? 'brightness_7' : 'brightness_4';
-                saveProgress();
-            });
-
-            // Restore progress
-            updateDisplay();
+        startButton.addEventListener('click', () => {
+            startButton.style.display = 'none';
+            stopButton.style.display = 'inline-block';
+            sessionStart = Date.now();
+            points = 0; // Reset points for new session
+            startConsuming();
         });
-    </script>
+
+        stopButton.addEventListener('click', () => {
+            startButton.style.display = 'inline-block';
+            stopButton.style.display = 'none';
+            stopConsuming();
+        });
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+        });
+
+        // Initial Load
+        updateDisplay();
+        loadHistory();
+        loadLeaderboards();
+    });
+</script>
 </body>
 </html>
