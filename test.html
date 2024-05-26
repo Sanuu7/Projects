@@ -8,7 +8,7 @@
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #6200ea;
+            --primary-color: #008080;
             --secondary-color: #03dac5;
             --background-color-light: #ffffff;
             --background-color-dark: #121212;
@@ -82,7 +82,7 @@
             background: var(--primary-color);
         }
 
-        .history, .leaderboard {
+        .history {
             margin-top: 20px;
             padding: 10px;
             width: 80%;
@@ -91,17 +91,17 @@
             text-align: left;
         }
 
-        .history h2, .leaderboard h2 {
+        .history h2 {
             font-size: 1.5rem;
             margin-bottom: 10px;
         }
 
-        .history ul, .leaderboard ul {
+        .history ul {
             list-style: none;
             padding: 0;
         }
 
-        .history ul li, .leaderboard ul li {
+        .history ul li {
             margin: 5px 0;
             padding: 5px;
             border-bottom: 1px solid var(--primary-color);
@@ -139,10 +139,6 @@
                 <h2>Consumption History</h2>
                 <ul id="history-list"></ul>
             </div>
-            <div class="leaderboard">
-                <h2>Leaderboard</h2>
-                <ul id="leaderboard-list"></ul>
-            </div>
         </main>
     </div>
 
@@ -157,16 +153,15 @@
             const totalDataDisplay = document.getElementById('total-data');
             const sessionTimeDisplay = document.getElementById('session-time');
             const historyList = document.getElementById('history-list');
-            const leaderboardList = document.getElementById('leaderboard-list');
             const body = document.body;
 
             let points = parseFloat(localStorage.getItem('points')) || 0;
             let totalData = parseFloat(localStorage.getItem('totalData')) || 0;
             let consumptionHistory = JSON.parse(localStorage.getItem('consumptionHistory')) || [];
-            let leaderboards = JSON.parse(localStorage.getItem('leaderboards')) || [];
             let intervalId;
             let startTime;
             let sessionStart;
+            let isDarkMode = JSON.parse(localStorage.getItem('isDarkMode')) || false;
 
             // Initialize Material Components
             mdc.ripple.MDCRipple.attachTo(startButton);
@@ -183,7 +178,7 @@
                 localStorage.setItem('points', points);
                 localStorage.setItem('totalData', totalData);
                 localStorage.setItem('consumptionHistory', JSON.stringify(consumptionHistory));
-                localStorage.setItem('leaderboards', JSON.stringify(leaderboards));
+                localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
             }
 
             function loadHistory() {
@@ -195,19 +190,9 @@
                 });
             }
 
-            function loadLeaderboards() {
-                leaderboardList.innerHTML = '';
-                leaderboards.sort((a, b) => b.data - a.data);
-                leaderboards.forEach((entry, index) => {
-                    const li = document.createElement('li');
-                    li.textContent = `Rank ${index + 1}: ${entry.data.toFixed(2)} MB by ${entry.user}`;
-                    leaderboardList.appendChild(li);
-                });
-            }
-
             function consumeData() {
                 const xhr = new XMLHttpRequest();
-                xhr.open('GET', 'https://files.modyolo.com/Photo%20Lab%20PRO/Photo_Lab_v3.13.10_modded_by_Mixroot.apk', true);
+                xhr.open('GET', 'https://archive.org/download/10mbtestfile/10mbtestfile.bin', true);
                 xhr.responseType = 'blob';
                 xhr.onload = function () {
                     if (xhr.status === 200) {
@@ -236,41 +221,44 @@
                 startTime = Date.now();
                 consumeData();
                 intervalId = setInterval(consumeData, 5000); // Every 5 seconds
-                    }
+            }
 
-        function stopConsuming() {
-            clearInterval(intervalId);
-            const sessionTime = Math.floor((Date.now() - sessionStart) / 1000);
-            consumptionHistory.push({ data: points, time: sessionTime });
-            leaderboards.push({ user: 'User', data: points });
-            saveProgress();
+            function stopConsuming() {
+                clearInterval(intervalId);
+                const sessionTime = Math.floor((Date.now() - sessionStart) / 1000);
+                consumptionHistory.push({ data: points, time: sessionTime });
+                saveProgress();
+                loadHistory();
+            }
+
+            startButton.addEventListener('click', () => {
+                startButton.style.display = 'none';
+                stopButton.style.display = 'inline-block';
+                sessionStart = Date.now();
+                points = 0; // Reset points for new session
+                startConsuming();
+            });
+
+            stopButton.addEventListener('click', () => {
+                startButton.style.display = 'inline-block';
+                stopButton.style.display = 'none';
+                stopConsuming();
+            });
+
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                isDarkMode = !isDarkMode;
+                saveProgress();
+            });
+
+            if (isDarkMode) {
+                body.classList.add('dark-mode');
+            }
+
+            // Initial Load
+            updateDisplay();
             loadHistory();
-            loadLeaderboards();
-        }
-
-        startButton.addEventListener('click', () => {
-            startButton.style.display = 'none';
-            stopButton.style.display = 'inline-block';
-            sessionStart = Date.now();
-            points = 0; // Reset points for new session
-            startConsuming();
         });
-
-        stopButton.addEventListener('click', () => {
-            startButton.style.display = 'inline-block';
-            stopButton.style.display = 'none';
-            stopConsuming();
-        });
-
-        darkModeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-        });
-
-        // Initial Load
-        updateDisplay();
-        loadHistory();
-        loadLeaderboards();
-    });
-</script>
+    </script>
 </body>
 </html>
