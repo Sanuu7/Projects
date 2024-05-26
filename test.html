@@ -1,33 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Data Eater Game</title>
-<style>
-#points { font-size: 24px; margin-bottom: 10px; }
-</style>
+    <title>Data Eater</title>
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <style>
+        body {
+            font-family: Roboto, sans-serif;
+            background-color: #212121; /* Dark background */
+            color: #fff;              /* White text */
+            text-align: center;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #points, #speed {
+            font-size: 48px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        #startBtn {
+            width: 100%;
+            background-color: #673ab7; /* Purple accent color */
+        }
+
+        .mdc-chip-set {
+            justify-content: center;
+        }
+
+        #snackbar .mdc-snackbar__surface {
+            background-color: #673ab7; /* Purple */
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 600px) { 
+            #points, #speed { font-size: 36px; }
+            .container { padding: 16px; }
+        }
+    </style>
 </head>
 <body>
-<div id="points">Points: 0</div>
-<button id="startBtn">Start Eating Data</button>
+    <div class="container">
+        <div id="points">Points: 0</div>
+        <div id="speed">Speed: 0 Mbps</div>
+        <button id="startBtn" class="mdc-button mdc-button--raised">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__label">Start Eating Data</span>
+        </button>
 
-<script>
-let points = 0, intervalId;
-const pointsElement = document.getElementById("points");
+        <div id="dataDetails" style="margin-top: 20px;">
+            <div class="mdc-chip-set" role="grid">
+                <div class="mdc-chip" role="row">
+                    <div class="mdc-chip__text">Downloaded: <span id="downloaded">0 MB</span></div>
+                </div>
+                <div class="mdc-chip" role="row">
+                    <div class="mdc-chip__text">Time Elapsed: <span id="timeElapsed">0s</span></div>
+                </div>
+            </div>
+        </div>
 
-async function fetchData() {
-    try {
-        const response = await fetch('large_file.jpg'); // Replace with your large file
-        points += (await response.blob()).size / (1024 * 1024);
-        pointsElement.textContent = `Points: ${points.toFixed(2)}`;
-    } catch (error) {
-        console.error("Error fetching data:", error); 
-        clearInterval(intervalId);
-    }
-}
+        <div id="snackbar" class="mdc-snackbar mdc-snackbar--leading">
+            <div class="mdc-snackbar__surface">
+                <div class="mdc-snackbar__label" role="status" aria-live="polite">
+                    Data consumption started!
+                </div>
+            </div>
+        </div>
+        <script>
+            let points = 0, intervalId, startTime, totalDownloaded = 0;
+            const pointsElement = document.getElementById("points");
+            const speedElement = document.getElementById("speed");
+            const downloadedElement = document.getElementById("downloaded");
+            const timeElapsedElement = document.getElementById("timeElapsed");
 
-document.getElementById("startBtn").addEventListener("click", () => {
-    intervalId = intervalId ? (clearInterval(intervalId), null) : setInterval(fetchData, 1000);
-});
-</script>
+            const snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('.mdc-snackbar'));
+
+            async function fetchData() {
+                startTime = performance.now();
+                try {
+                    const response = await fetch('large_file.jpg'); // Or multiple files
+                    totalDownloaded += (await response.blob()).size;
+                    points = totalDownloaded / (1024 * 1024);
+                    pointsElement.textContent = `Points: ${points.toFixed(2)}`;
+                    downloadedElement.textContent = `${(totalDownloaded / (1024 * 1024)).toFixed(2)} MB`;
+
+                    const endTime = performance.now();
+                    const duration = (endTime - startTime) / 1000; // seconds
+                    const speed = (totalDownloaded / (1024 * 1024) / duration).toFixed(2);
+                    speedElement.textContent = `Speed: ${speed} Mbps`;
+                    timeElapsedElement.textContent = `${duration.toFixed(0)}s`;
+                } catch (error) { console.error("Error fetching:", error); clearInterval(intervalId); }
+            }
+
+            document.getElementById("startBtn").addEventListener("click", () => {
+                if (!intervalId) {
+                    intervalId = setInterval(fetchData, 10);
+                    snackbar.open();
+                } else {
+                    clearInterval(intervalId); 
+                    intervalId = null; 
+                }
+            });
+        </script>
+    </div>
 </body>
 </html>
