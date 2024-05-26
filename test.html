@@ -23,8 +23,8 @@
         }
 
         button {
-            background-color: var(--md-ref-palette-secondary40);
-            color: var(--md-ref-palette-on-secondary);
+            background-color: var(--md-sys-color-secondary);
+            color: var(--md-sys-color-on-secondary);
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -36,16 +36,17 @@
         }
 
         button:hover {
-            background-color: var(--md-ref-palette-secondary50);
+            background-color: var(--md-sys-color-secondary-container);
         }
 
-        body.dark button {
-            background-color: var(--md-ref-palette-secondary80);
-            color: var(--md-ref-palette-on-secondary);
+        /* Specific styles for dark mode */
+        body[data-md-color-scheme="dark"] button {
+            background-color: var(--md-sys-color-secondary);
+            color: var(--md-sys-color-on-secondary);
         }
 
-        body.dark button:hover {
-            background-color: var(--md-ref-palette-secondary90);
+        body[data-md-color-scheme="dark"] button:hover {
+            background-color: var(--md-sys-color-secondary-container);
         }
     </style>
 </head>
@@ -59,18 +60,19 @@
 
     <script>
         function toggleDarkMode() {
-            if (document.body.classList.contains('dark')) {
-                document.body.classList.remove('dark');
+            const colorScheme = document.body.getAttribute('data-md-color-scheme');
+            if (colorScheme === 'dark') {
+                document.body.setAttribute('data-md-color-scheme', 'light');
                 localStorage.removeItem('darkMode');
             } else {
-                document.body.classList.add('dark');
+                document.body.setAttribute('data-md-color-scheme', 'dark');
                 localStorage.setItem('darkMode', 'enabled');
             }
         }
 
         // Check for saved preference on page load
         if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark');
+            document.body.setAttribute('data-md-color-scheme', 'dark');
         }
     </script>
 </body>
