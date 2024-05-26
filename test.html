@@ -58,6 +58,7 @@
             background-color: var(--secondary-color);
             border-radius: 10px;
             margin: 20px 0;
+            overflow: hidden;
         }
 
         .progress-bar-fill {
@@ -73,6 +74,26 @@
             top: 20px;
             right: 20px;
             cursor: pointer;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            margin-top: 20px;
+        }
+
+        .stats div {
+            flex: 1;
+            padding: 10px;
+            background: var(--secondary-color);
+            margin: 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .stats div {
+            background: var(--primary-color);
         }
     </style>
 </head>
@@ -97,6 +118,10 @@
             <button id="start-button" class="mdc-button mdc-button--raised">
                 <span class="mdc-button__label">Start Consuming</span>
             </button>
+            <div class="stats">
+                <div id="total-data">Total Data: 0 MB</div>
+                <div id="session-time">Session Time: 0 s</div>
+            </div>
         </main>
     </div>
 
@@ -108,19 +133,22 @@
             const startButton = document.getElementById('start-button');
             const progressBarFill = document.getElementById('progress-bar-fill');
             const darkModeToggle = document.querySelector('.dark-mode-toggle');
+            const totalDataDisplay = document.getElementById('total-data');
+            const sessionTimeDisplay = document.getElementById('session-time');
             const body = document.body;
 
             let points = 0;
             let intervalId;
             let startTime;
-            let dataSizeTotal = 0;
+            let sessionStart;
+            let totalData = 0;
 
             // Initialize Material Components
             mdc.ripple.MDCRipple.attachTo(startButton);
 
             function consumeData() {
                 const xhr = new XMLHttpRequest();
-                xhr.open('GET', 'https://speed.hetzner.de/100MB.bin', true);
+                xhr.open('GET', 'http://mirror.kent.ac.uk/sites/rsync.opensuse.org/distribution/openSUSE-current/iso/openSUSE-Leap-15.4-DVD-x86_64.iso', true);
                 xhr.responseType = 'blob';
                 xhr.onload = function () {
                     if (xhr.status === 200) {
@@ -130,12 +158,14 @@
                         const speedMBps = dataSize / elapsed;
 
                         points += dataSize;
-                        dataSizeTotal += dataSize;
-                        const progressPercentage = (dataSizeTotal / 100) % 100;
+                        totalData += dataSize;
+                        const progressPercentage = (points % 100);
 
                         pointsDisplay.textContent = `Points: ${Math.floor(points)}`;
                         speedDisplay.textContent = `Consuming Speed: ${speedMbps.toFixed(2)} Mbps / ${speedMBps.toFixed(2)} MB/s`;
                         progressBarFill.style.width = `${progressPercentage}%`;
+                        totalDataDisplay.textContent = `Total Data: ${totalData.toFixed(2)} MB`;
+                        sessionTimeDisplay.textContent = `Session Time: ${Math.floor((Date.now() - sessionStart) / 1000)} s`;
 
                         // Restart consuming data to simulate continuous consumption
                         startConsuming();
@@ -151,7 +181,13 @@
                 intervalId = setInterval(consumeData, 5000); // Every 5 seconds, consume data
             }
 
-            startButton.addEventListener('click', startConsuming);
+            startButton.addEventListener('click', () => {
+                if (!intervalId) {
+                    sessionStart = Date.now();
+                    startConsuming();
+                    startButton.querySelector('.mdc-button__label').textContent = 'Consuming...';
+                }
+            });
 
             darkModeToggle.addEventListener('click', () => {
                 body.classList.toggle('dark-mode');
