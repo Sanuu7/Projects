@@ -97,6 +97,47 @@
         .dark-mode-toggle span {
             color: var(--primary-color);
         }
+
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: white;
+            border: 2px solid #6200ea;
+            border-radius: 10px;
+            padding: 15px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .popup h2 {
+            margin-top: 0;
+            color: #6200ea;
+        }
+
+        .popup p {
+            font-size: 14px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -143,7 +184,20 @@
         <div class="description">A day with Leo where he pretends to be interested in your life. Wow!</div>
         <a href="#" class="subscribe-button">Get Pretended Interest</a>
     </div>
+
+    <button class="floating-button" onclick="togglePopup()">?</button>
+
+    <div class="popup" id="termsPopup">
+        <h2>Terms & Conditions</h2>
+        <p>Only selected questions may be asked...otherwise Leonidas might get upset and not be able to sleep. Your trivial queries could disrupt the cosmic balance of his zen.</p>
+        <p>Additional information: If you have purchased an animal and Leonidas does not feel well, you will not get your money back. Not even a cent. Instead, consider this a lesson in the art of emotional resilience.</p>
+        <p>More nuggets of wisdom: Our support team reserves the right to ignore complaints delivered via carrier pigeon, smoke signals, or overly enthusiastic semaphore.</p>
+        <p>If you want to invite Leonidas to dinner, the minimum is $100...you will receive an extra smile. For $200, you get a normal thank you, and for $300, he says 'Thank you Sanukey'. But for very special customers, we have the luxury lunch package for $500. A 'Thank you Sanukey' with a smile and as a bonus, a 'How are you'.</p>
+        <p>Lastly, remember: Any attempts to out-sarcasm Leonidas will be met with a polite but firm eye roll. Proceed at your own peril.</p>
+    </div>
+
     <button class="dark-mode-toggle" onclick="toggleDarkMode()"><span>🌙</span></button>
+
     <script>
         function toggleDarkMode() {
             const currentTheme = document.documentElement.getAttribute("data-theme");
@@ -151,6 +205,15 @@
                 document.documentElement.setAttribute("data-theme", "light");
             } else {
                 document.documentElement.setAttribute("data-theme", "dark");
+            }
+        }
+
+        function togglePopup() {
+            var popup = document.getElementById('termsPopup');
+            if (popup.style.display === 'none' || popup.style.display === '') {
+                popup.style.display = 'block';
+            } else {
+                popup.style.display = 'none';
             }
         }
     </script>
