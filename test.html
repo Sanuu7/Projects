@@ -6,21 +6,18 @@
     <title>M3 Testing By Sanukey</title>
     <style>
         :root {
-            --md-sys-color-primary: #6200ee;
-            --md-sys-color-on-primary: #ffffff;
-            --md-sys-color-surface: #121212;
-            --md-sys-color-on-surface: #ffffff;
-            --md-sys-color-background: #121212;
-            --md-sys-color-on-background: #ffffff;
-            --md-sys-color-surface-variant: #1e1e1e;
-            --md-sys-color-on-surface-variant: #cfcfcf;
+            --color-background: #121212;
+            --color-surface: #1e1e1e;
+            --color-primary: #bb86fc;
+            --color-on-primary: #ffffff;
+            --color-on-surface: #e0e0e0;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--md-sys-color-background);
-            color: var(--md-sys-color-on-background);
             margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-on-surface);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -28,23 +25,24 @@
         }
 
         .card {
-            background-color: var(--md-sys-color-surface-variant);
-            padding: 24px;
+            background-color: var(--color-surface);
             border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             text-align: center;
             max-width: 360px;
+            width: 100%;
         }
 
         .card h1 {
-            margin: 0 0 16px;
             font-size: 24px;
-            color: var(--md-sys-color-on-surface-variant);
+            margin-bottom: 16px;
+            color: var(--color-on-surface);
         }
 
         .card button {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
+            background-color: var(--color-primary);
+            color: var(--color-on-primary);
             border: none;
             padding: 12px 24px;
             border-radius: 8px;
@@ -54,7 +52,7 @@
         }
 
         .card button:hover {
-            background-color: #3700b3;
+            background-color: #8a2be2;
         }
     </style>
 </head>
