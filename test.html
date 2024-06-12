@@ -6,14 +6,11 @@
     <title>M3 Testing By Sanukey</title>
     <style>
         :root {
-            --color-background: #121212;
-            --color-surface: #1e1e1e;
-            --color-primary: #4c6ef5;
+            --color-background: #f0f4ff;
+            --color-surface: #e2e8ff;
+            --color-primary: #2962ff;
             --color-on-primary: #ffffff;
-            --color-secondary: #353b48;
-            --color-on-surface: #e0e0e0;
-            --color-button-hover: #3b5bdb;
-            --color-button-secondary-hover: #2f3640;
+            --color-on-surface: #1c1e21;
         }
 
         body {
@@ -25,21 +22,23 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            text-align: center;
         }
 
         .card {
             background-color: var(--color-surface);
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
             max-width: 360px;
             width: 100%;
         }
 
         .card h1 {
-            font-size: 2rem;
+            font-size: 1.75rem;
             margin-bottom: 16px;
+            color: var(--color-primary);
         }
 
         .card button {
@@ -51,26 +50,10 @@
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-bottom: 16px;
         }
 
         .card button:hover {
-            background-color: var(--color-button-hover);
-        }
-
-        .card .button-secondary {
-            background-color: var(--color-secondary);
-            color: var(--color-on-surface);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .card .button-secondary:hover {
-            background-color: var(--color-button-secondary-hover);
+            background-color: #0039cb;
         }
     </style>
 </head>
@@ -78,7 +61,6 @@
     <div class="card">
         <h1>M3 Testing By Sanukey</h1>
         <button>Download</button>
-        <button class="button-secondary">View patches</button>
     </div>
 </body>
 </html>
