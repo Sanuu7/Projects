@@ -6,12 +6,11 @@
     <title>ReVanced - Continuing the Legacy of Vanced</title>
     <style>
         :root {
-            --md-sys-color-primary: #BA68C8; /* Purple (adjust as needed) */
+            --md-sys-color-primary: #4B0082; /* Indigo base */
             --md-sys-color-on-primary: #FFFFFF;
-            --md-sys-color-background: #212121; /* Dark background */
+            --md-sys-color-background: #282828; /* Darkened background with purple tint */
             --md-sys-color-on-background: #FFFFFF; 
-            --md-sys-color-surface: #2C2C2C;  /* Slightly lighter surface for cards/buttons */
-            --md-sys-color-on-surface: #FFFFFF;
+            --md-sys-color-surface: #383838;  /* Slightly lighter surface for text */
         }
 
         body {
@@ -32,48 +31,33 @@
         }
 
         p {
+            color: var(--md-sys-color-surface); 
             margin: 16px 0;
         }
 
         button {
-            background-color: var(--md-sys-color-surface);
-            color: var(--md-sys-color-on-surface);
-            padding: 12px 24px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            padding: 14px 32px; /* Adjusted padding */
             border: none;
             border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 16px;
+            font-size: 18px; 
+            font-weight: 500; 
             cursor: pointer;
-            width: 80%; /* Take up most of the width */
-            max-width: 300px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
+            text-transform: uppercase;
         }
 
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 16px; 
-            margin-top: 24px;
-        }
-
-        .social-icons img {
-            width: 32px; /* Adjust as needed */
-            height: 32px;
+        button:hover {
+            filter: brightness(1.1); /* Subtle brightening on hover */
         }
     </style>
 </head>
 <body>
-    <h1>Continuing the legacy of Vanced.</h1>
-    <h2>ReVanced</h2>
-    <p>Customize your mobile experience through ReVanced by applying patches to your applications.</p>
+    <h1>M3 Testing</h1>
+    <h2>By sanukey</h2>
+    <p>Material You design testing with purple theme.</p>
 
-    <button>&#x2193; Download</button>
-    <button>&#x1F5D2; View patches</button>
-
-    <div class="social-icons">
-        <img src="github-icon.png" alt="GitHub">
-        <img src="discord-icon.png" alt="Discord">
-        <img src="reddit-icon.png" alt="Reddit">
-        <img src="telegram-icon.png" alt="Telegram">
-    </div>
+    <button>Button</button> 
 </body>
 </html>
