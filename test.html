@@ -3,70 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material You Purple Monochrome</title>
+    <title>Projects by Sanu</title>
     <style>
         :root {
-            --md-sys-color-primary: #6750A4;
-            --md-sys-color-on-primary: #FFFFFF;
-
-            --md-sys-color-primary-container: #553C8C;
-            --md-sys-color-on-primary-container: #EADDFF; 
-            
-            --md-sys-color-surface: #4F378B;
-            --md-sys-color-on-surface: #EADDFF;
-            
-            --md-sys-color-surface-variant: #5D499C; 
+            --md-sys-color-primary: #6750A4; 
+            --md-sys-color-on-primary: #FFFFFF; 
+            --md-sys-color-surface-variant: #5D499C;  
         }
 
         body {
-            font-family: Roboto, sans-serif;
-            background-color: var(--md-sys-color-surface);
-            color: var(--md-sys-color-on-surface);
+            font-family: Roboto, sans-serif;  
+            background-color: #F5F5F5; /* Light background similar to the screenshot */
             display: flex;
-            flex-direction: column;
+            flex-direction: column; 
             align-items: center;
             min-height: 100vh;
             gap: 24px;
             padding: 24px;
         }
 
-        .container {
-            background-color: var(--md-sys-color-surface-variant);
-            padding: 32px;
-            border-radius: 16px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); 
-            text-align: center;
+        h1 {
+            color: var(--md-sys-color-primary); /* Primary color for the title */
         }
 
-        button {
+        .card {
+            background-color: white; 
+            padding: 24px;
+            border-radius: 12px;  
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 400px; 
+        }
+
+        .card button {
             background-color: var(--md-sys-color-primary);
             color: var(--md-sys-color-on-primary);
-            padding: 12px 24px;
+            padding: 12px 20px; 
             border: none;
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
-            width: 200px; 
+            width: 100%;
+            margin-top: 16px; 
         }
 
-        button:hover {
-            background-color: var(--md-sys-color-primary-container);
+        .card button:hover {
+            opacity: 0.9; 
+        }
+
+        .card .play-button { /* Custom style for the play button */
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            font-size: 48px; /* Larger for the play icon */
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Material You Monochrome</h1>
+    <h1>Projects by Sanu</h1>
+
+    <div class="card">
+        <h2>Not the Botrix Game</h2>
+        <p>An exciting new game that's definitely not Botrix!</p>
+        <button>Play Now</button>
     </div>
-    
-    <button>Button 1</button>
-    <button>Button 2</button>
-    <button>Button 3</button>
-    
-    <script>
-        const primaryColor = "#9354B9";
-        document.documentElement.style.setProperty('--md-sys-color-primary', primaryColor);
-    </script>
+
+    <div class="card">
+        <h2>Sanu Flix</h2>
+        <p>Watch movies and TV shows for free with IMDB ID.</p>
+        <button class="play-button">▶</button>
+        <button>Watch (Beta)</button>
+    </div>
 </body>
 </html>
