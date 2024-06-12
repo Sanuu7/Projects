@@ -3,66 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material You Theme</title>
+    <title>ReVanced - Continuing the Legacy of Vanced</title>
     <style>
         :root {
-            --md-sys-color-primary: #BA68C8; 
+            --md-sys-color-primary: #BA68C8; /* Purple (adjust as needed) */
             --md-sys-color-on-primary: #FFFFFF;
-            --md-sys-color-surface: #1C1B1F; 
-            --md-sys-color-on-surface: #E6E1E5; 
-            --md-sys-color-surface-variant: #49454F; 
-            --md-sys-color-outline: #6D6875; 
-            --md-sys-color-error: #CF6679; 
+            --md-sys-color-background: #212121; /* Dark background */
+            --md-sys-color-on-background: #FFFFFF; 
+            --md-sys-color-surface: #2C2C2C;  /* Slightly lighter surface for cards/buttons */
+            --md-sys-color-on-surface: #FFFFFF;
         }
 
         body {
-            font-family: Roboto, sans-serif;
-            background-color: var(--md-sys-color-surface);
-            color: var(--md-sys-color-on-surface);
+            font-family: Roboto, sans-serif; 
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
-        }
-
-        .container {
-            background-color: var(--md-sys-color-surface-variant);
-            padding: 32px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 24px;
             text-align: center;
         }
 
-        h1 {
-            color: var(--md-sys-color-primary);
-            margin-bottom: 16px;
+        h1, h2 {
+            color: var(--md-sys-color-primary); 
         }
 
         p {
-            margin-bottom: 24px;
+            margin: 16px 0;
         }
 
         button {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
             padding: 12px 24px;
             border: none;
             border-radius: 8px;
+            margin-bottom: 8px;
             font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+            width: 80%; /* Take up most of the width */
+            max-width: 300px; 
         }
 
-        button:hover {
-            opacity: 0.9;
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 16px; 
+            margin-top: 24px;
+        }
+
+        .social-icons img {
+            width: 32px; /* Adjust as needed */
+            height: 32px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to My Material You Page</h1>
-        <p>This is a sample page showcasing a Material You design.</p>
-        <button>Explore</button>
+    <h1>Continuing the legacy of Vanced.</h1>
+    <h2>ReVanced</h2>
+    <p>Customize your mobile experience through ReVanced by applying patches to your applications.</p>
+
+    <button>&#x2193; Download</button>
+    <button>&#x1F5D2; View patches</button>
+
+    <div class="social-icons">
+        <img src="github-icon.png" alt="GitHub">
+        <img src="discord-icon.png" alt="Discord">
+        <img src="reddit-icon.png" alt="Reddit">
+        <img src="telegram-icon.png" alt="Telegram">
     </div>
 </body>
 </html>
