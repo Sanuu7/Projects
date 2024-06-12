@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M3 Testing By Sanukey</title>
+    <title>Login - M3 Testing By Sanukey</title>
     <style>
         :root {
             --color-background: #1c1b29;
@@ -42,6 +42,26 @@
             color: var(--color-primary);
         }
 
+        .input-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-on-surface);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: var(--color-background);
+            color: var(--color-on-surface);
+        }
+
         .card button {
             background-color: var(--color-primary);
             color: var(--color-on-primary);
@@ -60,8 +80,18 @@
 </head>
 <body>
     <div class="card">
-        <h1>M3 Testing By Sanukey</h1>
-        <button>Download</button>
+        <h1>Login</h1>
+        <form>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
     </div>
 </body>
 </html>
