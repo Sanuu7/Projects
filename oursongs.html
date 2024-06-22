@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Music Showcase</title>
+    <style>
+        :root {
+            --primary-color: #6200ea;
+            --secondary-color: #bb86fc;
+            --background-color: #121212;
+            --surface-color: #1f1b24;
+            --on-primary-color: #ffffff;
+            --on-surface-color: #e0e0e0;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--on-surface-color);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            margin: 20px 0;
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            margin: 0 0 10px;
+        }
+        
+        .card p {
+            margin: 0 0 20px;
+            color: var(--on-surface-color);
+        }
+        
+        .audio-player {
+            width: 100%;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>My Cool Track</h2>
+            <p>Enjoy this futuristic tune!</p>
+            <audio class="audio-player" controls>
+                <source src="your-audio-file-url-here.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 My Music Showcase</p>
+        </div>
+    </div>
+</body>
+</html>
