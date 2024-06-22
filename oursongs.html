@@ -39,6 +39,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             padding: 20px;
+            margin-bottom: 20px;
             transition: transform 0.3s;
         }
 
@@ -103,13 +104,31 @@
 </head>
 <body>
     <div class="container">
-        <div class="card">
+        <div class="card" id="card-1">
             <h2>Every Morning You're My First Thought</h2>
             <h3>Our Bond</h3>
             <div class="audio-controls">
-                <button id="play-button">Play</button>
-                <button id="stop-button" style="display: none;">Stop</button>
-                <span id="duration" class="duration">00:00</span>
+                <button id="play-button-1" onclick="playAudio('audio-player-1', 'play-button-1', 'stop-button-1', 'duration-1')">Play</button>
+                <button id="stop-button-1" style="display: none;" onclick="stopAudio('audio-player-1', 'play-button-1', 'stop-button-1', 'duration-1')">Stop</button>
+                <span id="duration-1" class="duration">00:00</span>
+            </div>
+        </div>
+        <div class="card" id="card-2">
+            <h2>I Can Hear You Sigh</h2>
+            <h3>A Whisper</h3>
+            <div class="audio-controls">
+                <button id="play-button-2" onclick="playAudio('audio-player-2', 'play-button-2', 'stop-button-2', 'duration-2')">Play</button>
+                <button id="stop-button-2" style="display: none;" onclick="stopAudio('audio-player-2', 'play-button-2', 'stop-button-2', 'duration-2')">Stop</button>
+                <span id="duration-2" class="duration">00:00</span>
+            </div>
+        </div>
+        <div class="card" id="card-3">
+            <h2>In the Quiet of the Night</h2>
+            <h3>Serenity</h3>
+            <div class="audio-controls">
+                <button id="play-button-3" onclick="playAudio('audio-player-3', 'play-button-3', 'stop-button-3', 'duration-3')">Play</button>
+                <button id="stop-button-3" style="display: none;" onclick="stopAudio('audio-player-3', 'play-button-3', 'stop-button-3', 'duration-3')">Stop</button>
+                <span id="duration-3" class="duration">00:00</span>
             </div>
         </div>
     </div>
@@ -117,38 +136,66 @@
         <p>&copy; 2024 Ramona And Sanuu</p>
     </div>
 
-    <audio id="audio-player">
+    <audio id="audio-player-1">
         <source src="https://files.catbox.moe/85nbi1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="audio-player-2">
+        <source src="https://files.catbox.moe/zk5g5m.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="audio-player-3">
+        <source src="https://files.catbox.moe/egu6lg.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
     <script>
-        const audioPlayer = document.getElementById('audio-player');
-        const playButton = document.getElementById('play-button');
-        const stopButton = document.getElementById('stop-button');
-        const duration = document.getElementById('duration');
+        const audioPlayers = [
+            document.getElementById('audio-player-1'),
+            document.getElementById('audio-player-2'),
+            document.getElementById('audio-player-3')
+        ];
+        const durations = [
+            document.getElementById('duration-1'),
+            document.getElementById('duration-2'),
+            document.getElementById('duration-3')
+        ];
+        
+        function playAudio(audioId, playBtnId, stopBtnId, durationId) {
+            audioPlayers.forEach(audio => audio.pause());
+            durations.forEach(duration => duration.style.display = 'none');
 
-        playButton.addEventListener('click', () => {
+            const audioPlayer = document.getElementById(audioId);
+            const playButton = document.getElementById(playBtnId);
+            const stopButton = document.getElementById(stopBtnId);
+            const duration = document.getElementById(durationId);
+
+            audioPlayer.currentTime = 0;
             audioPlayer.play();
             playButton.style.display = 'none';
             stopButton.style.display = 'inline-block';
             duration.style.display = 'block';
-        });
 
-        stopButton.addEventListener('click', () => {
+            audioPlayer.ontimeupdate = () => {
+                const minutes = Math.floor(audioPlayer.currentTime / 60);
+                const seconds = Math.floor(audioPlayer.currentTime % 60);
+                duration.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            };
+        }
+
+        function stopAudio(audioId, playBtnId, stopBtnId, durationId) {
+            const audioPlayer = document.getElementById(audioId);
+            const playButton = document.getElementById(playBtnId);
+            const stopButton = document.getElementById(stopBtnId);
+            const duration = document.getElementById(durationId);
+
             audioPlayer.pause();
             audioPlayer.currentTime = 0;
             stopButton.style.display = 'none';
             playButton.style.display = 'inline-block';
             duration.style.display = 'none';
             duration.textContent = '00:00';
-        });
-
-        audioPlayer.addEventListener('timeupdate', () => {
-            const minutes = Math.floor(audioPlayer.currentTime / 60);
-            const seconds = Math.floor(audioPlayer.currentTime % 60);
-            duration.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        });
+        }
     </script>
 </body>
 </html>
