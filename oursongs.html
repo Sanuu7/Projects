@@ -23,15 +23,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             text-align: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
         }
         
         .card {
             background-color: var(--surface-color);
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
             width: 100%;
             padding: 20px;
             transition: transform 0.3s;
@@ -85,17 +90,19 @@
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>Every Morning You're My First Thought</h2>
-        <p>Enjoy this futuristic tune!</p>
-        <div class="audio-controls">
-            <button id="play-button">Play</button>
-            <button id="stop-button">Stop</button>
-            <span id="duration" class="duration">00:00</span>
+    <div class="container">
+        <div class="card">
+            <h2>Every Morning You're My First Thought</h2>
+            <p>Enjoy this futuristic tune!</p>
+            <div class="audio-controls">
+                <button id="play-button">Play</button>
+                <button id="stop-button" style="display: none;">Stop</button>
+                <span id="duration" class="duration">00:00</span>
+            </div>
         </div>
-    </div>
-    <div class="footer">
-        <p>&copy; 2024 My Music Showcase</p>
+        <div class="footer">
+            <p>&copy; 2024 My Music Showcase</p>
+        </div>
     </div>
 
     <audio id="audio-player">
@@ -111,11 +118,15 @@
 
         playButton.addEventListener('click', () => {
             audioPlayer.play();
+            playButton.style.display = 'none';
+            stopButton.style.display = 'inline-block';
         });
 
         stopButton.addEventListener('click', () => {
             audioPlayer.pause();
             audioPlayer.currentTime = 0;
+            stopButton.style.display = 'none';
+            playButton.style.display = 'inline-block';
         });
 
         audioPlayer.addEventListener('timeupdate', () => {
