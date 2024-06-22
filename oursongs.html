@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Songs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>My Music Showcase</title>
     <style>
         :root {
             --primary-color: #6200ea;
@@ -46,14 +46,14 @@
             transform: translateY(-10px);
         }
         
-        .card h2 {
-            color: var(--primary-color);
-            margin: 0 0 10px;
+        .card h2, .card p {
+            color: var(--secondary-color);
         }
-        
-        .card p {
-            margin: 0 0 20px;
-            color: var(--on-surface-color);
+
+        .card h3 {
+            color: var(--secondary-color);
+            margin-top: -10px;
+            font-weight: normal;
         }
         
         .audio-controls {
@@ -88,6 +88,10 @@
         .footer {
             margin-top: 40px;
             color: var(--secondary-color);
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
@@ -95,7 +99,7 @@
     <div class="container">
         <div class="card">
             <h2>Every Morning You're My First Thought</h2>
-            <p>Our Bond</p>
+            <h3>Our Bond</h3>
             <div class="audio-controls">
                 <button id="play-button">Play</button>
                 <button id="stop-button" style="display: none;">Stop</button>
@@ -103,12 +107,12 @@
             </div>
         </div>
         <div class="footer">
-            <p>&copy; Ramona And Sanuu</p>
+            <p>&copy; 2024 Ramona And Sanuu</p>
         </div>
     </div>
 
     <audio id="audio-player">
-        <source src="https://files.catbox.moe/85nbi1.mp3" type="audio/mpeg">
+        <source src="http://cdn.discordapp.com/attachments/1143753744195002398/1254137554882789396/every_Morning_Youre_my_first_thought__22-06-24_23-43-35-233_27_75.mp3?ex=6678661d&is=6677" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
