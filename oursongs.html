@@ -13,7 +13,7 @@
             --on-primary-color: #ffffff;
             --on-surface-color: #e0e0e0;
             --light-background-color: #ffffff;
-            --light-surface-color: #f1f1f1;
+            --light-surface-color: #f8f0ff; /* Slight purple tint */
             --light-on-primary-color: #6200ea;
             --light-on-surface-color: #000000;
         }
@@ -50,7 +50,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             padding: 20px;
             margin-bottom: 20px;
-            transition: transform 0.3s;
+            transition: transform 0.3s, background-color 0.3s;
         }
 
         .card:hover {
@@ -239,171 +239,129 @@
         <div class="card" id="card-3">
             <h2>Overthinking</h2>
             <h3>Pondering</h3>
-            <div class="audio-controls">
-                <button id="play-button-3" onclick="playAudio('audio-player-3', 'play-button-3', 'stop-button-3', 'duration-3')">Play                <button id="stop-button-3" style="display: none;" onclick="stopAudio('audio-player-3', 'play-button-3', 'stop-button-3', 'duration-3')">Stop</button>
-                <span id="duration-3" class="duration">00:00</span>
-            </div>
-        </div>
-        <div class="card" id="card-2">
-            <h2>In the Quiet of the Night</h2>
-            <h3>Serenity</h3>
-            <div class="audio-controls">
-                <button id="play-button-2" onclick="playAudio('audio-player-2', 'play-button-2', 'stop-button-2', 'duration-2')">Play</button>
-                <button id="stop-button-2" style="display: none;" onclick="stopAudio('audio-player-2', 'play-button-2', 'stop-button-2', 'duration-2')">Stop</button>
-                <span id="duration-2" class="duration">00:00</span>
-            </div>
-        </div>
-        <div class="card" id="card-1">
-            <h2>I Can Hear You Sigh</h2>
-            <h3>Yearning</h3>
-            <div class="audio-controls">
-                <button id="play-button-1" onclick="playAudio('audio-player-1', 'play-button-1', 'stop-button-1', 'duration-1')">Play</button>
-                <button id="stop-button-1" style="display: none;" onclick="stopAudio('audio-player-1', 'play-button-1', 'stop-button-1', 'duration-1')">Stop</button>
-                <span id="duration-1" class="duration">00:00</span>
-            </div>
-        </div>
-        <div class="card" id="card-0">
-            <h2>Every Morning You're My First Thought</h2>
-            <h3>Our Bond</h3>
-            <div class="audio-controls">
-                <button id="play-button-0" onclick="playAudio('audio-player-0', 'play-button-0', 'stop-button-0', 'duration-0')">Play</button>
-                <button id="stop-button-0" style="display: none;" onclick="stopAudio('audio-player-0', 'play-button-0', 'stop-button-0', 'duration-0')">Stop</button>
-                <span id="duration-0" class="duration">00:00</span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="footer">© 2024 Ramona And Sanuu</div>
-    
-    <button class="floating-play-button" id="play-all-button">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 5v14l11-7L8 5z" fill="currentColor"/>
-        </svg>
-    </button>
+            <audio id="audio-player-4" src="https://files.catbox.moe/pfyz4c.mp3"></audio>
+<audio id="audio-player-5" src="https://files.catbox.moe/b9qeze.mp3"></audio>
+<audio id="audio-player-6" src="https://files.catbox.moe/fi5uo9.mp3"></audio>
+<audio id="audio-player-7" src="https://files.catbox.moe/rhqx45.mp3"></audio>
 
-    <button class="fab-menu-button" id="fab-menu-button">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2a1 1 0 011 1v8h8a1 1 0 110 2h-8v8a1 1 0 11-2 0v-8H3a1 1 0 110-2h8V3a1 1 0 011-1z" fill="currentColor"/>
-        </svg>
-    </button>
-    
-    <div class="fab-menu" id="fab-menu">
-        <button id="dark-mode-toggle">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7v14z" fill="currentColor"/>
-            </svg>
-        </button>
-    </div>
+<script>
+    let currentAudio = null;
 
-    <audio id="audio-player-0" src="https://files.catbox.moe/85nbi1.mp3"></audio>
-    <audio id="audio-player-1" src="https://files.catbox.moe/zk5g5m.mp3"></audio>
-    <audio id="audio-player-2" src="https://files.catbox.moe/egu6lg.mp3"></audio>
-    <audio id="audio-player-3" src="https://files.catbox.moe/xcoogq.mp3"></audio>
-    <audio id="audio-player-4" src="https://files.catbox.moe/pfyz4c.mp3"></audio>
-    <audio id="audio-player-5" src="https://files.catbox.moe/b9qeze.mp3"></audio>
-    <audio id="audio-player-6" src="https://files.catbox.moe/fi5uo9.mp3"></audio>
-    <audio id="audio-player-7" src="https://files.catbox.moe/rhqx45.mp3"></audio>
+    function playAudio(audioId, playButtonId, stopButtonId, durationId) {
+        const audio = document.getElementById(audioId);
+        const playButton = document.getElementById(playButtonId);
+        const stopButton = document.getElementById(stopButtonId);
+        const duration = document.getElementById(durationId);
 
-    <script>
-        let currentAudio = null;
-
-        function playAudio(audioId, playButtonId, stopButtonId, durationId) {
-            const audio = document.getElementById(audioId);
-            const playButton = document.getElementById(playButtonId);
-            const stopButton = document.getElementById(stopButtonId);
-            const duration = document.getElementById(durationId);
-
-            if (currentAudio && currentAudio.element !== audio) {
-                stopAudio(currentAudio.id, currentAudio.playButton, currentAudio.stopButton, currentAudio.duration);
-            }
-
-            audio.play();
-            playButton.style.display = 'none';
-            stopButton.style.display = 'inline';
-            duration.style.display = 'block';
-
-            currentAudio = {
-                id: audioId,
-                playButton: playButtonId,
-                stopButton: stopButtonId,
-                duration: durationId,
-                element: audio
-            };
-
-            audio.ontimeupdate = function() {
-                const minutes = Math.floor(audio.currentTime / 60);
-                const seconds = Math.floor(audio.currentTime % 60);
-                duration.innerText = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-            };
-
-            audio.onended = function() {
-                stopAudio(audioId, playButtonId, stopButtonId, durationId);
-            };
+        if (currentAudio && currentAudio.element !== audio) {
+            stopAudio(currentAudio.id, currentAudio.playButton, currentAudio.stopButton, currentAudio.duration);
         }
 
-        function stopAudio(audioId, playButtonId, stopButtonId, durationId) {
-            const audio = document.getElementById(audioId);
-            const playButton = document.getElementById(playButtonId);
-            const stopButton = document.getElementById(stopButtonId);
-            const duration = document.getElementById(durationId);
+        audio.play();
+        playButton.style.display = 'none';
+        stopButton.style.display = 'inline';
+        duration.style.display = 'block';
 
-            audio.pause();
-            audio.currentTime = 0;
-            playButton.style.display = 'inline';
-            stopButton.style.display = 'none';
-            duration.style.display = 'none';
-            duration.innerText = '00:00';
+        currentAudio = {
+            id: audioId,
+            playButton: playButtonId,
+            stopButton: stopButtonId,
+            duration: durationId,
+            element: audio
+        };
 
-            if (currentAudio && currentAudio.id === audioId) {
-                currentAudio = null;
-            }
+        audio.ontimeupdate = function() {
+            const minutes = Math.floor(audio.currentTime / 60);
+            const seconds = Math.floor(audio.currentTime % 60);
+            duration.innerText = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        };
+
+        audio.onended = function() {
+            stopAudio(audioId, playButtonId, stopButtonId, durationId);
+        };
+    }
+
+    function stopAudio(audioId, playButtonId, stopButtonId, durationId) {
+        const audio = document.getElementById(audioId);
+        const playButton = document.getElementById(playButtonId);
+        const stopButton = document.getElementById(stopButtonId);
+        const duration = document.getElementById(durationId);
+
+        audio.pause();
+        audio.currentTime = 0;
+        playButton.style.display = 'inline';
+        stopButton.style.display = 'none';
+        duration.style.display = 'none';
+        duration.innerText = '00:00';
+
+        if (currentAudio && currentAudio.id === audioId) {
+            currentAudio = null;
         }
+    }
 
-        document.getElementById('play-all-button').addEventListener('click', function() {
-            const playButtonSvg = this.querySelector('svg path');
-            if (currentAudio) {
-                stopAudio(currentAudio.id, currentAudio.playButton, currentAudio.stopButton, currentAudio.duration);
-                playButtonSvg.setAttribute('d', 'M8 5v14l11-7-11-7z');
-                return;
+    document.getElementById('play-all-button').addEventListener('click', function() {
+        const playButtonSvg = this.querySelector('svg path');
+        if (currentAudio) {
+            stopAudio(currentAudio.id, currentAudio.playButton, currentAudio.stopButton, currentAudio.duration);
+            playButtonSvg.setAttribute('d', 'M8 5v14l11-7-11-7z');
+            return;
+        }
+        playSequentially(0);
+        playButtonSvg.setAttribute('d', 'M6 19h12V5H6v14z');
+    });
+
+    function playSequentially(index) {
+        const audios = document.querySelectorAll('audio');
+        if (index >= audios.length) return;
+        const audio = audios[index];
+        audio.play();
+        currentAudio = {
+            id: audio.id,
+            element: audio,
+            playButton: null,
+            stopButton: null,
+            duration: null
+        };
+        audio.onended = function() {
+            playSequentially(index + 1);
+        };
+    }
+
+    document.getElementById('fab-menu-button').addEventListener('click', function() {
+        document.getElementById('fab-menu').classList.toggle('show');
+    });
+
+    document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+        const darkModeEnabled = document.body.classList.toggle('light-mode');
+        localStorage.setItem('darkMode', darkModeEnabled ? 'enabled' : 'disabled');
+
+        // Apply card color based on dark mode state
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            if (darkModeEnabled) {
+                card.style.backgroundColor = 'var(--light-surface-color)';
+            } else {
+                card.style.backgroundColor = 'var(--surface-color)';
             }
-            playSequentially(0);
-            playButtonSvg.setAttribute('d', 'M6 19h12V5H6v14z');
         });
+    });
 
-        function playSequentially(index) {
-            const audios = document.querySelectorAll('audio');
-            if (index >= audios.length) return;
-            const audio = audios[index];
-            audio.play();
-            currentAudio = {
-                id: audio.id,
-                element: audio,
-                playButton: null,
-                stopButton: null,
-                duration: null
-            };
-            audio.onended = function() {
-                playSequentially(index + 1);
-            };
+    function checkDarkMode() {
+        const darkMode = localStorage.getItem('darkMode');
+        if (darkMode === 'enabled') {
+            document.body.classList.add('light-mode');
+            applyLightModeStyles();
         }
+    }
 
-        document.getElementById('fab-menu-button').addEventListener('click', function() {
-            document.getElementById('fab-menu').classList.toggle('show');
+    function applyLightModeStyles() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.style.backgroundColor = 'var(--light-surface-color)';
         });
+    }
 
-        document.getElementById('dark-mode-toggle').addEventListener('click', function() {
-            const darkModeEnabled = document.body.classList.toggle('light-mode');
-            localStorage.setItem('darkMode', darkModeEnabled ? 'enabled' : 'disabled');
-        });
-
-        function checkDarkMode() {
-            const darkMode = localStorage.getItem('darkMode');
-            if (darkMode === 'enabled') {
-                document.body.classList.add('light-mode');
-            }
-        }
-
-        checkDarkMode();
-    </script>
+    checkDarkMode();
+</script>
 </body>
 </html>
