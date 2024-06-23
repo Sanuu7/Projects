@@ -12,8 +12,12 @@
             --surface-color: #1f1b24;
             --on-primary-color: #ffffff;
             --on-surface-color: #e0e0e0;
+            --light-background-color: #ffffff;
+            --light-surface-color: #f1f1f1;
+            --light-on-primary-color: #6200ea;
+            --light-on-surface-color: #000000;
         }
-        
+
         body {
             margin: 0;
             padding: 0;
@@ -26,6 +30,7 @@
             align-items: center;
             min-height: 100vh;
             text-align: center;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
@@ -108,23 +113,61 @@
             background-color: var(--primary-color);
             color: var(--on-primary-color);
             border: none;
-            border-radius: 50%;
+            border-radius: 16px;
             width: 60px;
             height: 60px;
-            font-size: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+
+        .floating-button svg {
+            width: 32px;
+            height: 32px;
         }
 
         .floating-button:hover {
             background-color: var(--secondary-color);
         }
+
+        .fab-menu {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .fab-menu button {
+            background-color: var(--surface-color);
+            color: var(--on-surface-color);
+            border: none;
+            border-radius: 16px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+
+        .fab-menu button:hover {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+        }
+
+        .show {
+            display: flex !important;
+        }
     </style>
 </head>
-<body>
+<body onload="checkDarkMode()">
     <div class="container">
         <div class="card" id="card-7">
             <h2>Timeless Connection</h2>
@@ -164,7 +207,7 @@
         </div>
         <div class="card" id="card-3">
             <h2>Overthinking</h2>
-            <h3>Mind Maze</h3>
+            <h3>Pondering</h3>
             <div class="audio-controls">
                 <button id="play-button-3" onclick="playAudio('audio-player-3', 'play-button-3', 'stop-button-3', 'duration-3')">Play</button>
                 <button id="stop-button-3" style="display: none;" onclick="stopAudio('audio-player-3', 'play-button-3', 'stop-button-3', 'duration-3')">Stop</button>
@@ -176,147 +219,135 @@
             <h3>Serenity</h3>
             <div class="audio-controls">
                 <button id="play-button-2" onclick="playAudio('audio-player-2', 'play-button-2', 'stop-button-2', 'duration-2')">Play</button>
-                <button id="stop-button-2" style="display: none;" onclick="stopAudio('audio-player-2', 'play-button-2', 'stop-button-2', 'duration-2')">Stop</button>
-                <span id="duration-2" class="duration">00:00</span>
-            </div>
-        </div>
-        <div class="card" id="card-1">
-            <h2>I Can Hear You Sigh</h2>
-            <h3>A Whisper</h3>
-            <div class="audio-controls">
-                <button id="play-button-1" onclick="playAudio('audio-player-1', 'play-button-1', 'stop-button-1', 'duration-1')">Play</button>
-                <button id="stop-button-1" style="display: none;" onclick="stopAudio('audio-player-1', 'play-button-1', 'stop-button-1', 'duration-1')">Stop</button>
-                <span id="duration-1" class="duration">00:00</span>
+                               <button id="stop-button-0" style="display: none;" onclick="stopAudio('audio-player-0', 'play-button-0', 'stop-button-0', 'duration-0')">Stop</button>
+                <span id="duration-0" class="duration">00:00</span>
             </div>
         </div>
     </div>
-    <div class="footer">
-        <p>&copy; 2024 Ramona And Sanuu</p>
+    
+    <div class="footer">© 2024 Ramona And Sanuu</div>
+    
+    <button class="floating-button" id="play-all-button">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5v14l11-7L8 5z" fill="currentColor"/>
+        </svg>
+    </button>
+
+    <div class="fab-menu" id="fab-menu">
+        <button id="dark-mode-toggle">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7v14z" fill="currentColor"/>
+            </svg>
+        </button>
     </div>
 
-    <audio id="audio-player-7">
-        <source src="https://files.catbox.moe/rhqx45.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-        </audio>
-<audio id="audio-player-6">
-    <source src="https://files.catbox.moe/fi5uo9.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
-<audio id="audio-player-5">
-    <source src="https://files.catbox.moe/b9qeze.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
-<audio id="audio-player-4">
-    <source src="https://files.catbox.moe/pfyz4c.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
-<audio id="audio-player-3">
-    <source src="https://files.catbox.moe/xcoogq.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
-<audio id="audio-player-2">
-    <source src="https://files.catbox.moe/egu6lg.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
-<audio id="audio-player-1">
-    <source src="https://files.catbox.moe/zk5g5m.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
+    <audio id="audio-player-0" src="https://files.catbox.moe/85nbi1.mp3"></audio>
+    <audio id="audio-player-1" src="https://files.catbox.moe/zk5g5m.mp3"></audio>
+    <audio id="audio-player-2" src="https://files.catbox.moe/egu6lg.mp3"></audio>
+    <audio id="audio-player-3" src="https://files.catbox.moe/xcoogq.mp3"></audio>
+    <audio id="audio-player-4" src="https://files.catbox.moe/pfyz4c.mp3"></audio>
+    <audio id="audio-player-5" src="https://files.catbox.moe/b9qeze.mp3"></audio>
+    <audio id="audio-player-6" src="https://files.catbox.moe/fi5uo9.mp3"></audio>
+    <audio id="audio-player-7" src="https://files.catbox.moe/rhqx45.mp3"></audio>
 
-<button class="floating-button" id="floating-play-button" onclick="togglePlayPause()">&#9658;</button>
+    <script>
+        let currentAudio = null;
 
-<script>
-    const audioPlayers = [
-        document.getElementById('audio-player-7'),
-        document.getElementById('audio-player-6'),
-        document.getElementById('audio-player-5'),
-        document.getElementById('audio-player-4'),
-        document.getElementById('audio-player-3'),
-        document.getElementById('audio-player-2'),
-        document.getElementById('audio-player-1')
-    ];
-    const durations = [
-        document.getElementById('duration-7'),
-        document.getElementById('duration-6'),
-        document.getElementById('duration-5'),
-        document.getElementById('duration-4'),
-        document.getElementById('duration-3'),
-        document.getElementById('duration-2'),
-        document.getElementById('duration-1')
-    ];
-    let currentAudioIndex = 0;
+        function playAudio(audioId, playButtonId, stopButtonId, durationId) {
+            const audio = document.getElementById(audioId);
+            const playButton = document.getElementById(playButtonId);
+            const stopButton = document.getElementById(stopButtonId);
+            const duration = document.getElementById(durationId);
 
-    function playAudio(audioId, playBtnId, stopBtnId, durationId) {
-        audioPlayers.forEach(audio => audio.pause());
-        durations.forEach(duration => duration.style.display = 'none');
+            if (currentAudio && currentAudio !== audio) {
+                stopAudio(currentAudio.id, currentAudio.playButton, currentAudio.stopButton, currentAudio.duration);
+            }
 
-        const audioPlayer = document.getElementById(audioId);
-        const playButton = document.getElementById(playBtnId);
-        const stopButton = document.getElementById(stopBtnId);
-        const duration = document.getElementById(durationId);
+            audio.play();
+            playButton.style.display = 'none';
+            stopButton.style.display = 'inline';
+            duration.style.display = 'block';
 
-        audioPlayer.currentTime = 0;
-        audioPlayer.play();
-        playButton.style.display = 'none';
-        stopButton.style.display = 'inline-block';
-        duration.style.display = 'block';
+            currentAudio = {
+                id: audioId,
+                playButton: playButtonId,
+                stopButton: stopButtonId,
+                duration: durationId,
+                element: audio
+            };
 
-        audioPlayer.ontimeupdate = () => {
-            const minutes = Math.floor(audioPlayer.currentTime / 60);
-            const seconds = Math.floor(audioPlayer.currentTime % 60);
-            duration.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        };
-    }
+            audio.ontimeupdate = function() {
+                const minutes = Math.floor(audio.currentTime / 60);
+                const seconds = Math.floor(audio.currentTime % 60);
+                duration.innerText = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+            };
 
-    function stopAudio(audioId, playBtnId, stopBtnId, durationId) {
-        const audioPlayer = document.getElementById(audioId);
-        const playButton = document.getElementById(playBtnId);
-        const stopButton = document.getElementById(stopBtnId);
-        const duration = document.getElementById(durationId);
-
-        audioPlayer.pause();
-        audioPlayer.currentTime = 0;
-        stopButton.style.display = 'none';
-        playButton.style.display = 'inline-block';
-        duration.style.display = 'none';
-        duration.textContent = '00:00';
-    }
-
-    function playNextAudio() {
-        audioPlayers[currentAudioIndex].pause();
-        durations[currentAudioIndex].style.display = 'none';
-
-        currentAudioIndex = (currentAudioIndex + 1) % audioPlayers.length;
-        const nextAudio = audioPlayers[currentAudioIndex];
-        const nextDuration = durations[currentAudioIndex];
-        const playButton = document.getElementById(`play-button-${currentAudioIndex + 1}`);
-        const stopButton = document.getElementById(`stop-button-${currentAudioIndex + 1}`);
-
-        nextAudio.currentTime = 0;
-        nextAudio.play();
-        playButton.style.display = 'none';
-        stopButton.style.display = 'inline-block';
-        nextDuration.style.display = 'block';
-
-        nextAudio.ontimeupdate = () => {
-            const minutes = Math.floor(nextAudio.currentTime / 60);
-            const seconds = Math.floor(nextAudio.currentTime % 60);
-            nextDuration.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        };
-
-        nextAudio.onended = playNextAudio;
-    }
-
-    function togglePlayPause() {
-        const floatingPlayButton = document.getElementById('floating-play-button');
-        if (audioPlayers[currentAudioIndex].paused) {
-            floatingPlayButton.innerHTML = '&#10074;&#10074;';
-            playNextAudio();
-        } else {
-            floatingPlayButton.innerHTML = '&#9658;';
-            audioPlayers[currentAudioIndex].pause();
+            audio.onended = function() {
+                stopAudio(audioId, playButtonId, stopButtonId, durationId);
+            };
         }
-    }
-</script>
+
+        function stopAudio(audioId, playButtonId, stopButtonId, durationId) {
+            const audio = document.getElementById(audioId);
+            const playButton = document.getElementById(playButtonId);
+            const stopButton = document.getElementById(stopButtonId);
+            const duration = document.getElementById(durationId);
+
+            audio.pause();
+            audio.currentTime = 0;
+            playButton.style.display = 'inline';
+            stopButton.style.display = 'none';
+            duration.style.display = 'none';
+            duration.innerText = '00:00';
+
+            if (currentAudio && currentAudio.id === audioId) {
+                currentAudio = null;
+            }
+        }
+
+        document.getElementById('play-all-button').addEventListener('click', function() {
+            const playButtonSvg = this.querySelector('svg path');
+            if (currentAudio) {
+                stopAudio(currentAudio.id, currentAudio.playButton, currentAudio.stopButton, currentAudio.duration);
+                playButtonSvg.setAttribute('d', 'M8 5v14l11-7-11-7z');
+                return;
+            }
+            playSequentially(0);
+            playButtonSvg.setAttribute('d', 'M6 19h12V5H6v14z');
+        });
+
+        function playSequentially(index) {
+            const audios = document.querySelectorAll('audio');
+            if (index >= audios.length) return;
+            const audio = audios[index];
+            audio.play();
+            currentAudio = {
+                id: audio.id,
+                element: audio,
+                playButton: null,
+                stopButton: null,
+                duration: null
+            };
+            audio.onended = function() {
+                playSequentially(index + 1);
+            };
+        }
+
+        document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+            const darkModeEnabled = document.body.classList.toggle('light-mode');
+            localStorage.setItem('darkMode', darkModeEnabled ? 'enabled' : 'disabled');
+        });
+
+        function checkDarkMode() {
+            const darkMode = localStorage.getItem('darkMode');
+            if (darkMode === 'enabled') {
+                document.body.classList.add('light-mode');
+            }
+        }
+
+        document.querySelector('.floating-button').addEventListener('click', function() {
+            document.getElementById('fab-menu').classList.toggle('show');
+        });
+    </script>
 </body>
 </html>
