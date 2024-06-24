@@ -198,89 +198,97 @@
         </div>
     </div>
     <div class="footer">
-                <p>&copy; 2024 Ramona And Sanuu</p>
-    </div>
+    <p>&copy; 2024 Ramona And Sanuu</p>
+</div>
 
-    <audio id="audio-player-7">
-        <source src="https://files.catbox.moe/7.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="audio-player-6">
-        <source src="https://files.catbox.moe/6.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="audio-player-5">
-        <source src="https://files.catbox.moe/5.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="audio-player-4">
-        <source src="https://files.catbox.moe/4.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="audio-player-3">
-        <source src="https://files.catbox.moe/3.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="audio-player-2">
-        <source src="https://files.catbox.moe/2.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="audio-player-1">
-        <source src="https://files.catbox.moe/1.mp3" type="audio/mpeg">
-    </audio>
+<audio id="audio-player-7">
+    <source src="https://files.catbox.moe/7.mp3" type="audio/mpeg">
+</audio>
+<audio id="audio-player-6">
+    <source src="https://files.catbox.moe/6.mp3" type="audio/mpeg">
+</audio>
+<audio id="audio-player-5">
+    <source src="https://files.catbox.moe/5.mp3" type="audio/mpeg">
+</audio>
+<audio id="audio-player-4">
+    <source src="https://files.catbox.moe/4.mp3" type="audio/mpeg">
+</audio>
+<audio id="audio-player-3">
+    <source src="https://files.catbox.moe/3.mp3" type="audio/mpeg">
+</audio>
+<audio id="audio-player-2">
+    <source src="https://files.catbox.moe/2.mp3" type="audio/mpeg">
+</audio>
+<audio id="audio-player-1">
+    <source src="https://files.catbox.moe/1.mp3" type="audio/mpeg">
+</audio>
 
-    <button class="floating-button" onclick="togglePlayAll()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 5v14l11-7z"/>
-        </svg>
-    </button>
+<button class="floating-button" onclick="togglePlayAll()">
+    <svg id="floating-button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path id="play-icon" d="M8 5v14l11-7z"/>
+        <path id="pause-icon" d="M6 19h4V5H6zm8-14v14h4V5z" style="display: none;"/>
+    </svg>
+</button>
 
-    <script>
-        let isPlayingAll = false;
-        const audioPlayers = [
-            document.getElementById('audio-player-1'),
-            document.getElementById('audio-player-2'),
-            document.getElementById('audio-player-3'),
-            document.getElementById('audio-player-4'),
-            document.getElementById('audio-player-5'),
-            document.getElementById('audio-player-6'),
-            document.getElementById('audio-player-7')
-        ];
+<script>
+    let isPlayingAll = false;
+    const audioPlayers = [
+        document.getElementById('audio-player-1'),
+        document.getElementById('audio-player-2'),
+        document.getElementById('audio-player-3'),
+        document.getElementById('audio-player-4'),
+        document.getElementById('audio-player-5'),
+        document.getElementById('audio-player-6'),
+        document.getElementById('audio-player-7')
+    ];
 
-        function playAudio(playerId, playButtonId, stopButtonId, durationId) {
-            const player = document.getElementById(playerId);
-            const playButton = document.getElementById(playButtonId);
-            const stopButton = document.getElementById(stopButtonId);
-            const duration = document.getElementById(durationId);
+    function playAudio(playerId, playButtonId, stopButtonId, durationId) {
+        const player = document.getElementById(playerId);
+        const playButton = document.getElementById(playButtonId);
+        const stopButton = document.getElementById(stopButtonId);
+        const duration = document.getElementById(durationId);
 
-            player.play();
-            playButton.style.display = 'none';
-            stopButton.style.display = 'inline-block';
-            duration.style.display = 'inline-block';
+        player.play();
+        playButton.style.display = 'none';
+        stopButton.style.display = 'inline-block';
+        duration.style.display = 'inline-block';
 
-            player.ontimeupdate = () => {
-                const minutes = Math.floor(player.currentTime / 60);
-                const seconds = Math.floor(player.currentTime % 60);
-                duration.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-            };
+        player.ontimeupdate = () => {
+            const minutes = Math.floor(player.currentTime / 60);
+            const seconds = Math.floor(player.currentTime % 60);
+            duration.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        };
+    }
+
+    function stopAudio(playerId, playButtonId, stopButtonId, durationId) {
+        const player = document.getElementById(playerId);
+        const playButton = document.getElementById(playButtonId);
+        const stopButton = document.getElementById(stopButtonId);
+        const duration = document.getElementById(durationId);
+
+        player.pause();
+        player.currentTime = 0;
+        playButton.style.display = 'inline-block';
+        stopButton.style.display = 'none';
+        duration.style.display = 'none';
+    }
+
+    function togglePlayAll() {
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+
+        if (isPlayingAll) {
+            audioPlayers.forEach(player => player.pause());
+            isPlayingAll = false;
+            playIcon.style.display = 'inline';
+            pauseIcon.style.display = 'none';
+        } else {
+            audioPlayers.forEach(player => player.play());
+            isPlayingAll = true;
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline';
         }
-
-        function stopAudio(playerId, playButtonId, stopButtonId, durationId) {
-            const player = document.getElementById(playerId);
-            const playButton = document.getElementById(playButtonId);
-            const stopButton = document.getElementById(stopButtonId);
-            const duration = document.getElementById(durationId);
-
-            player.pause();
-            player.currentTime = 0;
-            playButton.style.display = 'inline-block';
-            stopButton.style.display = 'none';
-            duration.style.display = 'none';
-        }
-
-        function togglePlayAll() {
-            if (isPlayingAll) {
-                audioPlayers.forEach(player => player.pause());
-                isPlayingAll = false;
-            } else {
-                audioPlayers.forEach(player => player.play());
-                isPlayingAll = true;
-            }
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
