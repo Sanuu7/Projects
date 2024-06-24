@@ -1,381 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Music Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>My Music Showcase</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
+        :root {
+            --primary-color: #6200ea;
+            --secondary-color: #bb86fc;
+            --background-color: #121212;
+            --surface-color: #1f1b24;
+            --on-primary-color: #ffffff;
+            --on-surface-color: #e0e0e0;
+        }
+        
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #121212;
-            color: #FFFFFF;
             margin: 0;
             padding: 0;
-            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--on-surface-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
         }
 
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
+            width: 90%;
+            max-width: 600px;
             padding: 20px;
         }
 
         .card {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            background-color: #1F1F1F;
+            background-color: var(--surface-color);
             border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
         }
 
         .card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #BB86FC;
+            color: var(--secondary-color);
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
         }
 
         .card h3 {
-            font-size: 1rem;
-            margin-bottom: 20px;
-            color: #A8A8A8;
+            color: var(--secondary-color);
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: 400;
         }
 
         .audio-controls {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
         }
 
         .audio-controls button {
-            padding: 10px;
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
             border: none;
-            border-radius: 50%;
-            background-color: #BB86FC;
-            color: #FFFFFF;
+            border-radius: 24px;
+            padding: 10px 20px;
             cursor: pointer;
+            font-size: 16px;
             transition: background-color 0.3s;
+            margin-bottom: 10px;
         }
 
         .audio-controls button:hover {
-            background-color: #9E6CFD;
+            background-color: var(--secondary-color);
         }
 
         .duration {
-            color: #A8A8A8;
-        }
-
-        .footer {
-            text-align: center;
-            margin: 20px 0;
-            color: #A8A8A8;
-        }
-
-        .floating-play-button,
-        .fab-menu-button {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            background-color: #BB86FC;
-            color: white;
-            border: none;
-            border-radius: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            cursor: pointer;
-        }
-
-        .floating-play-button {
-            bottom: 20px;
-            right: 20px;
-        }
-
-        .fab-menu-button {
-            bottom: 20px;
-            left: 20px;
-        }
-
-        .fab-menu {
-            position: fixed;
-            bottom: 100px;
-            left: 20px;
-            z-index: 1000;
+            font-size: 14px;
+            color: var(--on-surface-color);
+            margin-top: 10px;
             display: none;
         }
 
-        .fab-menu.show {
-            display: block;
+        .footer {
+            margin-top: 40px;
+            color: var(--secondary-color);
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 10px;
         }
 
-        .fab-menu button {
-            width: 40px;
-            height: 40px;
-            background-color: #BB86FC;
-            color: white;
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
             border: none;
             border-radius: 50%;
-            margin-bottom: 10px;
+            width: 60px;
+            height: 60px;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
         }
 
-        .light-mode .card {
-            background-color: #FFFFFF;
-            color: #000000;
+        .floating-button:hover {
+            background-color: var(--secondary-color);
         }
 
-        .light-mode .card h2 {
-            color: #6200EA;
-        }
-
-        .light-mode .card h3 {
-            color: #424242;
-        }
-
-        .light-mode {
-            background-color: #FFFFFF;
-            color: #000000;
-        }
-
-        .light-mode .footer {
-            color: #424242;
+        .floating-button svg {
+            fill: var(--on-primary-color);
+            width: 30px;
+            height: 30px;
         }
     </style>
 </head>
-
-<body class="dark-mode">
-    <div class="container" id="card-container">
-        <!-- Cards will be dynamically added here -->
+<body>
+    <div class="container">
+        <div class="card" id="card-7">
+            <h2>Timeless Connection</h2>
+            <h3>Eternal</h3>
+            <div class="audio-controls">
+                <button id="play-button-7" onclick="playAudio('audio-player-7', 'play-button-7', 'stop-button-7', 'duration-7')">Play</button>
+                <button id="stop-button-7" style="display: none;" onclick="stopAudio('audio-player-7', 'play-button-7', 'stop-button-7', 'duration-7')">Stop</button>
+                <span id="duration-7" class="duration">00:00</span>
+            </div>
+        </div>
+        <div class="card" id="card-6">
+            <h2>Soul Mate</h2>
+            <h3>Kindred Spirits</h3>
+            <div class="audio-controls">
+                <button id="play-button-6" onclick="playAudio('audio-player-6', 'play-button-6', 'stop-button-6', 'duration-6')">Play</button>
+                <button id="stop-button-6" style="display: none;" onclick="stopAudio('audio-player-6', 'play-button-6', 'stop-button-6', 'duration-6')">Stop</button>
+                <span id="duration-6" class="duration">00:00</span>
+            </div>
+        </div>
+        <div class="card" id="card-5">
+            <h2>I Don't Wanna Lose You</h2>
+            <h3>Heartfelt</h3>
+            <div class="audio-controls">
+                <button id="play-button-5" onclick="playAudio('audio-player-5', 'play-button-5', 'stop-button-5', 'duration-5')">Play</button>
+                <button id="stop-button-5" style="display: none;" onclick="stopAudio('audio-player-5', 'play-button-5', 'stop-button-5', 'duration-5')">Stop</button>
+                <span id="duration-5" class="duration">00:00</span>
+            </div>
+        </div>
+        <div class="card" id="card-4">
+            <h2>Missing You Tonight</h2>
+            <h3>Longing</h3>
+            <div class="audio-controls">
+                <button id="play-button-4" onclick="playAudio('audio-player-4', 'play-button-4', 'stop-button-4', 'duration-4')">Play</button>
+                <button id="stop-button-4" style="display: none;" onclick="stopAudio('audio-player-4', 'play-button-4', 'stop-button-4', 'duration-4')">Stop</button>
+                <span id="duration-4" class="duration">00:00</span>
+            </div>
+        </div>
+        <div class="card" id="card-3">
+            <h2>Overthinking</h2>
+            <h3>Mind Maze</h3>
+            <div class="audio-controls">
+                <button id="play-button-3" onclick="playAudio('audio-player-3', 'play-button-3', 'stop-button-3', 'duration-3')">Play</button>
+                <button id="stop-button-3" style="display: none;" onclick="stopAudio('audio-player-3', 'play-button-3', 'stop-button-3', 'duration-3')">Stop</button>
+                <span id="duration-3" class="duration">00:00</span>
+            </div>
+        </div>
+        <div class="card" id="card-2">
+            <h2>In the Quiet of the Night</h2>
+            <h3>Serenity</h3>
+            <div class="audio-controls">
+                <button id="play-button-2" onclick="playAudio('audio-player-2', 'play-button-2', 'stop-button-2', 'duration-2')">Play</button>
+                <button id="stop-button-2" style="display: none;" onclick="stopAudio('audio-player-2', 'play-button-2', 'stop-button-2', 'duration-2')">Stop</button>
+                <span id="duration-2" class="duration">00:00</span>
+            </div>
+        </div>
+        <div class="card" id="card-1">
+            <h2>I Can Hear You Sigh</h2>
+            <h3>A Whisper</h3>
+            <div class="audio-controls">
+                <button id="play-button-1" onclick="playAudio('audio-player-1', 'play-button-1', 'stop-button-1', 'duration-1')">Play</button>
+                <button id="stop-button-1" style="display: none;" onclick="stopAudio('audio-player-1', 'play-button-1', 'stop-button-1', 'duration-1')">Stop</button>
+                <span id="duration-1" class="duration">00:00</span>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+                <p>&copy; 2024 Ramona And Sanuu</p>
     </div>
 
-    <div class="footer">© 2024 Ramona And Sanuu</div>
+    <audio id="audio-player-7">
+        <source src="https://files.catbox.moe/7.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-player-6">
+        <source src="https://files.catbox.moe/6.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-player-5">
+        <source src="https://files.catbox.moe/5.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-player-4">
+        <source src="https://files.catbox.moe/4.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-player-3">
+        <source src="https://files.catbox.moe/3.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-player-2">
+        <source src="https://files.catbox.moe/2.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-player-1">
+        <source src="https://files.catbox.moe/1.mp3" type="audio/mpeg">
+    </audio>
 
-    <!-- Floating play button -->
-    <button class="floating-play-button" id="play-all-button" onclick="togglePlayAll()">
-        <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-            <path d="M8 5v14l11-7-11-7z"></path>
-        </svg>
-        <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24" style="display:none;">
-            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
+    <button class="floating-button" onclick="togglePlayAll()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
         </svg>
     </button>
 
-    <!-- Fab menu button -->
-    <button class="fab-menu-button" id="fab-menu-button" onclick="toggleFabMenu()">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2a1 1 0 011 1v8h8a1 1 0 110 2h-8v8a1 1 0 11-2 0v-8H3a1 1 0 110-2h8V3a1 1 0 011-1z" fill="currentColor"></path>
-        </svg>
-    </button>
-
-    <!-- Fab menu -->
-    <div class="fab-menu" id="fab-menu">
-        <button id="dark-mode-toggle" onclick="toggleDarkMode()">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7v14z" fill="currentColor"></path>
-            </svg>
-        </button>
-    </div>
-
-    <!-- JavaScript -->
     <script>
-        let currentAudio = null;
-        let playAllInterval = null;
+        let isPlayingAll = false;
+        const audioPlayers = [
+            document.getElementById('audio-player-1'),
+            document.getElementById('audio-player-2'),
+            document.getElementById('audio-player-3'),
+            document.getElementById('audio-player-4'),
+            document.getElementById('audio-player-5'),
+            document.getElementById('audio-player-6'),
+            document.getElementById('audio-player-7')
+        ];
 
-        function togglePlayPause(audioId, buttonId) {
-            const audio = document.getElementById(audioId);
-            const button = document.getElementById(buttonId);
+        function playAudio(playerId, playButtonId, stopButtonId, durationId) {
+            const player = document.getElementById(playerId);
+            const playButton = document.getElementById(playButtonId);
+            const stopButton = document.getElementById(stopButtonId);
+            const duration = document.getElementById(durationId);
 
-            if (audio.paused) {
-                playAudio(audioId, buttonId);
-            } else {
-                pauseAudio(audioId, buttonId);
-            }
+            player.play();
+            playButton.style.display = 'none';
+            stopButton.style.display = 'inline-block';
+            duration.style.display = 'inline-block';
+
+            player.ontimeupdate = () => {
+                const minutes = Math.floor(player.currentTime / 60);
+                const seconds = Math.floor(player.currentTime % 60);
+                duration.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+            };
         }
 
-        function playAudio(audioId, buttonId) {
-            const audio = document.getElementById(audioId);
-            const button = document.getElementById(buttonId);
+        function stopAudio(playerId, playButtonId, stopButtonId, durationId) {
+            const player = document.getElementById(playerId);
+            const playButton = document.getElementById(playButtonId);
+            const stopButton = document.getElementById(stopButtonId);
+            const duration = document.getElementById(durationId);
 
-            if (currentAudio && currentAudio !== audio) {
-                pauseAudio(currentAudio.id, currentAudio.buttonId);
-            }
-
-            audio.play();
-            button.textContent = 'Pause';
-            button.setAttribute('onclick', `pauseAudio('${audioId}', '${buttonId}')`);
-            document.getElementById(`stop-button-${audioId.slice(-1)}`).style.display = 'inline-block'; // Show stop button
-            currentAudio = audio;
-            updateDuration(audioId);
-        }
-
-        function pauseAudio(audioId, buttonId) {
-            const audio = document.getElementById(audioId);
-            const button = document.getElementById(buttonId);
-
-            audio.pause();
-            button.textContent = 'Play';
-            button.setAttribute('onclick', `playAudio('${audioId}', '${buttonId}')`);
-        }
-
-        function stopAudio(audioId, buttonId) {
-            const audio = document.getElementById(audioId);
-            const button = document.getElementById(buttonId);
-
-            audio.pause();
-            audio.currentTime = 0;
-            button.textContent = 'Play';
-            button.setAttribute('onclick', `playAudio('${audioId}', '${buttonId}')`);
-            document.getElementById(`stop-button-${audioId.slice(-1)}`).style.display = 'none'; // Hide stop button
-        }
-
-        function updateDuration(audioId) {
-            const audio = document.getElementById(audioId);
-            const durationElement = document.getElementById(`duration-${audioId.slice(-1)}`);
-
-            audio.addEventListener('timeupdate', () => {
-                const minutes = Math.floor(audio.currentTime / 60);
-                const seconds = Math.floor(audio.currentTime % 60);
-                durationElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-                durationElement.style.display = 'inline-block';
-            });
+            player.pause();
+            player.currentTime = 0;
+            playButton.style.display = 'inline-block';
+            stopButton.style.display = 'none';
+            duration.style.display = 'none';
         }
 
         function togglePlayAll() {
-            const playIcon = document.getElementById('play-icon');
-            const pauseIcon = document.getElementById('pause-icon');
-
-                            if (playAllInterval) {
-                    clearInterval(playAllInterval);
-                    playAllInterval = null;
-                    pauseAll();
-                    playIcon.style.display = 'block';
-                    pauseIcon.style.display = 'none';
-                } else {
-                    playNext();
-                    playAllInterval = setInterval(playNext, 1000); // Adjust interval as needed
-                    playIcon.style.display = 'none';
-                    pauseIcon.style.display = 'block';
-                }
+            if (isPlayingAll) {
+                audioPlayers.forEach(player => player.pause());
+                isPlayingAll = false;
+            } else {
+                audioPlayers.forEach(player => player.play());
+                isPlayingAll = true;
             }
-
-            function playNext() {
-                const audios = document.querySelectorAll('audio');
-                let foundCurrent = false;
-
-                for (let i = 0; i < audios.length; i++) {
-                    if (audios[i] === currentAudio) {
-                        foundCurrent = true;
-                    } else if (foundCurrent) {
-                        playAudio(audios[i].id, `play-pause-button-${audios[i].id.slice(-1)}`);
-                        return;
-                    }
-                }
-
-                if (!foundCurrent && audios.length > 0) {
-                    playAudio(audios[0].id, `play-pause-button-${audios[0].id.slice(-1)}`);
-                }
-            }
-
-            function pauseAll() {
-                const audios = document.querySelectorAll('audio');
-                audios.forEach(audio => {
-                    audio.pause();
-                });
-            }
-
-            function toggleFabMenu() {
-                const fabMenu = document.getElementById('fab-menu');
-                fabMenu.classList.toggle('show');
-            }
-
-            function toggleDarkMode() {
-                const body = document.body;
-                const darkModeToggle = document.getElementById('dark-mode-toggle');
-
-                body.classList.toggle('light-mode');
-                if (body.classList.contains('light-mode')) {
-                    localStorage.setItem('theme', 'light');
-                    darkModeToggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7v14z" fill="currentColor"></path></svg>';
-                } else {
-                    localStorage.setItem('theme', 'dark');
-                    darkModeToggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a1 1 0 011 1v8h8a1 1 0 110 2h-8v8a1 1 0 11-2 0v-8H3a1 1 0 110-2h8V3a1 1 0 011-1z" fill="currentColor"></path></svg>';
-                }
-            }
-
-            function loadTheme() {
-                const theme = localStorage.getItem('theme');
-                if (theme === 'light') {
-                    document.body.classList.add('light-mode');
-                } else {
-                    document.body.classList.add('dark-mode');
-                }
-            }
-
-            document.addEventListener('DOMContentLoaded', () => {
-                loadTheme();
-
-                const songs = [
-                    { title: "Missing You Tonight", artist: "Artist 1", src: "https://files.catbox.moe/pfyz4c.mp3" },
-                    { title: "I Don't Wanna Lose You", artist: "Artist 2", src: "https://files.catbox.moe/b9qeze.mp3" },
-                    { title: "Soulmate", artist: "Artist 3", src: "https://files.catbox.moe/fi5uo9.mp3" },
-                    { title: "Timeless Connection", artist: "Artist 4", src: "https://files.catbox.moe/rhqx45.mp3" }
-                ];
-
-                const cardContainer = document.getElementById('card-container');
-
-                songs.forEach((song, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-
-                    const title = document.createElement('h2');
-                    title.textContent = song.title;
-
-                    const artist = document.createElement('h3');
-                    artist.textContent = song.artist;
-
-                    const audio = document.createElement('audio');
-                    audio.id = `audio-${index + 1}`;
-                    audio.src = song.src;
-
-                    const audioControls = document.createElement('div');
-                    audioControls.className = 'audio-controls';
-
-                    const playPauseButton = document.createElement('button');
-                    playPauseButton.id = `play-pause-button-${index + 1}`;
-                    playPauseButton.textContent = 'Play';
-                    playPauseButton.setAttribute('onclick', `togglePlayPause('audio-${index + 1}', 'play-pause-button-${index + 1}')`);
-
-                    const stopButton = document.createElement('button');
-                    stopButton.id = `stop-button-${index + 1}`;
-                    stopButton.textContent = 'Stop';
-                    stopButton.style.display = 'none';
-                    stopButton.setAttribute('onclick', `stopAudio('audio-${index + 1}', 'play-pause-button-${index + 1}')`);
-
-                    const duration = document.createElement('span');
-                    duration.id = `duration-${index + 1}`;
-                    duration.className = 'duration';
-                    duration.style.display = 'none';
-
-                    audioControls.appendChild(playPauseButton);
-                    audioControls.appendChild(stopButton);
-                    audioControls.appendChild(duration);
-
-                    card.appendChild(title);
-                    card.appendChild(artist);
-                    card.appendChild(audio);
-                    card.appendChild(audioControls);
-
-                    cardContainer.appendChild(card);
-                });
-            });
+        }
     </script>
 </body>
 </html>
