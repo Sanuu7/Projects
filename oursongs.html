@@ -126,6 +126,16 @@
 </head>
 <body>
     <div class="container">
+        <div class="card" id="card-9">
+            <h2>I love you for a thousand years</h2>
+            <h3>Eternal Love</h3>
+            <div class="audio-controls">
+                <button id="play-button-9" onclick="playAudio('audio-player-9', 'play-button-9', 'stop-button-9', 'duration-9')">Play</button>
+                <button id="stop-button-9" style="display: none;" onclick="stopAudio('audio-player-9', 'play-button-9', 'stop-button-8', 'duration-9')">Stop</button>
+                <span id="duration-9" class="duration">00:00</span>
+            </div>
+        </div>
+    <div class="container">
         <div class="card" id="card-8">
             <h2>The Heart Beats Fast</h2>
             <h3>Rythms of Passion</h3>
@@ -204,6 +214,10 @@
         <p>&copy; 2024 Ramona And Sanuu</p>
     </div>
 
+        <audio id="audio-player-9">
+        <source src="https://files.catbox.moe/cdg2i2.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+        </audio>
         <audio id="audio-player-8">
         <source src="https://files.catbox.moe/336oot.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
