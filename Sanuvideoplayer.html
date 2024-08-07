@@ -1,76 +1,94 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Video Player</title>
+    <title>Netflix-style Video Player</title>
     <style>
-        body {
+        body, html {
             margin: 0;
             padding: 0;
+            height: 100%;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
+            color: #fff;
         }
         .video-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
+            height: 100%;
+            overflow: hidden;
         }
         video {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
         }
         .controls {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background-color: rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+            padding: 20px;
+        }
+        .top-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
+            margin-bottom: 10px;
         }
-        .controls button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        .time {
-            color: white;
-            font-size: 14px;
+        .center-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
         }
         .bottom-controls {
             display: flex;
             justify-content: space-between;
-            width: 100%;
-            padding-top: 10px;
+            align-items: center;
         }
-        .bottom-controls button {
-            font-size: 18px;
+        .control-button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+        .time-display {
+            font-size: 14px;
+            margin-left: auto;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="video-container">
         <video id="myVideo" src="https://files.catbox.moe/csp0mq.mp4"></video>
+        <button class="back-button">←</button>
         <div class="controls">
-            <button onclick="skip(-10)">⏪</button>
-            <button id="playPause" onclick="playPause()">▶</button>
-            <button onclick="skip(10)">⏩</button>
-            <span class="time" id="currentTime">0:03 / 01:26:55</span>
+            <div class="top-controls">
+                <button class="control-button" onclick="skip(-10)">⟲10</button>
+                <button class="control-button" id="playPause" onclick="playPause()">▶</button>
+                <button class="control-button" onclick="skip(10)">10⟳</button>
+                <span class="time-display" id="currentTime">0:03 / 01:26:55</span>
+            </div>
             <div class="bottom-controls">
-                <button>☁️</button>
-                <button>💬</button>
-                <button>🔊</button>
-                <button>⤢</button>
+                <button class="control-button">☁</button>
+                <button class="control-button">💬</button>
+                <button class="control-button">🔊</button>
+                <button class="control-button">⤢</button>
             </div>
         </div>
     </div>
@@ -95,16 +113,14 @@
         }
 
         function updateTime() {
-            const minutes = Math.floor(video.currentTime / 60);
-            const seconds = Math.floor(video.currentTime % 60);
+            const currentMinutes = Math.floor(video.currentTime / 60);
+            const currentSeconds = Math.floor(video.currentTime % 60);
             const totalMinutes = Math.floor(video.duration / 60);
             const totalSeconds = Math.floor(video.duration % 60);
-            currentTimeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')} / ${totalMinutes}:${totalSeconds.toString().padStart(2, '0')}`;
+            currentTimeDisplay.textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')} / ${totalMinutes}:${totalSeconds.toString().padStart(2, '0')}`;
         }
 
         video.addEventListener('timeupdate', updateTime);
     </script>
 </body>
 </html>
-
-```
