@@ -1,0 +1,110 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Video Player</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+        }
+        video {
+            width: 100%;
+            height: auto;
+        }
+        .controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+        .controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .time {
+            color: white;
+            font-size: 14px;
+        }
+        .bottom-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding-top: 10px;
+        }
+        .bottom-controls button {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video id="myVideo" src="https://files.catbox.moe/csp0mq.mp4"></video>
+        <div class="controls">
+            <button onclick="skip(-10)">⏪</button>
+            <button id="playPause" onclick="playPause()">▶</button>
+            <button onclick="skip(10)">⏩</button>
+            <span class="time" id="currentTime">0:03 / 01:26:55</span>
+            <div class="bottom-controls">
+                <button>☁️</button>
+                <button>💬</button>
+                <button>🔊</button>
+                <button>⤢</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('myVideo');
+        const playPauseButton = document.getElementById('playPause');
+        const currentTimeDisplay = document.getElementById('currentTime');
+
+        function playPause() {
+            if (video.paused) {
+                video.play();
+                playPauseButton.innerHTML = '⏸';
+            } else {
+                video.pause();
+                playPauseButton.innerHTML = '▶';
+            }
+        }
+
+        function skip(seconds) {
+            video.currentTime += seconds;
+        }
+
+        function updateTime() {
+            const minutes = Math.floor(video.currentTime / 60);
+            const seconds = Math.floor(video.currentTime % 60);
+            const totalMinutes = Math.floor(video.duration / 60);
+            const totalSeconds = Math.floor(video.duration % 60);
+            currentTimeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')} / ${totalMinutes}:${totalSeconds.toString().padStart(2, '0')}`;
+        }
+
+        video.addEventListener('timeupdate', updateTime);
+    </script>
+</body>
+</html>
+
+```
