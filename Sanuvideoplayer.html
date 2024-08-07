@@ -65,9 +65,10 @@
             height: 4px;
             background-color: rgba(255,255,255,0.3);
             position: relative;
+            cursor: pointer;
         }
         .progress {
-            width: 30%;
+            width: 0%;
             height: 100%;
             background-color: #E50914;
         }
@@ -113,10 +114,10 @@
         <video id="myVideo" src="https://files.catbox.moe/csp0mq.mp4"></video>
         <div class="controls">
             <div class="top-bar">
-                <svg class="icon" viewBox="0 0 24 24">
+                <svg class="icon" viewBox="0 0 24 24" id="backButton">
                     <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                 </svg>
-                <div class="title">Leonidas the sucker!</div>
+                <div class="title">S1:E1 "Days Gone Bye"</div>
                 <div class="top-buttons">
                     <svg class="icon" viewBox="0 0 24 24">
                         <path d="M9 21h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.58 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2zM9 9l4.34-4.34L12 10h9v2l-3 7H9V9zM1 9h4v12H1z"/>
@@ -130,21 +131,21 @@
                 </div>
             </div>
             <div class="center-controls">
-                <svg class="icon large-icon" viewBox="0 0 24 24">
-                    <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm-1.1 11h-.85v-3.26l-1.01.31v-.69l1.77-.63h.09V16zm4.28-1.76c0 .32-.03.6-.1.82s-.17.42-.29.57-.28.26-.45.33-.37.1-.59.1-.41-.03-.59-.1s-.33-.18-.46-.33-.23-.34-.3-.57-.11-.5-.11-.82v-.74c0-.32.03-.6.1-.82s.17-.42.29-.57.28-.26.45-.33.37-.1.59-.1.41.03.59.1.33.18.46.33.23.34.3.57.11.5.11.82v.74zm-.85-.86c0-.19-.01-.35-.04-.48s-.07-.23-.12-.31-.11-.14-.19-.17-.16-.05-.25-.05-.18.02-.25.05-.14.09-.19.17-.09.18-.12.31-.04.29-.04.48v.97c0 .19.01.35.04.48s.07.24.12.32.11.14.19.17.16.05.25.05.18-.02.25-.05.14-.09.19-.17.09-.19.11-.32.04-.29.04-.48v-.97z"/>
+                <svg class="icon large-icon" viewBox="0 0 24 24" id="rewindButton">
+                    <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
                 </svg>
-                <svg class="icon large-icon" viewBox="0 0 24 24">
+                <svg class="icon large-icon" viewBox="0 0 24 24" id="playPauseButton">
                     <path d="M8 5v14l11-7z"/>
                 </svg>
-                <svg class="icon large-icon" viewBox="0 0 24 24">
+                <svg class="icon large-icon" viewBox="0 0 24 24" id="forwardButton">
                     <path d="M18.92 13c-.5 0-.91.37-.98.86-.48 3.37-3.77 5.84-7.42 4.96-2.25-.54-3.91-2.27-4.39-4.53C5.32 10.42 8.27 7 12 7v3l4-4-4-4v3c-4.97 0-9 4.03-9 9s4.03 9 9 9c4.63 0 8.44-3.5 8.9-8 .02-.19-.13-.39-.33-.46-.12-.05-.25-.07-.37-.07-.28 0-.54.15-.68.39z"/>
                 </svg>
             </div>
             <div class="bottom-controls">
-                <div class="progress-bar">
-                    <div class="progress"></div>
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress" id="progress"></div>
                 </div>
-                <div class="time-display">0:03 / 01:26:55</div>
+                <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
                 <div class="bottom-buttons">
                     <svg class="icon" viewBox="0 0 24 24">
                         <path d="M10 8v8l6-4-6-4zm4.82 1.82L16 11l-1.18 1.18L13.64 13 15 14.36l2.82-2.82L19 12.72 17.54 14l1.46 1.46 2.82-2.82L22 13.36l-3.18-3.18L17 8.36l-2.18 2.18zM4 18h3v-3H4v3zm0-5h3v-3H4v3zm0-5h3V5H4v3zm5 10h3v-3H9v3zm0-5h3v-3H9v3zm0-5h3V5H9v3z"/>
@@ -168,5 +169,59 @@
             <div class="brightness-level"></div>
         </div>
     </div>
+
+    <script>
+        const video = document.getElementById('myVideo');
+        const playPauseButton = document.getElementById('playPauseButton');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const rewindButton = document.getElementById('rewindButton');
+        const forwardButton = document.getElementById('forwardButton');
+        const backButton = document.getElementById('backButton');
+
+        function togglePlayPause() {
+            if (video.paused) {
+                video.play();
+                playPauseButton.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+            } else {
+                video.pause();
+                playPauseButton.innerHTML = '<path d="M8 5v14l11-7z"/>';
+            }
+        }
+
+        function updateProgress() {
+            const percent = (video.currentTime / video.duration) * 100;
+            progress.style.width = `${percent}%`;
+            timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+        }
+
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60);
+            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function seek(e) {
+            const rect = progressBar.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / progressBar.offsetWidth;
+            video.currentTime = pos * video.duration;
+        }
+
+        function skip(duration) {
+            video.currentTime += duration;
+        }
+
+        playPauseButton.addEventListener('click', togglePlayPause);
+        video.addEventListener('timeupdate', updateProgress);
+        progressBar.addEventListener('click', seek);
+        rewindButton.addEventListener('click', () => skip(-10));
+        forwardButton.addEventListener('click', () => skip(10));
+        backButton.addEventListener('click', () => window.history.back());
+
+        video.addEventListener('loadedmetadata', () => {
+            timeDisplay.textContent = `0:00 / ${formatTime(video.duration)}`;
+        });
+    </script>
 </body>
 </html>
