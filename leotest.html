@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leo's Exclusive Subscription Plans</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --primary-color-light: #4285f4;
+            --surface-color: #ffffff;
+            --background-color: #f8f9fa;
+            --text-color: #202124;
+            --button-background: #1a73e8;
+            --button-text: #ffffff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            color: var(--primary-color);
+        }
+
+        .plan {
+            border: 1px solid var(--primary-color-light);
+            border-radius: 16px;
+            background-color: var(--surface-color);
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+        }
+
+        .plan-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .price {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+
+        .description {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .subscribe-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            color: var(--button-text);
+            background-color: var(--button-background);
+            border: none;
+            border-radius: 24px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .subscribe-button:hover {
+            background-color: var(--primary-color-light);
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode-toggle span {
+            color: var(--primary-color);
+        }
+
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 80px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12);
+        }
+
+        .popup {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--surface-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 16px;
+            padding: 15px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .popup h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .popup p {
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .discover-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: var(--button-text);
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12);
+        }
+
+        .discover-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+    <h1>Leo's Exclusive Subscription Plans</h1>
+    <div class="plan">
+        <div class="plan-title">Free Tier</div>
+        <div class="price">FREE</div>
+        <div class="description">Get ignored and experience top-notch attitude. Because why not?</div>
+        <a href="#" class="subscribe-button">Get Ignored</a>
+    </div>
+    <div class="plan">
+        <div class="plan-title">$50 Tier</div>
+        <div class="price">$50</div>
+        <div class="description">Talk with Leo. Yes, you read that right. Actual words from the man himself.</div>
+        <a href="#" class="subscribe-button">Talk with Leo</a>
+    </div>
+    <div class="plan">
+        <div class="plan-title">$100 Tier</div>
+        <div class="price">$100</div>
+        <div class="description">Talk with Leo while he smiles. Because you deserve a little happiness.</div>
+        <a href="#" class="subscribe-button">Talk with a Smile</a>
+    </div>
+    <div class="plan">
+        <div class="plan-title">$200 Tier</div>
+        <div class="price">$200</div>
+        <div class="description">Get thanks along with other perks. Finally, some recognition!</div>
+        <a href="#" class="subscribe-button">Get Thanks</a>
+    </div>
+    <div class="plan">
+        <div class="plan-title">$500 Tier</div>
+        <div class="price">$500</div>
+        <div class="description">Leo personally acknowledges your existence. You'll never forget it!</div>
+        <a href="#" class="subscribe-button">Get Acknowledged</a>
+    </div>
+    <div class="plan">
+        <div class="plan-title">$1000 Tier</div>
+        <div class="price">$1000</div>
+        <div class="description">Spend an entire hour with Leo where he might even listen to you.</div>
+        <a href="#" class="subscribe-button">Get Listened To</a>
+    </div>
+    <div class="plan">
+        <div class="plan-title">$5000 Tier</div>
+        <div class="price">$5000</div>
+        <div class="description">A day with Leo where he pretends to be interested in your life. Wow!</div>
+        <a href="#" class="subscribe-button">Get Pretended Interest</a>
+    </div>
+
+    <button class="floating-button" onclick="togglePopup()">?</button>
+
+    <div class="popup" id="termsPopup">
+        <h2>Terms & Conditions</h2>
+        <p>Only selected questions may be asked...otherwise Leonidas might get upset and not be able to sleep. Your trivial queries could disrupt the cosmic balance of his zen.</p>
+        <p>Additional information: If you have purchased an animal and Leonidas does not feel well, you will not get your money back. Not even a cent. Instead, consider this a lesson in the art of emotional resilience.</p>
+        <p>More nuggets of wisdom: Our support team reserves the right to ignore complaints delivered via carrier pigeon, smoke signals, or overly enthusiastic semaphore.</p>
+        <p>If you want to invite Leonidas to dinner, the minimum is $100...you will receive an extra smile. For $200, you get a normal thank you, and for $300, he says 'Thank you Sanukey'. But for very special customers, we have the luxury lunch package for $500. A 'Thank you Sanukey' with a smile and as a bonus, a 'How are you'.</p>
+        <p>Lastly, remember: Any attempts to out-sarcasm Leonidas will be met with a polite but firm eye roll. Proceed at your own peril.</p>
+    </div>
+
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()"><span>🌙</span></button>
+
+    <a href="https://sanuu7.github.io/Projects/leodes.html" class="discover-button" title="Discover">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+    </a>
+
+    <script>
+        function toggleDarkMode() {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            if (currentTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "light");
+            } else {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        }
+
+        function togglePopup() {
+            var popup = document.getElementById('termsPopup');
+            if (popup.style.display === 'none' || popup.style.display === '') {
+                popup.style.display = 'block';
+            } else {
+                popup.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
