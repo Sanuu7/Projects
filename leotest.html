@@ -6,23 +6,26 @@
     <title>Leo's Exclusive Subscription Plans</title>
     <style>
         :root {
-            --primary-color: #1a73e8;
-            --primary-color-light: #4285f4;
-            --surface-color: #ffffff;
-            --background-color: #f8f9fa;
-            --text-color: #202124;
-            --button-background: #1a73e8;
-            --button-text: #ffffff;
+            --primary-color: #BB86FC;
+            --primary-variant: #3700B3;
+            --secondary-color: #03DAC6;
+            --background: #121212;
+            --surface: #1E1E1E;
+            --error: #CF6679;
+            --on-primary: #000000;
+            --on-secondary: #000000;
+            --on-background: #FFFFFF;
+            --on-surface: #FFFFFF;
+            --on-error: #000000;
         }
 
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            background-color: var(--background);
+            color: var(--on-background);
             margin: 0;
             padding: 20px;
             text-align: center;
-            transition: background-color 0.3s, color 0.3s;
         }
 
         h1 {
@@ -30,14 +33,13 @@
         }
 
         .plan {
-            border: 1px solid var(--primary-color-light);
+            background-color: var(--surface);
             border-radius: 16px;
-            background-color: var(--surface-color);
             margin: 20px auto;
             padding: 20px;
             width: 80%;
             max-width: 500px;
-            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .plan-title {
@@ -48,20 +50,21 @@
 
         .price {
             font-size: 20px;
-            color: var(--primary-color);
+            color: var(--secondary-color);
         }
 
         .description {
             font-size: 16px;
             margin: 10px 0;
+            color: var(--on-surface);
         }
 
         .subscribe-button {
             display: inline-block;
             margin-top: 20px;
             padding: 10px 20px;
-            color: var(--button-text);
-            background-color: var(--button-background);
+            color: var(--on-primary);
+            background-color: var(--primary-color);
             border: none;
             border-radius: 24px;
             text-decoration: none;
@@ -71,23 +74,7 @@
         }
 
         .subscribe-button:hover {
-            background-color: var(--primary-color-light);
-        }
-
-        .dark-mode-toggle {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: 2px solid var(--primary-color);
-            border-radius: 20px;
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .dark-mode-toggle span {
-            color: var(--primary-color);
+            background-color: var(--primary-variant);
         }
 
         .floating-button {
@@ -95,7 +82,7 @@
             bottom: 20px;
             right: 80px;
             background-color: var(--primary-color);
-            color: white;
+            color: var(--on-primary);
             border: none;
             border-radius: 50%;
             width: 56px;
@@ -105,19 +92,19 @@
             align-items: center;
             font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .popup {
             position: fixed;
             bottom: 20px;
             left: 20px;
-            background-color: var(--surface-color);
+            background-color: var(--surface);
             border: 1px solid var(--primary-color);
             border-radius: 16px;
             padding: 15px;
             width: 300px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: none;
         }
 
@@ -128,7 +115,7 @@
 
         .popup p {
             font-size: 14px;
-            color: var(--text-color);
+            color: var(--on-surface);
         }
 
         .discover-button {
@@ -136,7 +123,7 @@
             bottom: 20px;
             right: 20px;
             background-color: var(--primary-color);
-            color: var(--button-text);
+            color: var(--on-primary);
             border: none;
             border-radius: 50%;
             width: 56px;
@@ -145,7 +132,7 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .discover-button svg {
@@ -211,8 +198,6 @@
         <p>Lastly, remember: Any attempts to out-sarcasm Leonidas will be met with a polite but firm eye roll. Proceed at your own peril.</p>
     </div>
 
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()"><span>🌙</span></button>
-
     <a href="https://sanuu7.github.io/Projects/leodes.html" class="discover-button" title="Discover">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
@@ -220,15 +205,6 @@
     </a>
 
     <script>
-        function toggleDarkMode() {
-            const currentTheme = document.documentElement.getAttribute("data-theme");
-            if (currentTheme === "dark") {
-                document.documentElement.setAttribute("data-theme", "light");
-            } else {
-                document.documentElement.setAttribute("data-theme", "dark");
-            }
-        }
-
         function togglePopup() {
             var popup = document.getElementById('termsPopup');
             if (popup.style.display === 'none' || popup.style.display === '') {
