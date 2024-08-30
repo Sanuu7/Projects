@@ -74,13 +74,26 @@
         .play-pause-btn {
             background-color: var(--primary-color);
             border: none;
-            border-radius: 50%;
+            border-radius: 12px;
             width: 40px;
             height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-pause-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 12px;
+            box-shadow: 0 0 0 4px var(--background-color);
         }
 
         .play-pause-btn svg {
@@ -127,54 +140,97 @@
             <img src="https://files.catbox.moe/gja4yj.jpeg" alt="Time's Embrace">
             <h3 class="song-title">Time's Embrace</h3>
             <div class="audio-player">
-                <audio id="audio" src="https://files.catbox.moe/sk7edy.mp4"></audio>
+                <audio src="https://files.catbox.moe/sk7edy.mp4"></audio>
                 <div class="audio-controls">
-                    <button class="play-pause-btn" onclick="togglePlay()">
-                        <svg viewBox="0 0 24 24" id="playPauseIcon">
+                    <button class="play-pause-btn">
+                        <svg viewBox="0 0 24 24" class="play-pause-icon">
                             <path d="M8 5v14l11-7z"/>
                         </svg>
                     </button>
-                    <input type="range" class="time-slider" value="0" max="100" oninput="seek()">
-                    <span class="time-display">0:13 / 3:46</span>
+                    <input type="range" class="time-slider" value="0" max="100">
+                    <span class="time-display">0:00 / 0:00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="playlist-item">
+            <img src="https://files.catbox.moe/915tfv.jpeg" alt="Dreamy Lullaby">
+            <h3 class="song-title">Dreamy Lullaby</h3>
+            <div class="audio-player">
+                <audio src="https://files.catbox.moe/jxvh9l.mp4"></audio>
+                <div class="audio-controls">
+                    <button class="play-pause-btn">
+                        <svg viewBox="0 0 24 24" class="play-pause-icon">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </button>
+                    <input type="range" class="time-slider" value="0" max="100">
+                    <span class="time-display">0:00 / 0:00</span>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const audio = document.getElementById('audio');
-        const playPauseBtn = document.querySelector('.play-pause-btn');
-        const playPauseIcon = document.getElementById('playPauseIcon');
-        const timeSlider = document.querySelector('.time-slider');
-        const timeDisplay = document.querySelector('.time-display');
+        const audioPlayers = document.querySelectorAll('.audio-player');
+        let currentPlayingIndex = -1;
 
-        function togglePlay() {
-            if (audio.paused) {
-                audio.play();
-                playPauseIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-            } else {
-                audio.pause();
-                playPauseIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+        audioPlayers.forEach((player, index) => {
+            const audio = player.querySelector('audio');
+            const playPauseBtn = player.querySelector('.play-pause-btn');
+            const playPauseIcon = player.querySelector('.play-pause-icon');
+            const timeSlider = player.querySelector('.time-slider');
+            const timeDisplay = player.querySelector('.time-display');
+
+            function togglePlay() {
+                if (currentPlayingIndex !== -1 && currentPlayingIndex !== index) {
+                    const prevAudio = audioPlayers[currentPlayingIndex].querySelector('audio');
+                    const prevPlayPauseIcon = audioPlayers[currentPlayingIndex].querySelector('.play-pause-icon');
+                    prevAudio.pause();
+                    prevPlayPauseIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                }
+
+                if (audio.paused) {
+                    audio.play();
+                    playPauseIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    currentPlayingIndex = index;
+                } else {
+                    audio.pause();
+                    playPauseIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    currentPlayingIndex = -1;
+                }
             }
-        }
 
-        function seek() {
-            const seekTime = audio.duration * (timeSlider.value / 100);
-            audio.currentTime = seekTime;
-        }
+            function seek() {
+                const seekTime = audio.duration * (timeSlider.value / 100);
+                audio.currentTime = seekTime;
+            }
 
-        function updateTimeDisplay() {
-            const currentMinutes = Math.floor(audio.currentTime / 60);
-            const currentSeconds = Math.floor(audio.currentTime % 60);
-            const durationMinutes = Math.floor(audio.duration / 60);
-            const durationSeconds = Math.floor(audio.duration % 60);
+            function updateTimeDisplay() {
+                const currentMinutes = Math.floor(audio.currentTime / 60);
+                const currentSeconds = Math.floor(audio.currentTime % 60);
+                const durationMinutes = Math.floor(audio.duration / 60) || 0;
+                const durationSeconds = Math.floor(audio.duration % 60) || 0;
 
-            timeDisplay.textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')} / ${durationMinutes}:${durationSeconds.toString().padStart(2, '0')}`;
-            timeSlider.value = (audio.currentTime / audio.duration) * 100;
-        }
+                timeDisplay.textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')} / ${durationMinutes}:${durationSeconds.toString().padStart(2, '0')}`;
+                timeSlider.value = (audio.currentTime / audio.duration) * 100 || 0;
+            }
 
-        audio.addEventListener('timeupdate', updateTimeDisplay);
-        audio.addEventListener('loadedmetadata', updateTimeDisplay);
+            playPauseBtn.addEventListener('click', togglePlay);
+            timeSlider.addEventListener('input', seek);
+            audio.addEventListener('timeupdate', updateTimeDisplay);
+            audio.addEventListener('loadedmetadata', updateTimeDisplay);
+
+            audio.addEventListener('ended', () => {
+                playPauseIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                const nextIndex = (index + 1) % audioPlayers.length;
+                const nextAudio = audioPlayers[nextIndex].querySelector('audio');
+                const nextPlayPauseIcon = audioPlayers[nextIndex].querySelector('.play-pause-icon');
+                nextAudio.play();
+                nextPlayPauseIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                currentPlayingIndex = nextIndex;
+            });
+        });
     </script>
 </body>
 </html>
