@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,6 +129,50 @@
             font-size: 0.8rem;
             color: var(--text-color);
         }
+
+        .controls-wrapper {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .control-btn {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 12px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .control-btn svg {
+            width: 15px;
+            height: 15px;
+            fill: var(--text-color);
+        }
+
+        .control-btn.active {
+            background-color: var(--secondary-color);
+        }
+
+        .visualization {
+            height: 50px;
+            background-color: rgba(149, 117, 205, 0.2);
+            margin-top: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .visualization-bar {
+            height: 100%;
+            width: 5px;
+            background-color: var(--primary-color);
+            display: inline-block;
+            margin-right: 2px;
+        }
     </style>
 </head>
 <body>
@@ -219,11 +264,72 @@
                 </div>
             </div>
         </div>
+
+        <div class="controls-wrapper">
+            <button class="control-btn shuffle-btn" title="Shuffle">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
+                </svg>
+            </button>
+            <button class="control-btn loop-btn" title="Loop">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="visualization">
+            <!-- Visualization bars will be added here dynamically -->
+        </div>
     </div>
 
     <script>
         const audioPlayers = document.querySelectorAll('.audio-player');
         let currentPlayingIndex = -1;
+        let isShuffled = false;
+        let shuffledOrder = [];
+        let isLooping = false;
+
+        const visualization = document.querySelector('.visualization');
+        const visualizationBarsCount = 50;
+        for (let i = 0; i < visualizationBarsCount; i++) {
+            const bar = document.createElement('div');
+            bar.classList.add('visualization-bar');
+            visualization.appendChild(bar);
+        }
+
+        function createShuffledOrder() {
+            shuffledOrder = Array.from(Array(audioPlayers.length).keys());
+            for (let i = shuffledOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledOrder[i], shuffledOrder[j]] = [shuffledOrder[j], shuffledOrder[i]];
+            }
+        }
+
+        function getNextIndex(currentIndex) {
+            if (isShuffled) {
+                const currentShuffledIndex = shuffledOrder.indexOf(currentIndex);
+                return shuffledOrder[(currentShuffledIndex + 1) % audioPlayers.length];
+            } else {
+                return (currentIndex + 1) % audioPlayers.length;
+            }
+        }
+
+        function fadeAudio(audio, startVolume, endVolume, duration) {
+            const fadeInterval = 50;
+            const volumeChange = (endVolume - startVolume) / (duration / fadeInterval);
+            let currentTime = 0;
+
+            const fadeTimer = setInterval(() => {
+                currentTime += fadeInterval;
+                audio.volume = Math.min(Math.max(startVolume + volumeChange * (currentTime / fadeInterval), 0), 1);
+
+                if (currentTime >= duration) {
+                    clearInterval(fadeTimer);
+                    audio.volume = endVolume;
+                }
+            }, fadeInterval);
+        }
 
         audioPlayers.forEach((player, index) => {
             const audio = player.querySelector('audio');
@@ -236,17 +342,25 @@
                 if (currentPlayingIndex !== -1 && currentPlayingIndex !== index) {
                     const prevAudio = audioPlayers[currentPlayingIndex].querySelector('audio');
                     const prevPlayPauseIcon = audioPlayers[currentPlayingIndex].querySelector('.play-pause-icon');
-                    prevAudio.pause();
-                    prevPlayPauseIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    fadeAudio(prevAudio, prevAudio.volume, 0, 1000);
+                    setTimeout(() => {
+                        prevAudio.pause();
+                        prevPlayPauseIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    }, 1000);
                 }
 
                 if (audio.paused) {
+                    audio.volume = 0;
                     audio.play();
+                    fadeAudio(audio, 0, 1, 1000);
                     playPauseIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
                     currentPlayingIndex = index;
                 } else {
-                    audio.pause();
-                    playPauseIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    fadeAudio(audio, audio.volume, 0, 1000);
+                    setTimeout(() => {
+                        audio.pause();
+                        playPauseIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    }, 1000);
                     currentPlayingIndex = -1;
                 }
             }
@@ -256,6 +370,9 @@
                 audio.currentTime = seekTime;
             }
 
+            function updateTimeDisplay() {
+                const currentMinutes = Math.floor(audio.currentTime / 60);
+                const currentSeconds = Math.floor
             function updateTimeDisplay() {
                 const currentMinutes = Math.floor(audio.currentTime / 60);
                 const currentSeconds = Math.floor(audio.currentTime % 60);
@@ -273,14 +390,99 @@
 
             audio.addEventListener('ended', () => {
                 playPauseIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-                const nextIndex = (index + 1) % audioPlayers.length;
-                const nextAudio = audioPlayers[nextIndex].querySelector('audio');
-                const nextPlayPauseIcon = audioPlayers[nextIndex].querySelector('.play-pause-icon');
-                nextAudio.play();
-                nextPlayPauseIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-                currentPlayingIndex = nextIndex;
+                if (isLooping) {
+                    audio.currentTime = 0;
+                    audio.play();
+                } else {
+                    const nextIndex = getNextIndex(index);
+                    const nextAudio = audioPlayers[nextIndex].querySelector('audio');
+                    const nextPlayPauseIcon = audioPlayers[nextIndex].querySelector('.play-pause-icon');
+                    nextAudio.play();
+                    nextPlayPauseIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    currentPlayingIndex = nextIndex;
+                }
             });
+
+            // Visualization
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function updateVisualization() {
+                requestAnimationFrame(updateVisualization);
+                analyser.getByteFrequencyData(dataArray);
+
+                const bars = visualization.children;
+                const step = Math.floor(bufferLength / bars.length);
+
+                for (let i = 0; i < bars.length; i++) {
+                    const value = dataArray[i * step];
+                    bars[i].style.height = `${value / 2}%`;
+                }
+            }
+
+            updateVisualization();
         });
+
+        // Shuffle button
+        const shuffleBtn = document.querySelector('.shuffle-btn');
+        shuffleBtn.addEventListener('click', () => {
+            isShuffled = !isShuffled;
+            shuffleBtn.classList.toggle('active');
+            if (isShuffled) {
+                createShuffledOrder();
+            }
+        });
+
+        // Loop button
+        const loopBtn = document.querySelector('.loop-btn');
+        loopBtn.addEventListener('click', () => {
+            isLooping = !isLooping;
+            loopBtn.classList.toggle('active');
+        });
+
+        // Local Storage
+        function saveToLocalStorage() {
+            const data = {
+                currentPlayingIndex,
+                isShuffled,
+                isLooping,
+                shuffledOrder
+            };
+            localStorage.setItem('betterSleepData', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const data = JSON.parse(localStorage.getItem('betterSleepData'));
+            if (data) {
+                currentPlayingIndex = data.currentPlayingIndex;
+                isShuffled = data.isShuffled;
+                isLooping = data.isLooping;
+                shuffledOrder = data.shuffledOrder;
+
+                if (isShuffled) {
+                    shuffleBtn.classList.add('active');
+                }
+                if (isLooping) {
+                    loopBtn.classList.add('active');
+                }
+                if (currentPlayingIndex !== -1) {
+                    const audio = audioPlayers[currentPlayingIndex].querySelector('audio');
+                    const playPauseIcon = audioPlayers[currentPlayingIndex].querySelector('.play-pause-icon');
+                    audio.play();
+                    playPauseIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                }
+            }
+        }
+
+        window.addEventListener('beforeunload', saveToLocalStorage);
+        loadFromLocalStorage();
     </script>
 </body>
 </html>
