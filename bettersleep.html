@@ -17,13 +17,12 @@
             background-color: var(--background-color);
             color: var(--text-color);
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
 
         .container {
             max-width: 400px;
             margin: 0 auto;
-            padding: 20px;
         }
 
         h1 {
@@ -32,11 +31,17 @@
             color: var(--primary-color);
         }
 
+        .subtitle {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
         .playlist-item {
             background-color: rgba(149, 117, 205, 0.1);
             border-radius: 15px;
             padding: 20px;
-            text-align: center;
             margin-top: 20px;
         }
 
@@ -44,6 +49,11 @@
             width: 100%;
             border-radius: 10px;
             margin-bottom: 10px;
+        }
+
+        .song-title {
+            font-size: 1.2rem;
+            margin: 10px 0;
         }
 
         .audio-player {
@@ -108,12 +118,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Sleep</h1>
-        <p>A project by Sanu</p>
+        <h1>Better Sleep</h1>
+        <p class="subtitle">A project by Sanu</p>
 
         <div class="playlist-item">
             <img src="https://files.catbox.moe/gja4yj.jpeg" alt="Time's Embrace">
-            <h3>Time's Embrace</h3>
+            <h3 class="song-title">Time's Embrace</h3>
             <div class="audio-player">
                 <audio id="audio" src="https://files.catbox.moe/sk7edy.mp4"></audio>
                 <div class="audio-controls">
@@ -123,7 +133,7 @@
                         </svg>
                     </button>
                     <input type="range" class="time-slider" value="0" max="100" oninput="seek()">
-                    <span class="time-display">0:00 / 3:46</span>
+                    <span class="time-display">0:13 / 3:46</span>
                 </div>
             </div>
         </div>
