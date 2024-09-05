@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number Generator</title>
+    <title>Roulette Gen</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -13,14 +13,16 @@
             background-color: #2c2f33; /* Dark Background */
             color: #FFFFFF;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             margin: 0;
         }
-        .container {
-            text-align: center;
-            padding: 20px;
+        .title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
         .number-display {
             font-size: 48px;
@@ -45,6 +47,7 @@
             background-color: #7a288a; /* Darker Purple */
             cursor: pointer;
             transition: background-color 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
         .generate-button:hover {
             background-color: #8b3ab5; /* Lighter Purple */
@@ -55,8 +58,8 @@
             fill: #FFFFFF;
         }
         @media (max-width: 600px) {
-            .container {
-                padding: 10px;
+            .title {
+                font-size: 24px;
             }
             .number-display {
                 font-size: 36px;
@@ -66,14 +69,13 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="number-display" id="numberDisplay"></div>
-        <div class="button-container">
-            <div class="generate-button" id="generateButton">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </div>
+    <div class="title">Roulette Gen</div>
+    <div class="number-display" id="numberDisplay"></div>
+    <div class="button-container">
+        <div class="generate-button" id="generateButton">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
         </div>
     </div>
 
@@ -87,19 +89,19 @@
             numberDisplay.textContent = randomNumber;
 
             // Random animation selection
-            const animations = ['pulse', 'shake', 'rotate', 'zoom', 'flip'];
+            const animations = ['pulse', 'shake', 'rotate', 'zoom', 'flip', 'bounce', 'flash'];
             const selectedAnimation = animations[Math.floor(Math.random() * animations.length)];
             numberDisplay.classList.add(selectedAnimation);
             setTimeout(() => {
                 numberDisplay.classList.remove(selectedAnimation);
-            }, 500);
+            }, 1000);
         });
 
         // Add animation CSS
         const style = document.createElement('style');
         style.textContent = `
             .pulse {
-                animation: pulse 0.5s ease;
+                animation: pulse 1s ease;
             }
             @keyframes pulse {
                 0% {
@@ -114,7 +116,7 @@
             }
 
             .shake {
-                animation: shake 0.5s ease;
+                animation: shake 1s ease;
             }
             @keyframes shake {
                 0% {
@@ -138,7 +140,7 @@
             }
 
             .rotate {
-                animation: rotate 0.5s ease;
+                animation: rotate 1s ease;
             }
             @keyframes rotate {
                 0% {
@@ -150,7 +152,7 @@
             }
 
             .zoom {
-                animation: zoom 0.5s ease;
+                animation: zoom 1s ease;
             }
             @keyframes zoom {
                 0% {
@@ -165,7 +167,7 @@
             }
 
             .flip {
-                animation: flip 0.5s ease;
+                animation: flip 1s ease;
             }
             @keyframes flip {
                 0% {
@@ -173,6 +175,30 @@
                 }
                 100% {
                     transform: rotateY(360deg);
+                }
+            }
+
+            .bounce {
+                animation: bounce 1s ease;
+            }
+            @keyframes bounce {
+                0%, 100% {
+                    transform: translateY(0);
+                }
+                50% {
+                    transform: translateY(-20px);
+                }
+            }
+
+            .flash {
+                animation: flash 1s ease;
+            }
+            @keyframes flash {
+                0%, 100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.5;
                 }
             }
         `;
