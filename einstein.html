@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini Chat</title>
+    <title>Einstein AI (Beta)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-         body {
+        body {
             font-family: 'Roboto', sans-serif;
             background-color: #121212;
             color: #e0e0e0;
@@ -16,20 +16,27 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            min-height: 100vh; /* Ensure full viewport height */
         }
-          .container {
-            max-width: 700px; /* Smaller max-width */
+        .container {
+             max-width: 700px;
             margin: 20px auto;
-            padding: 20px;
+             padding: 20px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            height: 100%; /* Container fills the space, not needed if it grows */
+            
         }
-          h1 {
-            font-weight: 500;
+           h1 {
+             font-weight: 500;
+             text-align: center;
+             margin-bottom: 5px;
+        }
+        h3{
+            font-weight: 300;
             text-align: center;
-            margin-bottom: 20px;
+             margin-bottom: 20px;
         }
         #chat-container {
             flex-grow: 1;
@@ -39,72 +46,69 @@
             margin-bottom: 15px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+             gap: 8px;
         }
         .user-message, .gemini-message {
             max-width: 80%;
-            padding: 12px;
+             padding: 12px;
             margin: 0;
-            border-radius: 20px;
+           border-radius: 20px;
             display: inline-block;
              word-wrap: break-word;
         }
         .user-message {
             background-color: #3700B3;
             color: #e0e0e0;
-            text-align: right;
+           text-align: right;
             align-self: flex-end;
              margin-left: auto;
         }
-
-       .gemini-message {
+        .gemini-message {
            background-color: #242424;
-           color: #e0e0e0;
-           text-align: left;
-           align-self: flex-start;
+            color: #e0e0e0;
+            text-align: left;
+             align-self: flex-start;
            margin-right: auto;
-       }
+        }
          .input-area {
             display: flex;
-            align-items: center;
-            padding: 10px;
+             align-items: center;
+             padding: 10px;
             margin-top: auto;
             background-color: #1e1e1e;
-            border-radius: 10px;
+             border-radius: 10px;
             gap: 10px;
         }
           textarea {
             flex-grow: 1;
-            background-color: transparent;
-            border: none;
-            padding: 10px;
-            color: #e0e0e0;
-            resize: none;
+             background-color: transparent;
+           border: none;
+           padding: 10px;
+             color: #e0e0e0;
+             resize: none;
             font-family: inherit;
-            outline: none;
-            font-size: 1.1rem;
+             outline: none;
+             font-size: 1.1rem;
         }
          button {
              background: none;
-             border: none;
-             padding: 8px;
+            border: none;
+            padding: 8px;
              cursor: pointer;
              display: flex;
-             justify-content: center;
-             align-items: center;
-             border-radius: 8px;
-             transition: background-color 0.3s ease;
-             
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
         }
         button:hover{
             background-color: #3700B320;
-        }
-        
+         }
          button svg{
              fill:#6200EE;
-           height: 30px;
-           width: 30px;
-         }
+            height: 30px;
+            width: 30px;
+        }
           .loading-indicator{
             text-align: center;
             margin: 10px 0;
@@ -115,7 +119,8 @@
 <body>
 
     <div class="container">
-        <h1>Gemini API Chat</h1>
+        <h1>Einstein AI (Beta)</h1>
+        <h3>A project by sanuu</h3>
         <div id="chat-container">
           <!-- Messages here -->
         </div>
@@ -131,71 +136,68 @@
     </div>
 
     <script>
-        const apiKey = "YOUR_GEMINI_API_KEY"; // <-- REPLACE WITH YOUR API KEY
-        const model = "gemini-pro"; // Replace with the model you want to use
-        
+        const apiKey = "AIzaSyA_5PC49gS_AHKQ_o4tIQt5U1NxTq488Ak"; // <-- REPLACE WITH YOUR API KEY
+        const model = "gemini-2.0-flash-exp"; // Replace with the model you want to use
+
         const chatContainer = document.getElementById("chat-container");
         const userInput = document.getElementById("user-input");
         const sendButton = document.getElementById("send-button");
-         const loadingIndicator = document.querySelector(".loading-indicator");
-        
+        const loadingIndicator = document.querySelector(".loading-indicator");
+
+
         sendButton.addEventListener('click', sendMessage);
-          userInput.addEventListener('keydown', function(event){
+         userInput.addEventListener('keydown', function(event){
            if(event.key === 'Enter' && !event.shiftKey){
              event.preventDefault();
              sendMessage();
            }
           });
-
-        function displayMessage(message, sender) {
-            const messageDiv = document.createElement("div");
-            messageDiv.textContent = message;
-            if(sender === "user"){
+         function displayMessage(message, sender) {
+             const messageDiv = document.createElement("div");
+                messageDiv.textContent = message;
+             if(sender === "user"){
                  messageDiv.classList.add("user-message");
             } else {
                 messageDiv.classList.add("gemini-message");
-            }
-          
-            chatContainer.appendChild(messageDiv);
-             chatContainer.scrollTop = chatContainer.scrollHeight; // Auto scroll to bottom
-         }
-       async function sendMessage(){
+             }
+             chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Auto scroll to bottom
+          }
+        async function sendMessage(){
             const userMessage = userInput.value;
             if(!userMessage.trim()){
               return;
             }
-            displayMessage(userMessage, "user");
+             displayMessage(userMessage, "user");
             userInput.value = "";
-            loadingIndicator.style.display = "block";
-            try {
+           loadingIndicator.style.display = "block";
+           try {
                  const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+model+":generateContent?key="+apiKey, {
-                    method: 'POST',
-                     headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                       contents: [{
-                           parts: [{ text: userMessage }],
-                       }],
+                     method: 'POST',
+                    headers: {
+                       'Content-Type': 'application/json',
+                     },
+                   body: JSON.stringify({
+                         contents: [{
+                            parts: [{ text: userMessage }],
+                         }],
                      }),
-                  });
-                if (!response.ok) {
-                      throw new Error(`HTTP error! status: ${response.status}`);
+                });
+              if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const data = await response.json();
+               const data = await response.json();
                 console.log("API Response:", data);
-
-                const geminiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if(geminiResponse){
+               const geminiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                 if(geminiResponse){
                      displayMessage(geminiResponse, "gemini");
                 } else {
-                   displayMessage("Sorry, I could not process your message.","gemini");
+                     displayMessage("Sorry, I could not process your message.","gemini");
                 }
-
 
           } catch (error) {
               console.error("Error communicating with the API:", error);
-             displayMessage("Error communicating with the API", "gemini");
+            displayMessage("Error communicating with the API", "gemini");
           } finally {
               loadingIndicator.style.display = "none";
           }
