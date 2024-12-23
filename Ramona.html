@@ -3,461 +3,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merry Christmas Ramona - Audio Player</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Modern Audio Player</title>
     <style>
-        :root {
-            --primary-color: #9C27B0;
-            --primary-light: #CE93D8;
-            --primary-dark: #6A1B9A;
-            --surface: #1C1B1F;
-            --on-surface: #E6E1E5;
-            --secondary: #CCC2DC;
-        }
-
-        * {
+        /* CSS Reset and Basic Styles */
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            background: var(--surface);
-            color: var(--on-surface);
+            font-family: sans-serif;
+            background-color: #1e1e1e; /* Dark background */
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+            overflow: hidden; /* Hide scrollbars due to snowflakes */
+            position: relative; /* For snowflake positioning */
         }
 
-        .snowflake {
-            position: fixed;
-            color: #fff;
-            font-size: 1em;
-            font-family: Arial;
-            text-shadow: 0 0 1px #000;
-            user-select: none;
-            z-index: 1;
-            animation: fall 10s linear infinite;
-        }
-
-        @keyframes fall {
-            0% {
-                opacity: 0;
-                transform: translateY(-20vh) rotate(0deg);
-            }
-            20% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(100vh) rotate(360deg);
-            }
-        }
-
+        /* Material You Inspired Player Container */
         .player-container {
-            background: rgba(156, 39, 176, 0.1);
-            backdrop-filter: blur(10px);
+            background-color: #2c2c3c; /* Slightly lighter background */
             border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            padding: 24px;
+            width: min(400px, 90vw);
             display: flex;
             flex-direction: column;
             align-items: center;
-            max-width: 800px;
-            width: 100%;
+            gap: 20px;
+            backdrop-filter: blur(10px); /* Optional blur */
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        .track-info {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .album-art {
-            width: 300px;
-            height: 300px;
+        /* Cover Art */
+        .cover-art {
+            width: 150px;
+            height: 150px;
             border-radius: 12px;
             overflow: hidden;
-            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .album-art img {
+        .cover-art img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .track-details {
-            flex: 1;
-            min-width: 280px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .track-title {
-            font-size: 2rem;
-            color: var(--primary-light);
-            margin-bottom: 0.5rem;
+        /* Song Info */
+        .song-info {
             text-align: center;
         }
 
-        .track-artist {
-            font-size: 1.2rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-            text-align: center;
+        .song-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 4px;
         }
 
-        .player-controls {
-            background: rgba(156, 39, 176, 0.2);
-            padding: 1rem;
-            border-radius: 12px;
+        .artist-name {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        /* Controls */
+        .controls {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 1rem;
-            width: 100%;
-        }
-
-        .control-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
+            gap: 16px;
         }
 
         .control-button {
-            background: var(--primary-color);
+            background: none;
             border: none;
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
+            color: #fff;
+            font-size: 1.5em;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
+            opacity: 0.8;
+            transition: opacity 0.2s ease-in-out;
         }
 
         .control-button:hover {
-            background: var(--primary-dark);
-            transform: scale(1.1);
+            opacity: 1;
         }
 
+        /* Progress Bar */
         .progress-container {
             width: 100%;
-            padding: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #aaa;
+            font-size: 0.8em;
         }
 
-        .progress-bar {
+        input[type="range"] {
+            flex-grow: 1;
             -webkit-appearance: none;
-            width: 100%;
+            appearance: none;
+            background: #4a4a5a;
             height: 6px;
-            background: rgba(255, 255, 255, 0.1);
             border-radius: 3px;
-            outline: none;
-        }
-
-        .progress-bar::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--primary-light);
-            border-radius: 50%;
             cursor: pointer;
         }
 
-        .time-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--secondary);
-            margin-top: 0.5rem;
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background-color: #a080f0; /* Purple accent */
+            border-radius: 50%;
+            cursor: grab;
         }
 
+        input[type="range"]::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background-color: #a080f0; /* Purple accent */
+            border-radius: 50%;
+            cursor: grab;
+        }
+
+        /* Lyrics Button */
         .lyrics-button {
-            background: var(--primary-color);
-            border: none;
+            background-color: #a080f0; /* Purple accent */
             color: white;
-            padding: 0.5rem 1rem;
+            border: none;
+            padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
+            transition: background-color 0.3s ease-in-out;
         }
 
         .lyrics-button:hover {
-            background: var(--primary-dark);
+            background-color: #8060d0;
         }
 
-        .lyrics-section {
-            margin-top: 2rem;
-            background: rgba(156, 39, 176, 0.1);
-            padding: 1.5rem;
+        /* Lyrics Popup */
+        .lyrics-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333343;
+            padding: 20px;
             border-radius: 12px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            width: 100%;
-        }
-
-        .lyrics-section.open {
-            max-height: 400px;
-        }
-
-        .lyrics-title {
-            color: var(--primary-light);
-            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            max-width: 80vw;
+            max-height: 80vh;
+            overflow: auto;
             text-align: center;
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            display: none; /* Hidden by default */
         }
 
-        .lyrics-content {
-            font-size: 1.1rem;
+        .lyrics-popup p {
+            white-space: pre-line;
         }
 
-        .verse-section {
-            margin-bottom: 2rem;
-            padding: 1rem;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
+        .lyrics-popup .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2em;
+            cursor: pointer;
         }
 
-        .verse-section:hover {
-            background: rgba(156, 39, 176, 0.2);
+        /* Christmas Snowflakes Animation */
+        .snowflake {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: fall linear infinite;
         }
 
-        .verse-title {
-            color: var(--primary-light);
-            font-weight: 500;
-            margin-bottom: 0.8rem;
-            font-size: 1.2rem;
-        }
-
-        .verse-text {
-            color: var(--on-surface);
-            line-height: 1.8;
-        }
-
-        .lyrics-section::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .lyrics-section::-webkit-scrollbar-track {
-            background: rgba(156, 39, 176, 0.1);
-        }
-
-        .lyrics-section::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .player-container {
-                margin: 1rem;
-                padding: 1rem;
-            }
-
-            .album-art {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 1;
-            }
-
-            .track-info {
-                gap: 1rem;
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
             }
         }
+
+        /* Material You Dynamic Theme - Simplified Purple */
+        :root {
+            --primary-color: #a080f0;
+            --on-primary-color: #ffffff;
+            --secondary-color: #c2a3ff;
+            --on-secondary-color: #000000;
+            --background-color: #1e1e1e;
+            --on-background-color: #ffffff;
+            --surface-color: #2c2c3c;
+            --on-surface-color: #ffffff;
+        }
+
+        .player-container {
+            background-color: var(--surface-color);
+            color: var(--on-surface-color);
+        }
+
+        .lyrics-button {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+        }
+
+        .lyrics-button:hover {
+            background-color: color-mix(in srgb, var(--primary-color) 80%, black);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            background-color: var(--primary-color);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            background-color: var(--primary-color);
+        }
+
     </style>
 </head>
 <body>
-    <!-- Snow Animation Container -->
-    <div id="snow-container"></div>
 
-    <div class="player-container">
-        <div class="track-info">
-            <div class="album-art">
-                <!-- Replace with your poster URL -->
-                <img src="YOUR_POSTER_URL_HERE" alt="Merry Christmas Ramona">
-            </div>
-            <div class="track-details">
-                <h1 class="track-title">Merry Christmas Ramona</h1>
-                <p class="track-artist">Christmas Special</p>
-                
-                <audio id="audio-player">
-                    <!-- Replace with your audio URL -->
-                    <source src="YOUR_AUDIO_URL_HERE" type="audio/mp3">
-                    Your browser does not support the audio element.
-                </audio>
-
-                <div class="player-controls">
-                    <div class="control-buttons">
-                        <button class="control-button" id="prev">
-                            <span class="material-icons">skip_previous</span>
-                        </button>
-                        <button class="control-button" id="play">
-                            <span class="material-icons">play_arrow</span>
-                        </button>
-                        <button class="control-button" id="next">
-                            <span class="material-icons">skip_next</span>
-                        </button>
-                    </div>
-                    <div class="progress-container">
-                        <input type="range" class="progress-bar" value="0" min="0" max="100">
-                        <div class="time-labels">
-                            <span id="current-time">0:00</span>
-                            <span id="duration">0:00</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="lyrics-button" id="toggle-lyrics">Show Lyrics</button>
-            </div>
-        </div>
-
-        <div class="lyrics-section" id="lyrics-section">
-            <h2 class="lyrics-title">Lyrics</h2>
-            <div class="lyrics-content">
-                <div class="verse-section" data-verse="1">
-                    <h3 class="verse-title">[Verse]</h3>
-                    <div class="verse-text">
-                        Lights are twinkling in the snow<br>
-                        Street's alive with a festive glow<br>
-                        Carols echo through the night<br>
-                        Everything's wrapped in twinkling light
-                    </div>
-                </div>
-
-                <div class="verse-section" data-verse="2">
-                    <h3 class="verse-title">[Verse 2]</h3>
-                    <div class="verse-text">
-                        Cookies baking warm and sweet<br>
-                        Presents piling at our feet<br>
-                        Ramona smiling ear to ear<br>
-                        Holiday magic's finally here
-                    </div>
-                </div>
-
-                <div class="verse-section" data-verse="3">
-                    <h3 class="verse-title">[Chorus]</h3>
-                    <div class="verse-text">
-                        Merry Christmas Ramona dear<br>
-                        Laughter ringing loud and clear<br>
-                        Together now no need to roam<br>
-                        In your heart I’ve found my home
-                    </div>
-                </div>
-
-                <div class="verse-section" data-verse="4">
-                    <h3 class="verse-title">[Verse 3]</h3>
-                    <div class="verse-text">
-                        Snowflakes dancing in the breeze<br>
-                        Joyful moments meant to freeze<br>
-                        Hot cocoa with marshmallow tops<br>
-                        Time just always seems to stop
-                    </div>
-                </div>
-
-                <div class="verse-section" data-verse="5">
-                    <h3 class="verse-title">[Bridge]</h3>
-                    <div class="verse-text">
-                        Jingle bells sound in the air<br>
-                        Mistletoe and love to share<br>
-                        Holding hands by the fire's flame<br>
-                        Ramona whispers my name
-                    </div>
-                </div>
-
-                <div class="verse-section" data-verse="6">
-                    <h3 class="verse-title">[Chorus]</h3>
-                    <div class="verse-text">
-                        Merry Christmas Ramona dear<br>
-                        Laughter ringing loud and clear<br>
-                        Together now no need to roam<br>
-                        In your heart I’ve found my home
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Snowflake Container -->
+    <div class="snowflakes" aria-hidden="true">
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
+        <div class="snowflake"></div>
     </div>
 
-    <!-- Snow Animation Script -->
+    <div class="player-container">
+        <div class="cover-art">
+            <img id="cover" src="https://i.imgur.com/0o1EGIB.jpeg" alt="Album Art">
+        </div>
+        <div class="song-info">
+            <h2 class="song-title" id="title">Merry Christmas Ramona</h2>
+            <p class="artist-name" id="artist">Artist Name</p>
+        </div>
+        <div class="progress-container">
+            <span id="currentTime">0:00</span>
+            <input type="range" id="progressBar" value="0">
+            <span id="duration">0:00</span>
+        </div>
+        <div class="controls">
+            <button class="control-button" id="prev"><i class="fas fa-backward"></i></button>
+            <button class="control-button" id="play"><i class="fas fa-play"></i></button>
+            <button class="control-button" id="next"><i class="fas fa-forward"></i></button>
+        </div>
+        <button class="lyrics-button" id="lyricsBtn">Show Lyrics</button>
+    </div>
+
+    <!-- Lyrics Popup -->
+    <div class="lyrics-popup" id="lyricsPopup">
+        <button class="close-button" id="closeLyrics">×</button>
+        <h2>Lyrics</h2>
+        <p id="lyricsText">
+            [Verse 1]
+            Lyrics go here...
+            [Chorus]
+            More lyrics...
+        </p>
+    </div>
+
+    <audio id="audio" src="your_mp3_link.mp3"></audio>
+
+    <script src="https://kit.fontawesome.com/your_fontawesome_kit_id.js" crossorigin="anonymous"></script>
     <script>
-        function createSnowflakes(num) {
-            const snowContainer = document.getElementById('snow-container');
-            for (let i = 0; i < num; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.classList.add('snowflake');
-                snowflake.textContent = '❄';
-                snowflake.style.left = `${Math.random() * 100}vw`;
-                snowflake.style.animationDuration = `${Math.random() * 3 + 7}s`; // Fall time between 7-10 seconds
-                snowflake.style.fontSize = `${Math.random() * 10 + 10}px`; // Font size between 10-20px
-                snowflake.style.opacity = Math.random();
-                snowContainer.appendChild(snowflake);
-            }
+        const audio = document.getElementById('audio');
+        const cover = document.getElementById('cover');
+        const title = document.getElementById('title');
+        const artist = document.getElementById('artist');
+        const playBtn = document.getElementById('play');
+        const prevBtn = document.getElementById('prev');
+        const nextBtn = document.getElementById('next');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeDisplay = document.getElementById('currentTime');
+        const durationDisplay = document.getElementById('duration');
+        const lyricsBtn = document.getElementById('lyricsBtn');
+        const lyricsPopup = document.getElementById('lyricsPopup');
+        const closeLyrics = document.getElementById('closeLyrics');
+        const lyricsText = document.getElementById('lyricsText');
+
+        // Replace with your actual data
+        const songData = {
+            title: "Merry Christmas Ramona",
+            artist: "Your Christmas Artist",
+            coverUrl: "https://i.imgur.com/0o1EGIB.jpeg",
+            audioUrl: "your_mp3_link.mp3",
+            lyrics: `[Verse 1]
+Dashing through the snow
+In a one-horse open sleigh
+O'er the fields we go
+Laughing all the way
+Bells on bobtail ring
+Making spirits bright
+What fun it is to ride and sing
+A sleighing song tonight
+
+[Chorus]
+Jingle bells, jingle bells
+Jingle all the way
+Oh, what fun it is to ride
+In a one-horse open sleigh, hey!
+Jingle bells, jingle bells
+Jingle all the way
+Oh, what fun it is to ride
+In a one-horse open sleigh!
+`
+        };
+
+        // Load song data
+        title.textContent = songData.title;
+        artist.textContent = songData.artist;
+        cover.src = songData.coverUrl;
+        audio.src = songData.audioUrl;
+
+        // Play/Pause Functionality
+        let isPlaying = false;
+        function playSong() {
+            audio.play();
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            isPlaying = true;
         }
 
-        createSnowflakes(100);
+        function pauseSong() {
+            audio.pause();
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            isPlaying = false;
+        }
 
-        // JavaScript code to control the audio player
-        const audioPlayer = document.getElementById('audio-player');
-        const playButton = document.getElementById('play');
-        const prevButton = document.getElementById('prev');
-        const nextButton = document.getElementById('next');
-        const progressBar = document.querySelector('.progress-bar');
-        const currentTimeLabel = document.getElementById('current-time');
-        const durationLabel = document.getElementById('duration');
-        const lyricsButton = document.getElementById('toggle-lyrics');
-        const lyricsSection = document.getElementById('lyrics-section');
-
-        playButton.addEventListener('click', () => {
-            if (audioPlayer.paused) {
-                audioPlayer.play();
-                playButton.innerHTML = '<span class="material-icons">pause</span>';
-            } else {
-                audioPlayer.pause();
-                playButton.innerHTML = '<span class="material-icons">play_arrow</span>';
-            }
+        playBtn.addEventListener('click', () => {
+            isPlaying ? pauseSong() : playSong();
         });
 
-        audioPlayer.addEventListener('timeupdate', () => {
-            const currentTime = audioPlayer.currentTime;
-            const duration = audioPlayer.duration;
-            progressBar.value = (currentTime / duration) * 100;
-            currentTimeLabel.textContent = formatTime(currentTime);
-            durationLabel.textContent = formatTime(duration);
+        // Update Progress Bar
+        audio.addEventListener('timeupdate', () => {
+            const { currentTime, duration } = audio;
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.value = progressPercent;
+            currentTimeDisplay.textContent = formatTime(currentTime);
         });
 
+        // Set Progress on Seek
         progressBar.addEventListener('input', () => {
-            const duration = audioPlayer.duration;
-            const newTime = (progressBar.value / 100) * duration;
-            audioPlayer.currentTime = newTime;
+            const seekTime = (progressBar.value / 100) * audio.duration;
+            audio.currentTime = seekTime;
         });
 
-        lyricsButton.addEventListener('click', () => {
-            lyricsSection.classList.toggle('open');
-            if (lyricsSection.classList.contains('open')) {
-                lyricsButton.textContent = 'Hide Lyrics';
-            } else {
-                lyricsButton.textContent = 'Show Lyrics';
-            }
+        // Update Duration
+        audio.addEventListener('loadedmetadata', () => {
+            durationDisplay.textContent = formatTime(audio.duration);
         });
 
-        function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        // Helper function to format time (seconds to mm:ss)
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+            return `${minutes}:${seconds}`;
         }
+
+        // Lyrics Popup Functionality
+        lyricsBtn.addEventListener('click', () => {
+            lyricsPopup.style.display = 'block';
+            lyricsText.textContent = songData.lyrics;
+        });
+
+        closeLyrics.addEventListener('click', () => {
+            lyricsPopup.style.display = 'none';
+        });
+
+        // Basic Snowflake Animation
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.style.left = `${Math.random() * 100}vw`;
+            snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`; // Random speed
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = `${Math.random() * 10 + 10}px`;
+
+            document.querySelector('.snowflakes').appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000); // Adjust based on animation duration
+        }
+
+        setInterval(createSnowflake, 200); // Create snowflakes regularly
+
+        // Next and Previous Buttons (Basic Placeholder)
+        prevBtn.addEventListener('click', () => {
+            alert('Previous Track (Not Implemented)');
+        });
+
+        nextBtn.addEventListener('click', () => {
+            alert('Next Track (Not Implemented)');
+        });
+
     </script>
 </body>
 </html>
