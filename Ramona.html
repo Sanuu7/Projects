@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Audio Player</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         /* CSS Reset and Basic Styles */
         *, *::before, *::after {
@@ -121,10 +122,24 @@
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 0.2s ease-in-out;
+            -webkit-user-select: none; /* Disable text selection */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .control-button:hover {
             opacity: 1;
+        }
+
+        .control-button.active {
+            opacity: 1; /* Indicate active state */
+            color: var(--primary-color);
+        }
+
+        .control-button .material-symbols-outlined {
+            font-size: inherit; /* Inherit size from button */
+            line-height: 1; /* Adjust line height for better alignment */
         }
 
         /* Progress Bar - Thicker */
@@ -198,13 +213,20 @@
             border-radius: 24px;
             box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
             z-index: 1000;
-            max-width: 90vw; /* Wider lyrics popup */
+            width: 80%; /* Wider lyrics popup */
+            max-width: 960px; /* Maximum width for large screens */
             max-height: 80vh;
             overflow-y: auto; /* Allow scrolling within popup */
             text-align: center;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .lyrics-popup {
+                width: 95%; /* Adjust width for smaller screens */
+            }
         }
 
         .lyrics-popup.show {
@@ -314,8 +336,12 @@
             <span id="duration">0:00</span>
         </div>
         <nav class="controls">
-            <button class="control-button" id="prev"><i class="fas fa-backward"></i></button>
-            <button class="control-button" id="play" aria-pressed="false"><i class="fas fa-play"></i></button>
+            <button class="control-button" id="prev"><span class="material-symbols-outlined">skip_previous</span></button>
+            <button class="control-button" id="play" aria-pressed="false">
+                <span class="material-symbols-outlined">play_arrow</span>
+                <span class="material-symbols-outlined" style="display: none;">pause</span>
+            </button>
+            <button class="control-button" id="repeat"><span class="material-symbols-outlined">repeat</span></button>
         </nav>
         <button class="lyrics-button" id="lyricsBtn">Show Lyrics</button>
     </div>
@@ -329,7 +355,6 @@
 
     <audio id="audio" src="https://files.catbox.moe/r7e71y.mp3"></audio>
 
-    <script src="https://kit.fontawesome.com/your_fontawesome_kit_id.js" crossorigin="anonymous"></script>
     <script>
         const audio = document.getElementById('audio');
         const cover = document.getElementById('cover');
@@ -337,6 +362,7 @@
         const artist = document.getElementById('artist');
         const playBtn = document.getElementById('play');
         const prevBtn = document.getElementById('prev');
+        const repeatBtn = document.getElementById('repeat');
         const progressBar = document.getElementById('progressBar');
         const currentTimeDisplay = document.getElementById('currentTime');
         const durationDisplay = document.getElementById('duration');
@@ -344,6 +370,8 @@
         const lyricsPopup = document.getElementById('lyricsPopup');
         const closeLyrics = document.getElementById('closeLyrics');
         const lyricsText = document.getElementById('lyricsText');
+        const playIcon = playBtn.querySelector('.material-symbols-outlined:first-child');
+        const pauseIcon = playBtn.querySelector('.material-symbols-outlined:last-child');
 
         // Snowflake Delay Styling
         const snowflakes = document.querySelectorAll('.snowflake');
@@ -393,6 +421,7 @@ In your heart I’ve found my home
 
         let currentSongIndex = 0;
         let isPlaying = false;
+        let isLooping = false;
 
         // Load song data
         function loadSong(index) {
@@ -405,20 +434,23 @@ In your heart I’ve found my home
             progressBar.value = 0;
             currentTimeDisplay.textContent = '0:00';
             audio.load(); // Important to load the new source
+            if (isPlaying) playSong(); // Keep playing if it was playing
         }
 
         loadSong(currentSongIndex); // Load the initial song
 
         function playSong() {
             audio.play();
-            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline-flex';
             playBtn.setAttribute('aria-pressed', 'true');
             isPlaying = true;
         }
 
         function pauseSong() {
             audio.pause();
-            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playIcon.style.display = 'inline-flex';
+            pauseIcon.style.display = 'none';
             playBtn.setAttribute('aria-pressed', 'false');
             isPlaying = false;
         }
@@ -491,6 +523,13 @@ In your heart I’ve found my home
         audio.addEventListener('error', () => {
             console.error("Error loading audio source:", audio.src);
             alert("Failed to load audio. Please check your internet connection or the audio source.");
+        });
+
+        // Repeat Button Functionality
+        repeatBtn.addEventListener('click', () => {
+            isLooping = !isLooping;
+            audio.loop = isLooping;
+            repeatBtn.classList.toggle('active', isLooping);
         });
 
     </script>
