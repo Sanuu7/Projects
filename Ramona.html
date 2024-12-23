@@ -43,6 +43,7 @@
             border-radius: 50%;
             opacity: 0.6;
             animation: fall linear infinite;
+            will-change: transform; /* Optimization hint */
         }
 
         @keyframes fall {
@@ -197,7 +198,7 @@
             border-radius: 24px;
             box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
             z-index: 1000;
-            max-width: 80vw;
+            max-width: 90vw; /* Wider lyrics popup */
             max-height: 80vh;
             overflow-y: auto; /* Allow scrolling within popup */
             text-align: center;
@@ -279,6 +280,7 @@
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
 </head>
 <body>
 
@@ -300,7 +302,7 @@
 
     <div class="player-container">
         <div class="cover-art">
-            <img id="cover" src="https://i.imgur.com/0o1EGIB.jpeg" alt="Album Art" class="loading" onload="this.classList.remove('loading')">
+            <img id="cover" src="https://i.imgur.com/0o1EGIB.jpeg" alt="Album Art" class="loading" onload="this.classList.remove('loading')" loading="lazy">
         </div>
         <div class="song-info">
             <h2 class="song-title" id="title">Merry Christmas Ramona</h2>
@@ -308,13 +310,13 @@
         </div>
         <div class="progress-container">
             <span id="currentTime">0:00</span>
-            <input type="range" id="progressBar" value="0">
+            <input type="range" id="progressBar" value="0" aria-label="Seekbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <span id="duration">0:00</span>
         </div>
-        <div class="controls">
+        <nav class="controls">
             <button class="control-button" id="prev"><i class="fas fa-backward"></i></button>
-            <button class="control-button" id="play"><i class="fas fa-play"></i></button>
-        </div>
+            <button class="control-button" id="play" aria-pressed="false"><i class="fas fa-play"></i></button>
+        </nav>
         <button class="lyrics-button" id="lyricsBtn">Show Lyrics</button>
     </div>
 
@@ -322,30 +324,10 @@
     <div class="lyrics-popup" id="lyricsPopup">
         <button class="close-button" id="closeLyrics">×</button>
         <h2>Lyrics</h2>
-        <p id="lyricsText">
-            [Verse 1]
-            Dashing through the snow
-            In a one-horse open sleigh
-            O'er the fields we go
-            Laughing all the way
-            Bells on bobtail ring
-            Making spirits bright
-            What fun it is to ride and sing
-            A sleighing song tonight
-
-            [Chorus]
-            Jingle bells, jingle bells
-            Jingle all the way
-            Oh, what fun it is to ride
-            In a one-horse open sleigh, hey!
-            Jingle bells, jingle bells
-            Jingle all the way
-            Oh, what fun it is to ride
-            In a one-horse open sleigh!
-        </p>
+        <p id="lyricsText"></p>
     </div>
 
-    <audio id="audio" src="your_mp3_link.mp3"></audio>
+    <audio id="audio" src="https://files.catbox.moe/r7e71y.mp3"></audio>
 
     <script src="https://kit.fontawesome.com/your_fontawesome_kit_id.js" crossorigin="anonymous"></script>
     <script>
@@ -369,51 +351,75 @@
             snowflake.style.animationDelay = `${index * 0.2}s`; // Stagger the start
         });
 
-        // Replace with your actual data
-        const songData = {
-            title: "Merry Christmas Ramona",
-            artist: "Your Christmas Artist",
-            coverUrl: "https://i.imgur.com/0o1EGIB.jpeg",
-            audioUrl: "your_mp3_link.mp3",
-            lyrics: `[Verse 1]
-Dashing through the snow
-In a one-horse open sleigh
-O'er the fields we go
-Laughing all the way
-Bells on bobtail ring
-Making spirits bright
-What fun it is to ride and sing
-A sleighing song tonight
+        // Song Data Array
+        const songs = [
+            {
+                title: "Merry Christmas Ramona",
+                artist: "Your Christmas Artist",
+                coverUrl: "https://i.imgur.com/0o1EGIB.jpeg",
+                audioUrl: "https://files.catbox.moe/r7e71y.mp3",
+                lyrics: `Lights are twinkling in the snow
+Street's alive with a festive glow
+Carols echo through the night
+Everything’s wrapped in twinkling light
 
-[Chorus]
-Jingle bells, jingle bells
-Jingle all the way
-Oh, what fun it is to ride
-In a one-horse open sleigh, hey!
-Jingle bells, jingle bells
-Jingle all the way
-Oh, what fun it is to ride
-In a one-horse open sleigh!
+Cookies baking warm and sweet
+Presents piling at our feet
+Ramona smiling ear to ear
+Holiday magic’s finally here
+
+Merry Christmas Ramona dear
+Laughter ringing loud and clear
+Together now no need to roam
+In your heart I’ve found my home
+
+Snowflakes dancing in the breeze
+Joyful moments meant to freeze
+Hot cocoa with marshmallow tops
+Time just always seems to stop
+
+Jingle bells sound in the air
+Mistletoe and love to share
+Holding hands by the fire's flame
+Ramona whispers my name
+
+Merry Christmas Ramona dear
+Laughter ringing loud and clear
+Together now no need to roam
+In your heart I’ve found my home
 `
-        };
+            }
+        ];
+
+        let currentSongIndex = 0;
+        let isPlaying = false;
 
         // Load song data
-        title.textContent = songData.title;
-        artist.textContent = songData.artist;
-        cover.src = songData.coverUrl;
-        audio.src = songData.audioUrl;
+        function loadSong(index) {
+            const currentSong = songs[index];
+            title.textContent = currentSong.title;
+            artist.textContent = currentSong.artist;
+            cover.src = currentSong.coverUrl;
+            audio.src = currentSong.audioUrl;
+            lyricsText.textContent = currentSong.lyrics;
+            progressBar.value = 0;
+            currentTimeDisplay.textContent = '0:00';
+            audio.load(); // Important to load the new source
+        }
 
-        // Play/Pause Functionality
-        let isPlaying = false;
+        loadSong(currentSongIndex); // Load the initial song
+
         function playSong() {
             audio.play();
             playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            playBtn.setAttribute('aria-pressed', 'true');
             isPlaying = true;
         }
 
         function pauseSong() {
             audio.pause();
             playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playBtn.setAttribute('aria-pressed', 'false');
             isPlaying = false;
         }
 
@@ -426,6 +432,7 @@ In a one-horse open sleigh!
             const { currentTime, duration } = audio;
             const progressPercent = (currentTime / duration) * 100;
             progressBar.value = progressPercent;
+            progressBar.setAttribute('aria-valuenow', Math.round(progressPercent));
             currentTimeDisplay.textContent = formatTime(currentTime);
         });
 
@@ -450,7 +457,6 @@ In a one-horse open sleigh!
         // Lyrics Popup Functionality
         lyricsBtn.addEventListener('click', () => {
             lyricsPopup.classList.add('show');
-            lyricsText.textContent = songData.lyrics;
         });
 
         closeLyrics.addEventListener('click', () => {
@@ -476,9 +482,15 @@ In a one-horse open sleigh!
 
         setInterval(createSnowflake, 400); // Create snowflakes regularly
 
-        // Next and Previous Buttons (Basic Placeholder)
+        // Next and Previous Buttons (Basic Placeholder for Single Song)
         prevBtn.addEventListener('click', () => {
-            alert('Previous Track (Not Implemented)');
+            alert('Previous Track (Only one track available)');
+        });
+
+        // Error handling for audio loading
+        audio.addEventListener('error', () => {
+            console.error("Error loading audio source:", audio.src);
+            alert("Failed to load audio. Please check your internet connection or the audio source.");
         });
 
     </script>
