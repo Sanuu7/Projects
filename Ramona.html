@@ -135,8 +135,8 @@
             -ms-user-select: none;
             user-select: none;
             height: 60px;
-            display: flex;
-             align-items: center;
+             display: flex;
+            align-items: center;
             justify-content: center;
         }
         .controls #play {
@@ -318,12 +318,10 @@
 
 
      /* Spatial Audio Toggle Styles */
-
-         .spatial-audio-button {
+          .spatial-audio-button {
             background: none;
             border: none;
             color: #fff;
-            font-size: 2em; /* Bigger icons */
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 0.2s ease-in-out;
@@ -333,10 +331,9 @@
             user-select: none;
             height: 60px;
             display: flex;
-            align-items: center;
-           justify-content: center;
-
-          }
+             align-items: center;
+            justify-content: center;
+        }
          .spatial-audio-button:hover {
             opacity: 1;
         }
@@ -344,11 +341,6 @@
         .spatial-audio-button.active {
             opacity: 1; /* Indicate active state */
             color: var(--primary-color);
-        }
-
-        .spatial-audio-button .material-symbols-outlined {
-           font-size: inherit; /* Inherit size from button */
-            line-height: 1; /* Adjust line height for better alignment */
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -392,8 +384,8 @@
                 <span class="material-symbols-outlined" style="display: none;">pause</span>
             </button>
              <button class="control-button" id="repeat"><span class="material-symbols-outlined">repeat</span></button>
-              <button class="spatial-audio-button" id="spatialAudioBtn">
-              <span class="material-symbols-outlined">headphones</span>
+             <button class="spatial-audio-button" id="spatialAudioBtn">
+                  <img src="https://files.catbox.moe/3t6z4y.svg" alt="Spatial Audio" style="width: 30px; height: 30px; pointer-events: none;"/>
         </button>
        </nav>
         <button class="lyrics-button" id="lyricsBtn">Show Lyrics</button>
@@ -426,7 +418,7 @@
         const lyricsText = document.getElementById('lyricsText');
         const playIcon = playBtn.querySelector('.material-symbols-outlined:first-child');
         const pauseIcon = playBtn.querySelector('.material-symbols-outlined:last-child');
-          // Spatial Audio URLs
+         // Spatial Audio URLs
         const regularAudioUrl = "https://files.catbox.moe/r7e71y.mp3";
         const spatialAudioUrl = "https://files.catbox.moe/hq6sjk.mp3";
 
@@ -439,7 +431,7 @@
             snowflake.style.animationDelay = `${index * 0.2}s`; // Stagger the start
         });
 
-          // Song Data Array
+        // Song Data Array
         const songs = [
             {
                 title: "Merry Christmas Ramona",
@@ -497,7 +489,7 @@ In your heart I’ve found my home
             title.textContent = currentSong.title;
             artist.textContent = currentSong.artist;
             cover.src = currentSong.coverUrl;
-            audio.src = currentSong.audioUrl;
+              audio.src = currentSong.audioUrl;
             lyricsText.textContent = currentSong.lyrics;
             progressBar.value = 0;
             currentTimeDisplay.textContent = '0:00';
@@ -583,13 +575,14 @@ In your heart I’ve found my home
         setInterval(createSnowflake, 400); // Create snowflakes regularly
 
         // Reset Button Functionality
-         resetBtn.addEventListener('click', () => {
+          resetBtn.addEventListener('click', () => {
               audio.currentTime = 0;
-           if(isPlaying) {
-                audio.play();
-            }
-           progressBar.value = 0;
+              if(isPlaying) {
+                  audio.play();
+              }
+             progressBar.value = 0;
         });
+
 
         // Error handling for audio loading
         audio.addEventListener('error', () => {
@@ -604,22 +597,21 @@ In your heart I’ve found my home
             repeatBtn.classList.toggle('active', isLooping);
         });
 
-
        // Spatial Audio Button Functionality
-      spatialAudioBtn.addEventListener('click', () => {
-           isSpatialActive = !isSpatialActive; // Toggle the state
-          spatialAudioBtn.classList.toggle('active', isSpatialActive);
+          spatialAudioBtn.addEventListener('click', () => {
+                isSpatialActive = !isSpatialActive;
+               spatialAudioBtn.classList.toggle('active', isSpatialActive);
 
-           const currentSong = songs[currentSongIndex]; // Get current song data
+               const currentSong = songs[currentSongIndex]; // Get current song data
             if (isSpatialActive) {
                   audio.src = spatialAudioUrl;
             } else {
-                audio.src = currentSong.audioUrl;
+                  audio.src = currentSong.audioUrl;
             }
-             if (isPlaying) {
-                audio.play()
+              if (isPlaying) {
+                 audio.play()
             }
-      });
+        });
 
     </script>
 </body>
