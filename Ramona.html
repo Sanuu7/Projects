@@ -368,6 +368,10 @@
         input:checked + .spatial-slider::before {
             transform: translateX(20px);
         }
+         .controls #repeat {
+          margin-top: -10px;
+        }
+
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
@@ -404,12 +408,11 @@
             <span id="duration">0:00</span>
         </div>
         <nav class="controls">
-            <button class="control-button" id="prev"><span class="material-symbols-outlined">skip_previous</span></button>
+            <button class="control-button" id="restart"><span class="material-symbols-outlined">replay</span></button>
             <button class="control-button" id="play" aria-pressed="false">
                 <span class="material-symbols-outlined">play_arrow</span>
                 <span class="material-symbols-outlined" style="display: none;">pause</span>
             </button>
-             <button class="control-button" id="next"><span class="material-symbols-outlined">skip_next</span></button>
             <button class="control-button" id="repeat"><span class="material-symbols-outlined">repeat</span></button>
         </nav>
         <!-- Spatial Audio Toggle -->
@@ -438,8 +441,7 @@
         const title = document.getElementById('title');
         const artist = document.getElementById('artist');
         const playBtn = document.getElementById('play');
-        const prevBtn = document.getElementById('prev');
-        const nextBtn = document.getElementById('next'); // Added Next Button
+        const restartBtn = document.getElementById('restart'); // Changed from prevBtn to restartBtn
         const repeatBtn = document.getElementById('repeat');
         const progressBar = document.getElementById('progressBar');
         const currentTimeDisplay = document.getElementById('currentTime');
@@ -450,25 +452,27 @@
         const lyricsText = document.getElementById('lyricsText');
         const playIcon = playBtn.querySelector('.material-symbols-outlined:first-child');
         const pauseIcon = playBtn.querySelector('.material-symbols-outlined:last-child');
-          const spatialToggle = document.getElementById('spatialToggle'); // Spatial Audio Toggle
+        const spatialToggle = document.getElementById('spatialToggle'); // Spatial Audio Toggle
+
         // Spatial Audio URLs
         const regularAudioUrl = "https://files.catbox.moe/r7e71y.mp3";
         const spatialAudioUrl = "https://files.catbox.moe/hq6sjk.mp3";
+
 
         // Snowflake Delay Styling
         const snowflakes = document.querySelectorAll('.snowflake');
         snowflakes.forEach((snowflake, index) => {
             snowflake.style.animationDelay = `${index * 0.2}s`; // Stagger the start
         });
-
-        // Song Data Array
+        
+             // Song Data Array
         const songs = [
             {
                 title: "Merry Christmas Ramona",
                 artist: "Sannu",
                 coverUrl: "https://i.imgur.com/0o1EGIB.jpeg",
                 audioUrl: regularAudioUrl,
-                 lyrics: `Lights are twinkling in the snow
+                lyrics: `Lights are twinkling in the snow
 Street's alive with a festive glow
 Carols echo through the night
 Everything’s wrapped in twinkling light
@@ -519,15 +523,17 @@ In your heart I’ve found my home
             title.textContent = currentSong.title;
             artist.textContent = currentSong.artist;
             cover.src = currentSong.coverUrl;
-            audio.src = currentSong.audioUrl;
+             audio.src = currentSong.audioUrl;
             lyricsText.textContent = currentSong.lyrics;
-            progressBar.value = 0;
+             progressBar.value = 0;
             currentTimeDisplay.textContent = '0:00';
             audio.load(); // Important to load the new source
-             if (isPlaying) playSong(); // Keep playing if it was playing
+           if (isPlaying) playSong(); // Keep playing if it was playing
+
         }
 
         loadSong(currentSongIndex); // Load the initial song
+
 
         function playSong() {
             audio.play();
@@ -554,7 +560,7 @@ In your heart I’ve found my home
             const { currentTime, duration } = audio;
             const progressPercent = (currentTime / duration) * 100;
             progressBar.value = progressPercent;
-            progressBar.setAttribute('aria-valuenow', Math.round(progressPercent));
+             progressBar.setAttribute('aria-valuenow', Math.round(progressPercent));
             currentTimeDisplay.textContent = formatTime(currentTime);
         });
 
@@ -592,7 +598,7 @@ In your heart I’ve found my home
             snowflake.style.left = `${Math.random() * 100}vw`;
             snowflake.style.animationDuration = `${Math.random() * 5 + 5}s`; // Random speed
             snowflake.style.opacity = Math.random() * 0.7;
-             snowflake.style.fontSize = `${Math.random() * 6 + 6}px`;
+           snowflake.style.fontSize = `${Math.random() * 6 + 6}px`;
             snowflake.style.setProperty('--i', Math.floor(Math.random() * 30) + 1); // For staggered delay
 
             document.querySelector('.snowflakes').appendChild(snowflake);
@@ -604,17 +610,13 @@ In your heart I’ve found my home
 
         setInterval(createSnowflake, 400); // Create snowflakes regularly
 
-        // Next and Previous Buttons (Basic Placeholder for Single Song)
-         nextBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
-            loadSong(currentSongIndex);
-         });
-
-        prevBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-            loadSong(currentSongIndex);
-         });
-
+         // Restart button functionality
+        restartBtn.addEventListener('click', () => {
+            audio.currentTime = 0; // Set current time to 0
+            if(isPlaying) {
+                audio.play(); // If playing, continue
+            }
+        });
 
         // Error handling for audio loading
         audio.addEventListener('error', () => {
@@ -630,16 +632,17 @@ In your heart I’ve found my home
         });
 
         // Spatial Audio Toggle Functionality
-         spatialToggle.addEventListener('change', () => {
-               const currentSong = songs[currentSongIndex]; // Get current song data
+        spatialToggle.addEventListener('change', () => {
+                const currentSong = songs[currentSongIndex]; // Get current song data
             if (spatialToggle.checked) {
-                audio.src = spatialAudioUrl;
+                 audio.src = spatialAudioUrl;
             } else {
-                  audio.src = currentSong.audioUrl
+                audio.src = currentSong.audioUrl
             }
-             if (isPlaying) {
-                 audio.play()
-             }
+            if (isPlaying) {
+                audio.play()
+            }
+
         });
     </script>
 </body>
