@@ -118,8 +118,8 @@
             display: flex;
             align-items: center;
             justify-content: center; /* Center the buttons */
-             gap: 24px;
-             flex-wrap: wrap;
+            gap: 24px;
+            flex-wrap: wrap;
         }
 
         .control-button {
@@ -134,14 +134,13 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
-            height: 40px;
-             display: flex;
+            height: 60px;
+            display: flex;
              align-items: center;
             justify-content: center;
         }
-      .controls #play {
-            height: 60px;
-             font-size: 3em;
+        .controls #play {
+            font-size: 3em;
         }
 
 
@@ -317,65 +316,16 @@
             background-color: var(--primary-color);
         }
 
-      /* Spatial Audio Toggle Styles */
-        .spatial-toggle-container {
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           gap: 10px; /* Added spacing between label and toggle */
-           user-select: none;
-           -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
+         /* Spatial Audio Icon  Styles */
 
-        .spatial-toggle-container label {
+          .spatial-audio-icon {
+            display: flex;
+             align-items: center;
+             justify-content: center;
+             font-size: 2em;
              color: #bdbdbd;
-        }
+             margin-right: 10px;
 
-        .spatial-toggle {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
-
-        .spatial-toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .spatial-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #555;
-            transition: .4s;
-             border-radius: 10px; /* More rounded switch */
-        }
-
-        .spatial-slider::before {
-            position: absolute;
-            content: "";
-            height: 14px;
-            width: 14px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-             border-radius: 50%; /* Round "thumb" */
-        }
-
-        input:checked + .spatial-slider {
-            background-color: var(--primary-color);
-        }
-
-        input:checked + .spatial-slider::before {
-            transform: translateX(20px);
         }
 
     </style>
@@ -413,22 +363,18 @@
             <input type="range" id="progressBar" value="0" aria-label="Seekbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <span id="duration">0:00</span>
         </div>
-       <nav class="controls">
-            <button class="control-button" id="prev"><span class="material-symbols-outlined">skip_previous</span></button>
+        <nav class="controls">
+            <button class="control-button" id="reset"><span class="material-symbols-outlined">replay</span></button>
             <button class="control-button" id="play" aria-pressed="false">
                 <span class="material-symbols-outlined">play_arrow</span>
                 <span class="material-symbols-outlined" style="display: none;">pause</span>
             </button>
-            <button class="control-button" id="repeat"><span class="material-symbols-outlined">repeat</span></button>
-             <!-- Spatial Audio Toggle -->
-            <div class="spatial-toggle-container">
-                <label><span class="material-symbols-outlined">spatial_audio</span></label>
-                <label class="spatial-toggle">
-                <input type="checkbox" id="spatialToggle">
-                <span class="spatial-slider"></span>
-            </label>
-            </div>
-       </nav>
+           <button class="control-button" id="repeat"><span class="material-symbols-outlined">repeat</span></button>
+        </nav>
+         <div class="spatial-audio-icon">
+            <span class="material-symbols-outlined">surround_sound</span>
+        </div>
+
         <button class="lyrics-button" id="lyricsBtn">Show Lyrics</button>
     </div>
 
@@ -447,7 +393,7 @@
         const title = document.getElementById('title');
         const artist = document.getElementById('artist');
         const playBtn = document.getElementById('play');
-        const prevBtn = document.getElementById('prev');
+        const resetBtn = document.getElementById('reset');
         const repeatBtn = document.getElementById('repeat');
         const progressBar = document.getElementById('progressBar');
         const currentTimeDisplay = document.getElementById('currentTime');
@@ -458,11 +404,8 @@
         const lyricsText = document.getElementById('lyricsText');
         const playIcon = playBtn.querySelector('.material-symbols-outlined:first-child');
         const pauseIcon = playBtn.querySelector('.material-symbols-outlined:last-child');
-        const spatialToggle = document.getElementById('spatialToggle'); // Spatial Audio Toggle
-
         // Spatial Audio URLs
-        const regularAudioUrl = "https://files.catbox.moe/r7e71y.mp3";
-        const spatialAudioUrl = "https://files.catbox.moe/hq6sjk.mp3";
+       const regularAudioUrl = "https://files.catbox.moe/r7e71y.mp3";
 
 
         // Snowflake Delay Styling
@@ -513,8 +456,8 @@ In your heart I’ve found my home
                 title: "Song 2",
                 artist: "Artist 2",
                 coverUrl: "https://placekitten.com/200/200",
-                audioUrl: "https://files.catbox.moe/r7e71y.mp3",
-                  lyrics: "This is some simple lyrics for song 2."
+                 audioUrl: "https://files.catbox.moe/r7e71y.mp3",
+                lyrics: "This is some simple lyrics for song 2."
 
             }
         ];
@@ -529,16 +472,15 @@ In your heart I’ve found my home
             title.textContent = currentSong.title;
             artist.textContent = currentSong.artist;
             cover.src = currentSong.coverUrl;
-            audio.src = currentSong.audioUrl;
+             audio.src = currentSong.audioUrl;
             lyricsText.textContent = currentSong.lyrics;
-            progressBar.value = 0;
+             progressBar.value = 0;
             currentTimeDisplay.textContent = '0:00';
             audio.load(); // Important to load the new source
-             if (isPlaying) playSong(); // Keep playing if it was playing
+            if (isPlaying) playSong(); // Keep playing if it was playing
         }
 
         loadSong(currentSongIndex); // Load the initial song
-
 
         function playSong() {
             audio.play();
@@ -603,7 +545,7 @@ In your heart I’ve found my home
             snowflake.style.left = `${Math.random() * 100}vw`;
             snowflake.style.animationDuration = `${Math.random() * 5 + 5}s`; // Random speed
             snowflake.style.opacity = Math.random() * 0.7;
-             snowflake.style.fontSize = `${Math.random() * 6 + 6}px`;
+            snowflake.style.fontSize = `${Math.random() * 6 + 6}px`;
             snowflake.style.setProperty('--i', Math.floor(Math.random() * 30) + 1); // For staggered delay
 
             document.querySelector('.snowflakes').appendChild(snowflake);
@@ -615,12 +557,14 @@ In your heart I’ve found my home
 
         setInterval(createSnowflake, 400); // Create snowflakes regularly
 
-        // Previous Buttons (Basic Placeholder for Single Song)
-        prevBtn.addEventListener('click', () => {
-             currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-            loadSong(currentSongIndex);
-         });
-
+         // Reset Button Functionality
+        resetBtn.addEventListener('click', () => {
+              audio.currentTime = 0;
+           if(isPlaying) {
+                audio.play();
+            }
+           progressBar.value = 0;
+        });
 
         // Error handling for audio loading
         audio.addEventListener('error', () => {
@@ -635,18 +579,6 @@ In your heart I’ve found my home
             repeatBtn.classList.toggle('active', isLooping);
         });
 
-       // Spatial Audio Toggle Functionality
-          spatialToggle.addEventListener('change', () => {
-                const currentSong = songs[currentSongIndex]; // Get current song data
-            if (spatialToggle.checked) {
-                audio.src = spatialAudioUrl;
-            } else {
-                  audio.src = currentSong.audioUrl
-            }
-            if (isPlaying) {
-                audio.play()
-            }
-        });
     </script>
 </body>
 </html>
