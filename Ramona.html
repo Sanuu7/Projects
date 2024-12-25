@@ -316,32 +316,106 @@
             background-color: var(--primary-color);
         }
 
-
      /* Spatial Audio Toggle Styles */
-          .spatial-audio-button {
-            background: none;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s ease-in-out;
-            -webkit-user-select: none; /* Disable text selection */
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            height: 60px;
-            display: flex;
+        .spatial-audio-button {
+             background: none;
+             border: none;
+             color: #fff;
+             cursor: pointer;
+             opacity: 0.7;
+             transition: opacity 0.2s ease-in-out;
+             -webkit-user-select: none; /* Disable text selection */
+             -moz-user-select: none;
+             -ms-user-select: none;
+             user-select: none;
+             height: 60px;
+             display: flex;
              align-items: center;
             justify-content: center;
-        }
+             position: relative; /* for absolute positioning of waves */
+         }
          .spatial-audio-button:hover {
             opacity: 1;
+         }
+
+         .spatial-audio-button.active {
+            opacity: 1;
+            color: var(--primary-color);
+         }
+
+          .spatial-audio-button .material-symbols-outlined {
+            font-size: inherit; /* Inherit size from button */
+             line-height: 1; /* Adjust line height for better alignment */
+         }
+
+        .spatial-audio-button::before,
+         .spatial-audio-button::after {
+             content: "";
+             position: absolute;
+             width: 8px;
+             height: 8px;
+             border: 2px solid #fff;
+             border-radius: 50%;
+         }
+           .spatial-audio-button::before {
+             top: 0;
+             left: 0;
         }
 
-        .spatial-audio-button.active {
-            opacity: 1; /* Indicate active state */
-            color: var(--primary-color);
+        .spatial-audio-button::after {
+            bottom: 0;
+            right: 0;
         }
+         .spatial-audio-button .wave {
+             position: absolute;
+              border: 1px solid #fff;
+             border-radius: 50%;
+             animation: wave 2s linear infinite; /* wave animation */
+         }
+
+         .spatial-audio-button .wave:nth-child(1) {
+            top: 5px;
+             left: 5px;
+            width: 10px;
+           height: 10px;
+             animation-delay: -0.5s; /* offset wave times */
+         }
+
+        .spatial-audio-button .wave:nth-child(2) {
+           top: 5px;
+            right: 5px;
+            width: 10px;
+            height: 10px;
+             animation-delay: -1s; /* offset wave times */
+        }
+
+         .spatial-audio-button .wave:nth-child(3) {
+             bottom: 5px;
+             left: 5px;
+            width: 10px;
+           height: 10px;
+             animation-delay: -1.5s; /* offset wave times */
+        }
+
+         .spatial-audio-button .wave:nth-child(4) {
+            bottom: 5px;
+            right: 5px;
+           width: 10px;
+            height: 10px;
+            animation-delay: -2s; /* offset wave times */
+         }
+
+          @keyframes wave {
+            0% {
+                 transform: scale(1);
+                opacity: 1;
+             }
+             100% {
+                 transform: scale(2.5);
+                opacity: 0;
+             }
+         }
+
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
@@ -377,15 +451,20 @@
             <input type="range" id="progressBar" value="0" aria-label="Seekbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <span id="duration">0:00</span>
         </div>
-       <nav class="controls">
+        <nav class="controls">
             <button class="control-button" id="reset"><span class="material-symbols-outlined">replay</span></button>
             <button class="control-button" id="play" aria-pressed="false">
                 <span class="material-symbols-outlined">play_arrow</span>
                 <span class="material-symbols-outlined" style="display: none;">pause</span>
             </button>
              <button class="control-button" id="repeat"><span class="material-symbols-outlined">repeat</span></button>
-             <button class="spatial-audio-button" id="spatialAudioBtn">
-                  <img src="https://files.catbox.moe/3t6z4y.svg" alt="Spatial Audio" style="width: 30px; height: 30px; pointer-events: none;"/>
+              <button class="spatial-audio-button" id="spatialAudioBtn">
+                <span class="material-symbols-outlined">person</span>
+                   <div class="wave"></div>
+                   <div class="wave"></div>
+                   <div class="wave"></div>
+                   <div class="wave"></div>
+
         </button>
        </nav>
         <button class="lyrics-button" id="lyricsBtn">Show Lyrics</button>
@@ -418,7 +497,7 @@
         const lyricsText = document.getElementById('lyricsText');
         const playIcon = playBtn.querySelector('.material-symbols-outlined:first-child');
         const pauseIcon = playBtn.querySelector('.material-symbols-outlined:last-child');
-         // Spatial Audio URLs
+        // Spatial Audio URLs
         const regularAudioUrl = "https://files.catbox.moe/r7e71y.mp3";
         const spatialAudioUrl = "https://files.catbox.moe/hq6sjk.mp3";
 
@@ -437,7 +516,7 @@
                 title: "Merry Christmas Ramona",
                 artist: "Sannu",
                 coverUrl: "https://i.imgur.com/0o1EGIB.jpeg",
-                audioUrl: regularAudioUrl,
+                  audioUrl: regularAudioUrl,
                 lyrics: `Lights are twinkling in the snow
 Street's alive with a festive glow
 Carols echo through the night
@@ -473,7 +552,7 @@ In your heart I’ve found my home
                 title: "Song 2",
                 artist: "Artist 2",
                 coverUrl: "https://placekitten.com/200/200",
-                 audioUrl: "https://files.catbox.moe/r7e71y.mp3",
+                  audioUrl: "https://files.catbox.moe/r7e71y.mp3",
                 lyrics: "This is some simple lyrics for song 2."
 
             }
@@ -491,10 +570,10 @@ In your heart I’ve found my home
             cover.src = currentSong.coverUrl;
               audio.src = currentSong.audioUrl;
             lyricsText.textContent = currentSong.lyrics;
-            progressBar.value = 0;
+             progressBar.value = 0;
             currentTimeDisplay.textContent = '0:00';
             audio.load(); // Important to load the new source
-             if (isPlaying) playSong(); // Keep playing if it was playing
+            if (isPlaying) playSong(); // Keep playing if it was playing
         }
 
         loadSong(currentSongIndex); // Load the initial song
@@ -574,15 +653,14 @@ In your heart I’ve found my home
 
         setInterval(createSnowflake, 400); // Create snowflakes regularly
 
-        // Reset Button Functionality
+       // Reset Button Functionality
           resetBtn.addEventListener('click', () => {
               audio.currentTime = 0;
-              if(isPlaying) {
-                  audio.play();
-              }
+               if(isPlaying) {
+                    audio.play();
+                }
              progressBar.value = 0;
         });
-
 
         // Error handling for audio loading
         audio.addEventListener('error', () => {
@@ -597,19 +675,19 @@ In your heart I’ve found my home
             repeatBtn.classList.toggle('active', isLooping);
         });
 
-       // Spatial Audio Button Functionality
+      // Spatial Audio Button Functionality
           spatialAudioBtn.addEventListener('click', () => {
-                isSpatialActive = !isSpatialActive;
-               spatialAudioBtn.classList.toggle('active', isSpatialActive);
+                 isSpatialActive = !isSpatialActive;
+                 spatialAudioBtn.classList.toggle('active', isSpatialActive);
 
                const currentSong = songs[currentSongIndex]; // Get current song data
             if (isSpatialActive) {
-                  audio.src = spatialAudioUrl;
+                audio.src = spatialAudioUrl;
             } else {
                   audio.src = currentSong.audioUrl;
             }
-              if (isPlaying) {
-                 audio.play()
+               if (isPlaying) {
+                audio.play()
             }
         });
 
