@@ -13,7 +13,7 @@
             --secondary-color: #8c68c9; /* Lighter shade of purple */
             --error-color: #CF6679; /* Error/Danger color */
             --hover-color: #512DA8; /* darker shade of the main color */
-           --shadow-color: rgba(0,0,0,0.3);
+            --shadow-color: rgba(0,0,0,0.3);
         }
 
         body {
@@ -46,7 +46,7 @@
             color: var(--on-surface-color);
             text-shadow: 2px 2px 4px var(--shadow-color);
             transition: color 0.3s ease;
-             user-select: none; /* Disable text selection */
+            user-select: none; /* Disable text selection */
         }
 
         #search-form {
@@ -184,9 +184,7 @@
             position: relative;
             text-align: left; /* Text alignment to left */
         }
-
-
-           #embed-modal iframe {
+        #embed-modal iframe {
               width: 100%;
              height: 500px;
              border: none;
@@ -213,37 +211,34 @@
             font-weight: 500;
             transition: color 0.3s ease;
            }
-
-
          .movie-card img, .series-card img {
-            transition: transform 0.3s ease; /* Smooth transition for images */
-           object-fit: cover; /* Ensure images cover their containers */
+             transition: transform 0.3s ease; /* Smooth transition for images */
+             object-fit: cover; /* Ensure images cover their containers */
             object-position: center; /* Center images in their containers */
         }
-         .movie-card:hover img, .series-card:hover img {
-            transform: scale(1.05);
-          }
+        .movie-card:hover img, .series-card:hover img {
+             transform: scale(1.05);
+         }
          @media (max-width: 600px) {
-                .container {
-                    width: 95%;
-                    padding: 20px;
-                 }
-                #search-form {
-                   flex-direction: column;
+               .container {
+                     width: 95%;
+                     padding: 20px;
+                }
+               #search-form {
+                     flex-direction: column;
                      gap: 10px;
                  }
-                 #search-input {
+               #search-input {
                      margin-right: 0;
 
                  }
-             }
-             @media (max-width: 400px) {
-                 .movie-card,
-                    .series-card {
+           }
+           @media (max-width: 400px) {
+              .movie-card,
+                     .series-card {
                         width: 100%;
-                    }
-             }
-
+                     }
+          }
     </style>
      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
@@ -271,46 +266,41 @@
          <div id="embed-error" style="color:red;"></div>
      </div>
     </div>
-
     <script>
        const searchForm = document.getElementById('search-form');
-        const searchInput = document.getElementById('search-input');
+       const searchInput = document.getElementById('search-input');
        const resultsDiv = document.getElementById('results');
         const embedModal = document.getElementById('embed-modal');
        const embedContent = document.getElementById('embed-content');
         const closeButton = embedModal.querySelector('.close-button');
         const embedIframeContainer = document.getElementById('embed-iframe-container');
         const embedError = document.getElementById('embed-error');
-       const seriesSelectContainer = document.getElementById('series-select-container');
 
         const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
         const EMBED_BASE_URL = 'https://embed.su/embed';
-
         closeButton.addEventListener('click', () => {
             embedModal.style.display = 'none';
             embedIframeContainer.innerHTML = '';
             embedError.textContent = '';
-            seriesSelectContainer.style.display = 'none';
         });
         searchForm.addEventListener('submit', (e) => {
-           e.preventDefault();
+            e.preventDefault();
             const query = searchInput.value;
             const searchType = document.querySelector('input[name="search-type"]:checked').value;
-           searchItems(query, searchType);
+            searchItems(query, searchType);
         });
-
-         async function searchItems(query, searchType) {
-          resultsDiv.innerHTML = '<p>Loading...</p>';
-          let API_URL = `https://api.themoviedb.org/3/search/${searchType}?api_key=${API_KEY}&query=${query}`;
-           try {
-               const response = await fetch(API_URL);
-               const data = await response.json();
-             displayResults(data.results,searchType);
-              }
-           catch(error) {
-                resultsDiv.innerHTML = '<p>Error fetching data.</p>';
-                console.error('Error:', error);
-            }
+       async function searchItems(query, searchType) {
+            resultsDiv.innerHTML = '<p>Loading...</p>';
+            let API_URL = `https://api.themoviedb.org/3/search/${searchType}?api_key=${API_KEY}&query=${query}`;
+             try {
+                 const response = await fetch(API_URL);
+                const data = await response.json();
+                displayResults(data.results,searchType);
+               }
+            catch(error) {
+               resultsDiv.innerHTML = '<p>Error fetching data.</p>';
+                 console.error('Error:', error);
+             }
         }
          function displayResults(items,searchType) {
            resultsDiv.innerHTML = '';
@@ -320,70 +310,69 @@
             }
             items.forEach(item => {
                 const card = document.createElement('div');
-                card.classList.add(searchType === 'movie' ? 'movie-card' : 'series-card');
-                card.addEventListener('click', () => loadEmbed(item, searchType));
+                 card.classList.add(searchType === 'movie' ? 'movie-card' : 'series-card');
+               card.addEventListener('click', () => loadEmbed(item, searchType));
                  const posterPath = item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : 'placeholder.jpg';
                  const poster = document.createElement('img');
                 poster.src = posterPath;
                 poster.alt = item.title || item.name;
-
                const title = document.createElement('h3');
                 title.textContent = item.title || item.name;
-                let releaseOrFirstAirDate = item.release_date || item.first_air_date || 'N/A';
-                const dateLabel = searchType === 'movie' ? 'Release Date:' : 'First Air Date:';
+               let releaseOrFirstAirDate = item.release_date || item.first_air_date || 'N/A';
+               const dateLabel = searchType === 'movie' ? 'Release Date:' : 'First Air Date:';
                 const dateDisplay = document.createElement('p');
                 dateDisplay.textContent = `${dateLabel} ${releaseOrFirstAirDate}`;
                 card.appendChild(poster);
                  card.appendChild(title);
-                card.appendChild(dateDisplay);
-               resultsDiv.appendChild(card);
-
+               card.appendChild(dateDisplay);
+                resultsDiv.appendChild(card);
             });
         }
          async function loadEmbed(item, searchType) {
            embedModal.style.display = 'flex';
                 embedError.textContent = '';
             embedIframeContainer.innerHTML = '';
-            seriesSelectContainer.style.display = 'none';
              if (!item.id) {
-                  embedError.textContent = "Could not load video.";
-                    return;
+                embedError.textContent = "Could not load video.";
+                 return;
              }
-              let embedURL = `${EMBED_BASE_URL}/${searchType}/${item.id}`;
+             let embedURL = `${EMBED_BASE_URL}/${searchType}/${item.id}`;
             if(searchType === 'tv') {
-                  try{
-                      const tvDetails = await fetch(`https://api.themoviedb.org/3/tv/${item.id}?api_key=${API_KEY}`)
-                     const tvData = await tvDetails.json();
-                    if(tvData && tvData.seasons) {
-                        const firstSeasonNumber = tvData.seasons[0]?.season_number;
-                         if (firstSeasonNumber !== undefined) {
-                           embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${firstSeasonNumber}/1`;
-                       }
-                     }
+                try{
+                   const tvDetails = await fetch(`https://api.themoviedb.org/3/tv/${item.id}?api_key=${API_KEY}`)
+                    const tvData = await tvDetails.json();
+                  if(tvData && tvData.seasons) {
+                        let firstValidSeason = 1;
+                        for (const season of tvData.seasons) {
+                              if (season.season_number !== 0) {
+                                  firstValidSeason = season.season_number;
+                                 break;
+                             }
+                        }
+                        embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${firstValidSeason}/1`;
+                    }
                  }
                  catch(error){
-                     embedError.textContent = "Could not load video.";
-                    console.error('Error fetching tv details', error);
+                    embedError.textContent = "Could not load video.";
+                     console.error('Error fetching tv details', error);
                      return;
-                 }
+                }
             }
             try {
                const response = await fetch(embedURL);
-               if(!response.ok) {
-                   embedError.textContent = "Could not load video.";
-                   return;
-               }
+                 if(!response.ok) {
+                     embedError.textContent = "Could not load video.";
+                     return;
+                }
                  const embedIframe = document.createElement('iframe');
                 embedIframe.src = embedURL;
-                embedIframe.allowfullscreen = true;
-                 embedIframeContainer.appendChild(embedIframe);
+                 embedIframe.allowfullscreen = true;
+                  embedIframeContainer.appendChild(embedIframe);
              } catch(error) {
-                 embedError.textContent = "Could not load video.";
+                embedError.textContent = "Could not load video.";
                  console.error("Error loading embed:", error);
             }
-         }
-
-
+        }
     </script>
 </body>
 </html>
