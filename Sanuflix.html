@@ -295,8 +295,6 @@
         <div class="select-container" id="series-select-container">
            <label for="season-select">Season:</label>
             <select id="season-select"></select>
-             <label for="episode-select">Episode:</label>
-           <select id="episode-select"></select>
         </div>
          <div id="embed-error" style="color:red;"></div>
      </div>
@@ -313,7 +311,6 @@
         const embedError = document.getElementById('embed-error');
         const seriesSelectContainer = document.getElementById('series-select-container');
          const seasonSelect = document.getElementById('season-select');
-        const episodeSelect = document.getElementById('episode-select');
 
         const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
         const EMBED_BASE_URL = 'https://embed.su/embed';
@@ -324,7 +321,6 @@
             embedError.textContent = '';
             seriesSelectContainer.style.display = 'none';
            seasonSelect.innerHTML = '';
-           episodeSelect.innerHTML = '';
         });
         searchForm.addEventListener('submit', (e) => {
            e.preventDefault();
@@ -393,11 +389,7 @@
 
                        displaySeasons(tvData.seasons,item.id, firstSeasonNumber);
                          if (firstSeasonNumber !== undefined) {
-                           const firstEpisodeData = await fetchEpisodes(firstSeasonNumber,item.id);
-                           if(firstEpisodeData){
-                             displayEpisodes(firstEpisodeData, 1);
-                           }
-                            embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${firstSeasonNumber}/1`;
+                           embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${firstSeasonNumber}/1`;
                        }
                      }
                  }
@@ -422,9 +414,8 @@
                  console.error("Error loading embed:", error);
             }
          }
-         function displaySeasons(seasons,itemId,initialSeasonNumber) {
+          function displaySeasons(seasons,itemId,initialSeasonNumber) {
             seasonSelect.innerHTML = '';
-             episodeSelect.innerHTML = '';
             seasons.forEach(season => {
                 const option = document.createElement('option');
                 option.value = season.season_number;
@@ -435,42 +426,29 @@
                 seasonSelect.appendChild(option);
              });
              seasonSelect.addEventListener('change', async () => {
-                const selectedSeason = seasonSelect.value;
-                if(selectedSeason) {
-                     const seasonData = await fetchEpisodes(selectedSeason,itemId);
-                    if(seasonData){
-                      displayEpisodes(seasonData);
-                     }
+                 const selectedSeason = seasonSelect.value;
+                 if(selectedSeason) {
+                  embedIframeContainer.innerHTML = '';
+                    const embedURL = `${EMBED_BASE_URL}/tv/${itemId}/${selectedSeason}/1`;
+                     try {
+                         const response = await fetch(embedURL);
+                           if(!response.ok) {
+                              embedError.textContent = "Could not load video.";
+                                return;
+                            }
+                           const embedIframe = document.createElement('iframe');
+                             embedIframe.src = embedURL;
+                            embedIframe.allowfullscreen = true;
+                             embedIframeContainer.appendChild(embedIframe);
+
+                         } catch(error) {
+                             embedError.textContent = "Could not load video.";
+                            console.error("Error loading embed:", error);
+                       }
                  }
               });
         }
-        async function fetchEpisodes(selectedSeason,itemId) {
-            try {
-                  const episodeData = await fetch(`https://api.themoviedb.org/3/tv/${itemId}/season/${selectedSeason}?api_key=${API_KEY}`);
-                const data = await episodeData.json();
-                 if(data && data.episodes) {
-                     return data.episodes;
-                 }
-             } catch(error){
-                 embedError.textContent = "Could not fetch episodes.";
-                 console.error('Error fetching tv episodes', error);
-             }
-            return null;
-         }
-          function displayEpisodes(episodes, initialEpisodeNumber) {
-            episodeSelect.innerHTML = '';
-            episodes.forEach(episode => {
-               const option = document.createElement('option');
-               option.value = episode.episode_number;
-               option.textContent = `Episode ${episode.episode_number}`;
 
-                if (initialEpisodeNumber !== undefined && episode.episode_number === initialEpisodeNumber) {
-                      option.selected = true; // auto select the first episode
-                   }
-
-               episodeSelect.appendChild(option);
-            });
-        }
     </script>
 </body>
 </html>
