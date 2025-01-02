@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #search-form {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #results {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .movie-card {
+            margin: 10px;
+            width: 200px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .movie-card h3, .movie-card p {
+            padding: 10px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Search</h1>
+        <form id="search-form">
+            <input type="text" id="search-input" placeholder="Search for a movie..." required>
+            <button type="submit">Search</button>
+        </form>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const searchForm = document.getElementById('search-form');
+        const searchInput = document.getElementById('search-input');
+        const resultsDiv = document.getElementById('results');
+        const API_KEY = 'YOUR_TMDB_API_KEY'; // Replace with your API key
+
+        searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = searchInput.value;
+        searchMovies(query);
+        });
+
+        async function searchMovies(query) {
+            resultsDiv.innerHTML = '<p>Loading...</p>';
+            const API_URL = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${query}`;
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                displayResults(data.results);
+            } catch (error) {
+                resultsDiv.innerHTML = '<p>Error fetching data.</p>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displayResults(movies) {
+            resultsDiv.innerHTML = '';
+            if (movies.length === 0) {
+                resultsDiv.innerHTML = '<p>No movies found.</p>';
+                return;
+            }
+
+            movies.forEach(movie => {
+            const movieCard = document.createElement('div');
+                movieCard.classList.add('movie-card');
+
+                const posterPath = movie.poster_path ? `https://image.tmdb.org/t/p/w200${movie.poster_path}` : 'placeholder.jpg';
+                const poster = document.createElement('img');
+                poster.src = posterPath;
+                poster.alt = movie.title;
+
+                const title = document.createElement('h3');
+                title.textContent = movie.title;
+
+                const releaseDate = document.createElement('p');
+                releaseDate.textContent = `Release Date: ${movie.release_date}`;
+
+
+                movieCard.appendChild(poster);
+                movieCard.appendChild(title);
+                 movieCard.appendChild(releaseDate);
+                resultsDiv.appendChild(movieCard);
+            });
+        }
+    </script>
+</body>
+</html>
