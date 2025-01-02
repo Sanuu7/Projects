@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie & Series Search</title>
     <style>
-       :root {
+        :root {
             --primary-color: #673AB7; /* Deep Purple */
             --background-color: #262626; /* Dark Gray */
             --surface-color: #373737; /* Slightly Lighter Dark Gray */
@@ -184,31 +184,7 @@
             position: relative;
             text-align: left; /* Text alignment to left */
         }
-         #embed-content .select-container {
-             display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-start;
-            margin-bottom: 10px;
-             gap: 10px;
-        }
-        #embed-content .select-container label{
-            margin-right: 10px;
-             color: var(--on-surface-color);
-         }
 
-         #embed-content .select-container select{
-            padding: 10px;
-             background-color: var(--background-color);
-             color: var(--on-surface-color);
-            border: 1px solid var(--primary-color);
-            border-radius: 8px;
-           margin-right: 15px;
-
-          }
-           #embed-content .select-container select:focus {
-            outline: none;
-             border-color: var(--secondary-color);
-           }
 
            #embed-modal iframe {
               width: 100%;
@@ -292,10 +268,6 @@
       <div id="embed-content">
         <span class="close-button">×</span>
          <div id="embed-iframe-container"></div>
-        <div class="select-container" id="series-select-container">
-           <label for="season-select">Season:</label>
-            <select id="season-select"></select>
-        </div>
          <div id="embed-error" style="color:red;"></div>
      </div>
     </div>
@@ -309,8 +281,7 @@
         const closeButton = embedModal.querySelector('.close-button');
         const embedIframeContainer = document.getElementById('embed-iframe-container');
         const embedError = document.getElementById('embed-error');
-        const seriesSelectContainer = document.getElementById('series-select-container');
-         const seasonSelect = document.getElementById('season-select');
+       const seriesSelectContainer = document.getElementById('series-select-container');
 
         const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
         const EMBED_BASE_URL = 'https://embed.su/embed';
@@ -320,7 +291,6 @@
             embedIframeContainer.innerHTML = '';
             embedError.textContent = '';
             seriesSelectContainer.style.display = 'none';
-           seasonSelect.innerHTML = '';
         });
         searchForm.addEventListener('submit', (e) => {
            e.preventDefault();
@@ -374,7 +344,7 @@
            embedModal.style.display = 'flex';
                 embedError.textContent = '';
             embedIframeContainer.innerHTML = '';
-             seriesSelectContainer.style.display = searchType === 'tv' ? 'flex': 'none';
+            seriesSelectContainer.style.display = 'none';
              if (!item.id) {
                   embedError.textContent = "Could not load video.";
                     return;
@@ -386,8 +356,6 @@
                      const tvData = await tvDetails.json();
                     if(tvData && tvData.seasons) {
                         const firstSeasonNumber = tvData.seasons[0]?.season_number;
-
-                       displaySeasons(tvData.seasons,item.id, firstSeasonNumber);
                          if (firstSeasonNumber !== undefined) {
                            embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${firstSeasonNumber}/1`;
                        }
@@ -414,40 +382,7 @@
                  console.error("Error loading embed:", error);
             }
          }
-          function displaySeasons(seasons,itemId,initialSeasonNumber) {
-            seasonSelect.innerHTML = '';
-            seasons.forEach(season => {
-                const option = document.createElement('option');
-                option.value = season.season_number;
-                option.textContent = `Season ${season.season_number}`;
-               if (initialSeasonNumber !== undefined && season.season_number === initialSeasonNumber) {
-                    option.selected = true; // auto select the first season
-                  }
-                seasonSelect.appendChild(option);
-             });
-             seasonSelect.addEventListener('change', async () => {
-                 const selectedSeason = seasonSelect.value;
-                 if(selectedSeason) {
-                  embedIframeContainer.innerHTML = '';
-                    const embedURL = `${EMBED_BASE_URL}/tv/${itemId}/${selectedSeason}/1`;
-                     try {
-                         const response = await fetch(embedURL);
-                           if(!response.ok) {
-                              embedError.textContent = "Could not load video.";
-                                return;
-                            }
-                           const embedIframe = document.createElement('iframe');
-                             embedIframe.src = embedURL;
-                            embedIframe.allowfullscreen = true;
-                             embedIframeContainer.appendChild(embedIframe);
 
-                         } catch(error) {
-                             embedError.textContent = "Could not load video.";
-                            console.error("Error loading embed:", error);
-                       }
-                 }
-              });
-        }
 
     </script>
 </body>
