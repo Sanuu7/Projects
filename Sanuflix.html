@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie & Series Search</title>
     <style>
-        :root {
+       :root {
             --primary-color: #673AB7; /* Deep Purple */
             --background-color: #262626; /* Dark Gray */
             --surface-color: #373737; /* Slightly Lighter Dark Gray */
@@ -306,7 +306,6 @@
        const searchForm = document.getElementById('search-form');
         const searchInput = document.getElementById('search-input');
        const resultsDiv = document.getElementById('results');
-        const searchTypeRadio = document.querySelectorAll('input[name="search-type"]');
         const embedModal = document.getElementById('embed-modal');
        const embedContent = document.getElementById('embed-content');
         const closeButton = embedModal.querySelector('.close-button');
@@ -319,167 +318,158 @@
         const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
         const EMBED_BASE_URL = 'https://embed.su/embed';
 
-
         closeButton.addEventListener('click', () => {
             embedModal.style.display = 'none';
-             embedIframeContainer.innerHTML = '';
-             embedError.textContent = '';
+            embedIframeContainer.innerHTML = '';
+            embedError.textContent = '';
             seriesSelectContainer.style.display = 'none';
-             seasonSelect.innerHTML = '';
-           episodeSelect.innerHTML ='';
-
-
+           seasonSelect.innerHTML = '';
+           episodeSelect.innerHTML = '';
         });
-         searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-           const query = searchInput.value;
+        searchForm.addEventListener('submit', (e) => {
+           e.preventDefault();
+            const query = searchInput.value;
             const searchType = document.querySelector('input[name="search-type"]:checked').value;
            searchItems(query, searchType);
         });
-         async function searchItems(query, searchType) {
-           resultsDiv.innerHTML = '<p>Loading...</p>';
-             let API_URL = `https://api.themoviedb.org/3/search/${searchType}?api_key=${API_KEY}&query=${query}`;
-           try {
-                 const response = await fetch(API_URL);
-               const data = await response.json();
-               displayResults(data.results,searchType);
-               }
-            catch(error) {
-              resultsDiv.innerHTML = '<p>Error fetching data.</p>';
-                 console.error('Error:', error);
-             }
-       }
 
-          function displayResults(items,searchType) {
+         async function searchItems(query, searchType) {
+          resultsDiv.innerHTML = '<p>Loading...</p>';
+          let API_URL = `https://api.themoviedb.org/3/search/${searchType}?api_key=${API_KEY}&query=${query}`;
+           try {
+               const response = await fetch(API_URL);
+               const data = await response.json();
+             displayResults(data.results,searchType);
+              }
+           catch(error) {
+                resultsDiv.innerHTML = '<p>Error fetching data.</p>';
+                console.error('Error:', error);
+            }
+        }
+         function displayResults(items,searchType) {
            resultsDiv.innerHTML = '';
             if (items.length === 0) {
-               resultsDiv.innerHTML = '<p>No items found.</p>';
+                resultsDiv.innerHTML = '<p>No items found.</p>';
                 return;
             }
-
-           items.forEach(item => {
-              const card = document.createElement('div');
-              card.classList.add(searchType === 'movie' ? 'movie-card' : 'series-card');
-               card.addEventListener('click', () => loadEmbed(item, searchType));
-                const posterPath = item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : 'placeholder.jpg';
-                const poster = document.createElement('img');
-               poster.src = posterPath;
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add(searchType === 'movie' ? 'movie-card' : 'series-card');
+                card.addEventListener('click', () => loadEmbed(item, searchType));
+                 const posterPath = item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : 'placeholder.jpg';
+                 const poster = document.createElement('img');
+                poster.src = posterPath;
                 poster.alt = item.title || item.name;
 
                const title = document.createElement('h3');
                 title.textContent = item.title || item.name;
-              let releaseOrFirstAirDate = item.release_date || item.first_air_date || 'N/A';
+                let releaseOrFirstAirDate = item.release_date || item.first_air_date || 'N/A';
                 const dateLabel = searchType === 'movie' ? 'Release Date:' : 'First Air Date:';
-
-               const dateDisplay = document.createElement('p');
-               dateDisplay.textContent = `${dateLabel} ${releaseOrFirstAirDate}`;
-
+                const dateDisplay = document.createElement('p');
+                dateDisplay.textContent = `${dateLabel} ${releaseOrFirstAirDate}`;
                 card.appendChild(poster);
-                card.appendChild(title);
-               card.appendChild(dateDisplay);
-                resultsDiv.appendChild(card);
+                 card.appendChild(title);
+                card.appendChild(dateDisplay);
+               resultsDiv.appendChild(card);
 
             });
         }
          async function loadEmbed(item, searchType) {
-             embedModal.style.display = 'flex';
+           embedModal.style.display = 'flex';
                 embedError.textContent = '';
             embedIframeContainer.innerHTML = '';
-            seriesSelectContainer.style.display = searchType === 'tv' ? 'flex': 'none';
-
-            if (!item.id) {
-                 embedError.textContent = "Could not load video.";
-                   return;
+             seriesSelectContainer.style.display = searchType === 'tv' ? 'flex': 'none';
+             if (!item.id) {
+                  embedError.textContent = "Could not load video.";
+                    return;
              }
-
-             let embedURL = `${EMBED_BASE_URL}/${searchType}/${item.id}`;
-
-             if(searchType === 'tv') {
-                 try{
-                    const tvDetails = await fetch(`https://api.themoviedb.org/3/tv/${item.id}?api_key=${API_KEY}`)
+              let embedURL = `${EMBED_BASE_URL}/${searchType}/${item.id}`;
+            if(searchType === 'tv') {
+                  try{
+                      const tvDetails = await fetch(`https://api.themoviedb.org/3/tv/${item.id}?api_key=${API_KEY}`)
                      const tvData = await tvDetails.json();
-                   if(tvData && tvData.seasons) {
-                        displaySeasons(tvData.seasons,item.id);
-                    }
+                    if(tvData && tvData.seasons) {
+                        const firstSeasonNumber = tvData.seasons[0]?.season_number;
+
+                       displaySeasons(tvData.seasons,item.id, firstSeasonNumber);
+                         if (firstSeasonNumber !== undefined) {
+                           const firstEpisodeData = await fetchEpisodes(firstSeasonNumber,item.id);
+                           if(firstEpisodeData){
+                             displayEpisodes(firstEpisodeData, 1);
+                           }
+                            embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${firstSeasonNumber}/1`;
+                       }
+                     }
                  }
                  catch(error){
-                      embedError.textContent = "Could not load video.";
-                      console.error('Error fetching tv details', error);
+                     embedError.textContent = "Could not load video.";
+                    console.error('Error fetching tv details', error);
                      return;
                  }
-                   const seasonNumber = seasonSelect.value;
-                 const episodeNumber = episodeSelect.value;
-                 if (!seasonNumber || !episodeNumber) {
-                     embedError.textContent = "Please select a season and episode.";
-                      return;
-
-                 }
-               embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${seasonNumber}/${episodeNumber}`;
             }
-
-             try {
-                 const response = await fetch(embedURL);
-                if(!response.ok) {
+            try {
+               const response = await fetch(embedURL);
+               if(!response.ok) {
                    embedError.textContent = "Could not load video.";
-                     return;
-                 }
-                   const embedIframe = document.createElement('iframe');
-                   embedIframe.src = embedURL;
-                   embedIframe.allowfullscreen = true;
-                   embedIframeContainer.appendChild(embedIframe);
-
-
-                } catch(error) {
-                  embedError.textContent = "Could not load video.";
-                 console.error("Error loading embed:", error);
+                   return;
                }
+                 const embedIframe = document.createElement('iframe');
+                embedIframe.src = embedURL;
+                embedIframe.allowfullscreen = true;
+                 embedIframeContainer.appendChild(embedIframe);
+             } catch(error) {
+                 embedError.textContent = "Could not load video.";
+                 console.error("Error loading embed:", error);
+            }
          }
-         function displaySeasons(seasons,itemId) {
-           seasonSelect.innerHTML = '';
-            episodeSelect.innerHTML = '';
-
+         function displaySeasons(seasons,itemId,initialSeasonNumber) {
+            seasonSelect.innerHTML = '';
+             episodeSelect.innerHTML = '';
             seasons.forEach(season => {
-                 const option = document.createElement('option');
-                 option.value = season.season_number;
+                const option = document.createElement('option');
+                option.value = season.season_number;
                 option.textContent = `Season ${season.season_number}`;
-                 seasonSelect.appendChild(option);
-            });
-
-            seasonSelect.addEventListener('change', async () => {
-               const selectedSeason = seasonSelect.value;
-                 if(selectedSeason) {
+               if (initialSeasonNumber !== undefined && season.season_number === initialSeasonNumber) {
+                    option.selected = true; // auto select the first season
+                  }
+                seasonSelect.appendChild(option);
+             });
+             seasonSelect.addEventListener('change', async () => {
+                const selectedSeason = seasonSelect.value;
+                if(selectedSeason) {
                      const seasonData = await fetchEpisodes(selectedSeason,itemId);
-                      if(seasonData){
-                       displayEpisodes(seasonData);
-                       }
+                    if(seasonData){
+                      displayEpisodes(seasonData);
+                     }
+                 }
+              });
+        }
+        async function fetchEpisodes(selectedSeason,itemId) {
+            try {
+                  const episodeData = await fetch(`https://api.themoviedb.org/3/tv/${itemId}/season/${selectedSeason}?api_key=${API_KEY}`);
+                const data = await episodeData.json();
+                 if(data && data.episodes) {
+                     return data.episodes;
+                 }
+             } catch(error){
+                 embedError.textContent = "Could not fetch episodes.";
+                 console.error('Error fetching tv episodes', error);
+             }
+            return null;
+         }
+          function displayEpisodes(episodes, initialEpisodeNumber) {
+            episodeSelect.innerHTML = '';
+            episodes.forEach(episode => {
+               const option = document.createElement('option');
+               option.value = episode.episode_number;
+               option.textContent = `Episode ${episode.episode_number}`;
+
+                if (initialEpisodeNumber !== undefined && episode.episode_number === initialEpisodeNumber) {
+                      option.selected = true; // auto select the first episode
                    }
 
-             });
-         }
-         async function fetchEpisodes(selectedSeason,itemId) {
-             try {
-                  const episodeData = await fetch(`https://api.themoviedb.org/3/tv/${itemId}/season/${selectedSeason}?api_key=${API_KEY}`);
-                 const data = await episodeData.json();
-                 if(data && data.episodes) {
-                        return data.episodes;
-                    }
-
-              } catch(error){
-                    embedError.textContent = "Could not fetch episodes.";
-                  console.error('Error fetching tv episodes', error);
-                  }
-                 return null;
-         }
-         function displayEpisodes(episodes) {
-             episodeSelect.innerHTML = '';
-             episodes.forEach(episode => {
-                    const option = document.createElement('option');
-                   option.value = episode.episode_number;
-                    option.textContent = `Episode ${episode.episode_number}`;
-                   episodeSelect.appendChild(option);
-
+               episodeSelect.appendChild(option);
             });
-
         }
     </script>
 </body>
