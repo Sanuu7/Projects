@@ -97,7 +97,7 @@
         const searchForm = document.getElementById('search-form');
         const searchInput = document.getElementById('search-input');
         const resultsDiv = document.getElementById('results');
-        const API_KEY = 'YOUR_TMDB_API_KEY'; // Replace with your API key
+        const API_KEY = '5e38ca50480518c0d1cde63718225f6c'; // Your API key is here
 
         searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -140,10 +140,9 @@
                 const releaseDate = document.createElement('p');
                 releaseDate.textContent = `Release Date: ${movie.release_date}`;
 
-
                 movieCard.appendChild(poster);
                 movieCard.appendChild(title);
-                 movieCard.appendChild(releaseDate);
+                movieCard.appendChild(releaseDate);
                 resultsDiv.appendChild(movieCard);
             });
         }
