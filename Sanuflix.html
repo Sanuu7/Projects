@@ -5,82 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Search</title>
     <style>
+        /* Color Palette (Purple Android Monet Inspired) */
+        :root {
+            --primary-purple: #6750A4;
+            --secondary-purple: #9A82C9;
+            --background-color: #1C1B1F; /* Dark Background */
+            --card-background: #2B2B33; /* Slightly Lighter Card */
+            --text-color: #E3E3E3; /* Light Gray Text */
+            --accent-color: #D0BCFF; /* Light Purple Accents */
+            --button-color: #6200EE; /* Bright Purple Button */
+             --input-background: #3D3D46; /* slightly lighter input background */
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: var(--background-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            color: var(--text-color);
         }
 
         .container {
-            background-color: #fff;
+            background-color: transparent;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 600px;
+            border-radius: 12px;
+            width: 85%;
+            max-width: 700px;
             text-align: center;
         }
 
         h1 {
             margin-bottom: 20px;
+            color: var(--text-color);
         }
 
         #search-form {
             display: flex;
             margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         #search-input {
             flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-right: 10px;
+            padding: 12px 15px;
+             background-color: var(--input-background);
+            border: none;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        #search-input::placeholder {
+          color: rgba(var(--text-color), 0.6);
         }
 
         button {
-            padding: 10px 15px;
+            padding: 12px 15px;
             border: none;
-            background-color: #007bff;
+            background-color: var(--button-color);
             color: #fff;
-            border-radius: 4px;
+            border-radius: 0 8px 8px 0;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+             font-size: 1rem;
         }
 
         button:hover {
-            background-color: #0056b3;
+           background-color: var(--accent-color);
+           color: var(--background-color);
         }
 
         #results {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: center;
+           padding: 10px; /* Add padding for spacing */
+       }
 
         .movie-card {
             margin: 10px;
-            width: 200px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
+            width: 220px;
+            background-color: var(--card-background);
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease-in-out;
         }
 
-        .movie-card img {
-            width: 100%;
-            height: auto;
-            display: block;
+        .movie-card:hover {
+             transform: scale(1.03);
         }
 
-        .movie-card h3, .movie-card p {
-            padding: 10px;
+
+         .movie-card img {
+             width: 100%;
+             height: auto;
+             display: block;
+             border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle divider */
+
+         }
+
+
+       .movie-card h3, .movie-card p {
+            padding: 12px 15px;
             margin: 0;
+             text-align: left;
         }
+
+        .movie-card h3{
+            font-size: 1.1rem; /* larger title font */
+           font-weight: 500;
+        }
+
+        .movie-card p{
+           font-size: 0.9rem; /* smaller text font */
+           color: rgba(var(--text-color), 0.8);
+        }
+
+
+          /* Fonts for better design */
+         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+
+
     </style>
 </head>
 <body>
