@@ -27,11 +27,11 @@
             align-items: center;
             min-height: 100vh;
             transition: background-color 0.3s ease;
-             overflow-x: hidden; /* Hide horizontal overflow for responsive design */
+            overflow-x: hidden; /* Hide horizontal overflow for responsive design */
         }
 
         .container {
-             background-color: var(--surface-color);
+            background-color: var(--surface-color);
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 8px 20px var(--shadow-color);
@@ -59,17 +59,16 @@
         }
         #search-form label {
             cursor: pointer;
-             padding: 8px 15px;
-             border-radius: 8px;
+            padding: 8px 15px;
+            border-radius: 8px;
             transition: background-color 0.3s ease, color 0.3s ease;
-             user-select: none; /* Disable text selection */
+            user-select: none; /* Disable text selection */
         }
-          #search-form label:hover {
-             background-color: var(--hover-color);
+        #search-form label:hover {
+            background-color: var(--hover-color);
         }
-
-          #search-form input[type="radio"] {
-             margin-right: 5px;
+        #search-form input[type="radio"] {
+            margin-right: 5px;
             appearance: none;
             width: 16px;
             height: 16px;
@@ -78,8 +77,7 @@
             position: relative;
             cursor: pointer;
         }
-
-         #search-form input[type="radio"]:checked {
+        #search-form input[type="radio"]:checked {
            background-color: var(--secondary-color);
 
         }
@@ -94,7 +92,6 @@
             background-color:  var(--on-surface-color);
 
         }
-
         #search-input {
             flex-grow: 1;
             padding: 12px;
@@ -105,33 +102,30 @@
              color: var(--on-surface-color);
              transition: border-color 0.3s ease, color 0.3s ease;
         }
-          #search-input:focus {
-             outline: none;
+        #search-input:focus {
+            outline: none;
             border-color: var(--secondary-color);
          }
-          button {
-             padding: 12px 20px;
+        button {
+            padding: 12px 20px;
             border: none;
             background-color: var(--primary-color);
              color: var(--on-surface-color);
             border-radius: 8px;
             cursor: pointer;
              transition: background-color 0.3s ease;
-         }
-
-         button:hover {
+        }
+        button:hover {
             background-color: var(--hover-color);
          }
-
         #results {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             transition: all 0.3s ease;
         }
-
         .movie-card, .series-card {
-           margin: 15px;
+            margin: 15px;
             width: 200px;
              background-color: var(--surface-color);
             border-radius: 12px;
@@ -140,18 +134,15 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
-
         .movie-card:hover, .series-card:hover {
             transform: scale(1.05);
             background-color: #404040; /* Slightly lighter on hover */
         }
-
         .movie-card img, .series-card img {
             width: 100%;
             height: auto;
             display: block;
         }
-
         .movie-card h3,
         .movie-card p,
         .series-card h3,
@@ -162,32 +153,32 @@
             color: var(--on-surface-color);
             transition: color 0.3s ease;
         }
-          #embed-modal {
+         #embed-modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-             background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.7);
             justify-content: center;
             align-items: center;
             transition: background-color 0.3s ease;
         }
          #embed-content {
             background-color: var(--surface-color);
-             padding: 25px;
+            padding: 25px;
             border-radius: 12px;
             max-width: 90%;
             max-height: 90%;
-             overflow-y: auto;
+            overflow-y: auto;
             position: relative;
             text-align: left; /* Text alignment to left */
         }
         #embed-modal iframe {
-              width: 100%;
-             height: 500px;
-             border: none;
+            width: 100%;
+            height: 500px;
+            border: none;
             margin-bottom: 15px;
             border-radius: 8px;
         }
@@ -196,7 +187,7 @@
             top: 15px;
              right: 15px;
             cursor: pointer;
-             font-size: 24px;
+            font-size: 24px;
             font-weight: bold;
             color: #fff;
             transition: color 0.3s ease;
@@ -204,43 +195,41 @@
           #embed-modal .close-button:hover {
                color: var(--secondary-color);
            }
-
-          #embed-error {
-            color: var(--error-color);
+         #embed-error {
+           color: var(--error-color);
             margin-top: 10px;
             font-weight: 500;
             transition: color 0.3s ease;
-           }
+          }
          .movie-card img, .series-card img {
-             transition: transform 0.3s ease; /* Smooth transition for images */
-             object-fit: cover; /* Ensure images cover their containers */
+            transition: transform 0.3s ease; /* Smooth transition for images */
+           object-fit: cover; /* Ensure images cover their containers */
             object-position: center; /* Center images in their containers */
-        }
+         }
         .movie-card:hover img, .series-card:hover img {
              transform: scale(1.05);
-         }
+        }
          @media (max-width: 600px) {
-               .container {
-                     width: 95%;
-                     padding: 20px;
-                }
-               #search-form {
+                .container {
+                    width: 95%;
+                    padding: 20px;
+                 }
+                #search-form {
                      flex-direction: column;
                      gap: 10px;
                  }
                #search-input {
-                     margin-right: 0;
-
+                    margin-right: 0;
                  }
            }
            @media (max-width: 400px) {
-              .movie-card,
-                     .series-card {
-                        width: 100%;
+                 .movie-card,
+                    .series-card {
+                         width: 100%;
                      }
-          }
+            }
     </style>
-     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -248,13 +237,13 @@
         <form id="search-form">
              <label>
                 <input type="radio" name="search-type" value="movie" checked>
-                     Movie
+                    Movie
              </label>
              <label>
                  <input type="radio" name="search-type" value="tv">
                      Series
              </label>
-              <input type="text" id="search-input" placeholder="Search..." required>
+             <input type="text" id="search-input" placeholder="Search..." required>
             <button type="submit">Search</button>
         </form>
         <div id="results"></div>
@@ -264,18 +253,17 @@
         <span class="close-button">×</span>
          <div id="embed-iframe-container"></div>
          <div id="embed-error" style="color:red;"></div>
-     </div>
+      </div>
     </div>
     <script>
        const searchForm = document.getElementById('search-form');
-       const searchInput = document.getElementById('search-input');
+        const searchInput = document.getElementById('search-input');
        const resultsDiv = document.getElementById('results');
         const embedModal = document.getElementById('embed-modal');
-       const embedContent = document.getElementById('embed-content');
+        const embedContent = document.getElementById('embed-content');
         const closeButton = embedModal.querySelector('.close-button');
         const embedIframeContainer = document.getElementById('embed-iframe-container');
-        const embedError = document.getElementById('embed-error');
-
+       const embedError = document.getElementById('embed-error');
         const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
         const EMBED_BASE_URL = 'https://embed.su/embed';
         closeButton.addEventListener('click', () => {
@@ -284,95 +272,97 @@
             embedError.textContent = '';
         });
         searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+             e.preventDefault();
             const query = searchInput.value;
             const searchType = document.querySelector('input[name="search-type"]:checked').value;
             searchItems(query, searchType);
         });
-       async function searchItems(query, searchType) {
-            resultsDiv.innerHTML = '<p>Loading...</p>';
-            let API_URL = `https://api.themoviedb.org/3/search/${searchType}?api_key=${API_KEY}&query=${query}`;
-             try {
+         async function searchItems(query, searchType) {
+             resultsDiv.innerHTML = '<p>Loading...</p>';
+             let API_URL = `https://api.themoviedb.org/3/search/${searchType}?api_key=${API_KEY}&query=${query}`;
+            try {
                  const response = await fetch(API_URL);
                 const data = await response.json();
-                displayResults(data.results,searchType);
-               }
-            catch(error) {
-               resultsDiv.innerHTML = '<p>Error fetching data.</p>';
-                 console.error('Error:', error);
+               displayResults(data.results,searchType);
              }
+           catch(error) {
+                resultsDiv.innerHTML = '<p>Error fetching data.</p>';
+                console.error('Error:', error);
+            }
         }
-         function displayResults(items,searchType) {
-           resultsDiv.innerHTML = '';
+        function displayResults(items,searchType) {
+            resultsDiv.innerHTML = '';
             if (items.length === 0) {
                 resultsDiv.innerHTML = '<p>No items found.</p>';
-                return;
+                 return;
             }
             items.forEach(item => {
                 const card = document.createElement('div');
-                 card.classList.add(searchType === 'movie' ? 'movie-card' : 'series-card');
+                card.classList.add(searchType === 'movie' ? 'movie-card' : 'series-card');
                card.addEventListener('click', () => loadEmbed(item, searchType));
-                 const posterPath = item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : 'placeholder.jpg';
-                 const poster = document.createElement('img');
-                poster.src = posterPath;
+               const posterPath = item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : 'placeholder.jpg';
+                const poster = document.createElement('img');
+                 poster.src = posterPath;
                 poster.alt = item.title || item.name;
-               const title = document.createElement('h3');
-                title.textContent = item.title || item.name;
-               let releaseOrFirstAirDate = item.release_date || item.first_air_date || 'N/A';
-               const dateLabel = searchType === 'movie' ? 'Release Date:' : 'First Air Date:';
+                const title = document.createElement('h3');
+                 title.textContent = item.title || item.name;
+                 let releaseOrFirstAirDate = item.release_date || item.first_air_date || 'N/A';
+                const dateLabel = searchType === 'movie' ? 'Release Date:' : 'First Air Date:';
                 const dateDisplay = document.createElement('p');
                 dateDisplay.textContent = `${dateLabel} ${releaseOrFirstAirDate}`;
                 card.appendChild(poster);
-                 card.appendChild(title);
+                card.appendChild(title);
                card.appendChild(dateDisplay);
-                resultsDiv.appendChild(card);
-            });
+                 resultsDiv.appendChild(card);
+             });
         }
-         async function loadEmbed(item, searchType) {
-           embedModal.style.display = 'flex';
+        async function loadEmbed(item, searchType) {
+            embedModal.style.display = 'flex';
                 embedError.textContent = '';
-            embedIframeContainer.innerHTML = '';
+             embedIframeContainer.innerHTML = '';
              if (!item.id) {
-                embedError.textContent = "Could not load video.";
-                 return;
+                 embedError.textContent = "Could not load video.";
+                  return;
              }
-             let embedURL = `${EMBED_BASE_URL}/${searchType}/${item.id}`;
+            let embedURL = `${EMBED_BASE_URL}/${searchType}/${item.id}`;
             if(searchType === 'tv') {
                 try{
-                   const tvDetails = await fetch(`https://api.themoviedb.org/3/tv/${item.id}?api_key=${API_KEY}`)
-                    const tvData = await tvDetails.json();
+                    const tvDetails = await fetch(`https://api.themoviedb.org/3/tv/${item.id}?api_key=${API_KEY}`)
+                     const tvData = await tvDetails.json();
                   if(tvData && tvData.seasons) {
                         let firstValidSeason = 1;
                         for (const season of tvData.seasons) {
-                              if (season.season_number !== 0) {
-                                  firstValidSeason = season.season_number;
-                                 break;
-                             }
+                           if (season.season_number !== 0) {
+                                firstValidSeason = season.season_number;
+                                break;
+                           }
                         }
-                        embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${firstValidSeason}/1`;
+                       embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${firstValidSeason}/1`;
                     }
-                 }
+                }
                  catch(error){
-                    embedError.textContent = "Could not load video.";
-                     console.error('Error fetching tv details', error);
+                     embedError.textContent = "Could not load video.";
+                    console.error('Error fetching tv details', error);
                      return;
                 }
-            }
+           }
             try {
                const response = await fetch(embedURL);
                  if(!response.ok) {
                      embedError.textContent = "Could not load video.";
-                     return;
-                }
+                    return;
+               }
                  const embedIframe = document.createElement('iframe');
-                embedIframe.src = embedURL;
+                 embedIframe.src = embedURL;
                  embedIframe.allowfullscreen = true;
-                  embedIframeContainer.appendChild(embedIframe);
-             } catch(error) {
+                   embedIframe.sandbox = 'allow-scripts allow-same-origin allow-presentation allow-forms allow-popups allow-pointer-lock allow-downloads';
+                   embedIframeContainer.appendChild(embedIframe);
+
+            } catch(error) {
                 embedError.textContent = "Could not load video.";
                  console.error("Error loading embed:", error);
-            }
-        }
+           }
+       }
     </script>
 </body>
 </html>
