@@ -5,84 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Search</title>
     <style>
+         :root {
+            --primary-color: #673AB7; /* Deep Purple */
+            --background-color: #262626; /* Dark Gray */
+            --surface-color: #373737; /* Slightly Lighter Dark Gray */
+            --on-surface-color: #FFFFFF; /* White Text on Background */
+            --secondary-color: #8c68c9; /* Lighter shade of purple */
+            --error-color: #CF6679; /* Error/Danger color */
+            --hover-color: #512DA8; /* darker shade of the main color */
+        }
+
+
         body {
-            font-family: sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: var(--background-color);
+            color: var(--on-surface-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            transition: background-color 0.3s ease;
         }
 
         .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 600px;
-            text-align: center;
+            background-color: var(--surface-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 700px;
+             text-align: center;
+             transition: background-color 0.3s ease;
         }
 
-        h1 {
-            margin-bottom: 20px;
+       h1 {
+            margin-bottom: 30px;
+             color: var(--on-surface-color);
+             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+             transition: color 0.3s ease;
         }
 
         #search-form {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         #search-input {
             flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-right: 10px;
+            padding: 12px;
+            background-color: var(--background-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            margin-right: 15px;
+             color: var(--on-surface-color);
+             transition: border-color 0.3s ease, color 0.3s ease;
         }
 
+          #search-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+         }
+
         button {
-            padding: 10px 15px;
+            padding: 12px 20px;
             border: none;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 4px;
+            background-color: var(--primary-color);
+            color: var(--on-surface-color);
+            border-radius: 8px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--hover-color);
         }
 
-        #results {
+       #results {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+             transition: all 0.3s ease;
         }
 
-       .movie-card {
-            margin: 10px;
+        .movie-card {
+             margin: 15px;
             width: 200px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
+            background-color: var(--surface-color);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            cursor: pointer; /* Add cursor pointer for interactivity */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .movie-card:hover {
+             transform: scale(1.05);
+             background-color: #404040; /* Slightly lighter on hover */
         }
 
 
-        .movie-card img {
+         .movie-card img {
             width: 100%;
             height: auto;
             display: block;
         }
 
-        .movie-card h3, .movie-card p {
-            padding: 10px;
+        .movie-card h3,
+        .movie-card p {
+            padding: 15px;
             margin: 0;
+            text-align: left;
+            color: var(--on-surface-color);
+            transition: color 0.3s ease;
         }
+
 
         #embed-modal {
             display: none;
@@ -91,38 +129,50 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             justify-content: center;
             align-items: center;
+             transition: background-color 0.3s ease;
         }
 
         #embed-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 80%;
-            max-height: 80%;
+            background-color: var(--surface-color);
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90%;
             overflow-y: auto;
-            position: relative; /* Add position relative for close button */
+            position: relative;
         }
 
         #embed-modal iframe {
             width: 100%;
-            height: 400px;
-             margin-bottom: 10px;
+            height: 500px;
+            border: none;
+             margin-bottom: 15px;
+            border-radius: 8px;
         }
           #embed-modal .close-button {
                 position: absolute;
-                top: 10px;
-                right: 10px;
+                top: 15px;
+                right: 15px;
                 cursor: pointer;
-                font-size: 20px;
+                font-size: 24px;
                 font-weight: bold;
-                color: #555;
+                color: #fff; /* Close icon should be white */
+                  transition: color 0.3s ease;
             }
+           #embed-modal .close-button:hover {
+               color: var(--secondary-color);
+           }
+          #embed-error {
+            color: var(--error-color); /* Error message using error color */
+            margin-top: 10px;
+           }
 
 
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -151,7 +201,6 @@
         const embedIframeContainer = document.getElementById('embed-iframe-container');
         const embedError = document.getElementById('embed-error');
 
-         //Replace with Your TMDb API Key
         const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
         const EMBED_BASE_URL = 'https://embed.su/embed/movie';
 
