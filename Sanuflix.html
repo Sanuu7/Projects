@@ -25,6 +25,9 @@
             --transition-speed: 0.3s;
             --card-hover-scale: 1.05;
             --card-hover-bg: #2C2C2C;
+            --font-size-title: 2em;
+            --font-size-card-title: 1.1em;
+            --font-size-card-text: 0.9em;
         }
 
         /* Light Mode Variables */
@@ -51,23 +54,24 @@
 
         /* Header */
         header {
-            background-color: var(--primary-color);
-            padding: 20px;
+            padding: 10px 20px;
             text-align: center;
             position: sticky;
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 4px var(--shadow-color);
+            background-color: var(--background-color);
         }
 
         header h1 {
             margin: 0;
-            font-size: 2em;
+            font-size: var(--font-size-title);
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 10px;
             letter-spacing: 2px;
+            color: var(--on-surface-color);
         }
 
         header h1 .material-icons {
@@ -229,13 +233,31 @@
             color: var(--on-surface-color);
         }
 
+        /* Trending Sections */
+        .trending-section {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 40px;
+        }
+
+        .trending-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: var(--on-surface-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trending-section h2 .material-icons {
+            font-size: 1.2em;
+        }
+
         /* Results Grid */
-        #results {
+        .results-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
-            width: 100%;
-            max-width: 1200px;
         }
 
         /* Card Styles */
@@ -278,7 +300,7 @@
 
         .card-content h3 {
             margin: 0 0 10px 0;
-            font-size: 1.1em;
+            font-size: var(--font-size-card-title);
             line-height: 1.2em;
             height: 2.4em;
             overflow: hidden;
@@ -287,8 +309,38 @@
 
         .card-content p {
             margin: 0;
-            font-size: 0.9em;
+            font-size: var(--font-size-card-text);
             color: #bbb;
+        }
+
+        /* See More Button */
+        .see-more-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .see-more-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background-color: var(--secondary-color);
+            color: var(--on-surface-color);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color var(--transition-speed) ease;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            font-weight: 500;
+            font-size: 1em;
+        }
+
+        .see-more-container button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .see-more-container button .material-icons {
+            font-size: 1.2em;
         }
 
         /* Embed Modal */
@@ -345,32 +397,6 @@
             color: var(--secondary-color);
         }
 
-        #fullscreen-prompt {
-            margin-top: 15px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        #fullscreen-prompt button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            background-color: var(--primary-color);
-            color: var(--on-surface-color);
-            cursor: pointer;
-            transition: background-color var(--transition-speed) ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: 500;
-            font-size: 1em;
-        }
-
-        #fullscreen-prompt button:hover {
-            background-color: var(--secondary-color);
-        }
-
         /* Loading Spinner */
         .spinner {
             border: 6px solid #f3f3f3;
@@ -408,7 +434,7 @@
                 align-items: flex-start;
             }
 
-            #results {
+            .results-grid {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
                 gap: 15px;
             }
@@ -452,7 +478,27 @@
             </div>
         </div>
 
-        <div id="results"></div>
+        <!-- Trending Movies Section -->
+        <div class="trending-section">
+            <h2><span class="material-icons">local_fire_department</span> Trending Movies</h2>
+            <div class="results-grid" id="trending-movies"></div>
+            <div class="see-more-container">
+                <button id="see-more-movies">
+                    <span class="material-icons">expand_more</span> See More Movies
+                </button>
+            </div>
+        </div>
+
+        <!-- Trending Series Section -->
+        <div class="trending-section">
+            <h2><span class="material-icons">tv</span> Trending Series</h2>
+            <div class="results-grid" id="trending-series"></div>
+            <div class="see-more-container">
+                <button id="see-more-series">
+                    <span class="material-icons">expand_more</span> See More Series
+                </button>
+            </div>
+        </div>
 
         <!-- Loading Spinner -->
         <div id="loading" class="spinner" style="display: none;"></div>
@@ -462,10 +508,6 @@
             <div id="embed-content">
                 <span class="material-icons close-button">close</span>
                 <iframe src="" allowfullscreen allow="fullscreen; autoplay"></iframe>
-                <div id="fullscreen-prompt" style="display: none;">
-                    <button id="fullscreen-yes"><span class="material-icons">fullscreen</span> Yes</button>
-                    <button id="fullscreen-no"><span class="material-icons">close_fullscreen</span> No</button>
-                </div>
             </div>
         </div>
     </main>
@@ -475,16 +517,16 @@
         // DOM Elements
         const searchForm = document.getElementById('search-form');
         const searchInput = document.getElementById('search-input');
-        const resultsDiv = document.getElementById('results');
         const sortBySelect = document.getElementById('sort-by');
         const loadingSpinner = document.getElementById('loading');
         const embedModal = document.getElementById('embed-modal');
         const embedContent = document.getElementById('embed-content');
         const closeButton = embedContent.querySelector('.close-button');
-        const embedIframe = embedContent.querySelector('iframe');
-        const fullscreenPrompt = document.getElementById('fullscreen-prompt');
-        const fullscreenYesButton = document.getElementById('fullscreen-yes');
-        const fullscreenNoButton = document.getElementById('fullscreen-no');
+
+        const trendingMoviesDiv = document.getElementById('trending-movies');
+        const trendingSeriesDiv = document.getElementById('trending-series');
+        const seeMoreMoviesBtn = document.getElementById('see-more-movies');
+        const seeMoreSeriesBtn = document.getElementById('see-more-series');
 
         // API Configuration
         const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
@@ -492,14 +534,18 @@
         const EMBED_BASE_URL = 'https://embed.su/embed';
 
         // State Variables
-        let currentItems = [];
         let currentSearchType = 'movie';
-        let currentPage = 1;
-        let totalPages = 1;
+        let currentPageMovies = 1;
+        let currentPageSeries = 1;
         let currentQuery = '';
         let currentFilter = 'default';
 
         // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTrending('movie');
+            loadTrending('tv');
+        });
+
         searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const query = searchInput.value.trim();
@@ -508,197 +554,185 @@
                 return;
             }
             currentQuery = query;
-            currentPage = 1;
+            currentSearchType = document.querySelector('input[name="search-type"]:checked').value;
             currentFilter = sortBySelect.value;
-            searchItems(query, currentSearchType, currentPage, currentFilter);
+            searchContent(query, currentSearchType, currentFilter);
         });
 
         sortBySelect.addEventListener('change', () => {
-            currentFilter = sortBySelect.value;
-            currentPage = 1;
-            if (currentFilter === 'trending') {
-                fetchTrending(currentSearchType, currentPage);
-            } else {
-                searchItems(currentQuery, currentSearchType, currentPage, currentFilter);
+            const query = currentQuery;
+            const type = currentSearchType;
+            const filter = sortBySelect.value;
+            if (query !== '') {
+                searchContent(query, type, filter);
             }
         });
 
-        // Radio Buttons for Search Type
-        const radioButtons = document.querySelectorAll('input[name="search-type"]');
-        radioButtons.forEach(radio => {
-            radio.addEventListener('change', () => {
-                currentSearchType = radio.value;
-                if (currentQuery !== '') {
-                    currentPage = 1;
-                    currentFilter = sortBySelect.value;
-                    if (currentFilter === 'trending') {
-                        fetchTrending(currentSearchType, currentPage);
-                    } else {
-                        searchItems(currentQuery, currentSearchType, currentPage, currentFilter);
-                    }
-                }
-            });
+        seeMoreMoviesBtn.addEventListener('click', () => {
+            currentPageMovies += 1;
+            loadTrending('movie', currentPageMovies);
         });
 
-        // Close Modal
+        seeMoreSeriesBtn.addEventListener('click', () => {
+            currentPageSeries += 1;
+            loadTrending('tv', currentPageSeries);
+        });
+
         closeButton.addEventListener('click', () => {
             embedModal.style.display = 'none';
-            embedIframe.src = '';
-            fullscreenPrompt.style.display = 'none';
+            embedContent.querySelector('iframe').src = '';
         });
 
-        // Fullscreen Prompt Buttons
-        fullscreenNoButton.addEventListener('click', () => {
-            fullscreenPrompt.style.display = 'none';
-        });
-
-        fullscreenYesButton.addEventListener('click', () => {
-            fullscreenPrompt.style.display = 'none';
-            window.open(embedIframe.src, '_blank', 'noopener,noreferrer');
-        });
-
-        // Click outside modal to close
         window.addEventListener('click', (e) => {
             if (e.target === embedModal) {
                 embedModal.style.display = 'none';
-                embedIframe.src = '';
-                fullscreenPrompt.style.display = 'none';
+                embedContent.querySelector('iframe').src = '';
             }
         });
 
-        // Keyboard Accessibility for Modal
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && embedModal.style.display === 'flex') {
                 embedModal.style.display = 'none';
-                embedIframe.src = '';
-                fullscreenPrompt.style.display = 'none';
+                embedContent.querySelector('iframe').src = '';
             }
         });
 
         // Functions
 
-        // Search Items
-        async function searchItems(query, searchType, page = 1, filter = 'default') {
-            resultsDiv.innerHTML = '';
-            loadingSpinner.style.display = 'block';
+        // Load Trending Content
+        async function loadTrending(type, page = 1) {
+            if (type === 'movie') {
+                trendingMoviesDiv.innerHTML = '';
+            } else if (type === 'tv') {
+                trendingSeriesDiv.innerHTML = '';
+            }
+            showLoading(true);
             try {
-                let endpoint = '';
-                if (filter === 'trending') {
-                    endpoint = `${API_BASE_URL}/trending/${searchType}/day?api_key=${API_KEY}&page=${page}`;
-                } else if (filter === 'popular') {
-                    endpoint = `${API_BASE_URL}/search/${searchType}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}&sort_by=popularity.desc`;
-                } else if (filter === 'top_rated') {
-                    endpoint = `${API_BASE_URL}/search/${searchType}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}&sort_by=vote_average.desc`;
-                } else {
-                    endpoint = `${API_BASE_URL}/search/${searchType}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`;
+                const endpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=${page}`;
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error('Failed to fetch trending data.');
+                const data = await response.json();
+                const items = data.results.slice(0, 15);
+                displayTrending(items, type);
+            } catch (error) {
+                if (type === 'movie') {
+                    trendingMoviesDiv.innerHTML = '<p style="color: var(--error-color);">Error fetching trending movies.</p>';
+                } else if (type === 'tv') {
+                    trendingSeriesDiv.innerHTML = '<p style="color: var(--error-color);">Error fetching trending series.</p>';
                 }
-
-                const response = await fetch(endpoint);
-                if (!response.ok) throw new Error('Network response was not ok.');
-                const data = await response.json();
-                currentItems = data.results || [];
-                totalPages = data.total_pages || 1;
-                displayResults(currentItems);
-            } catch (error) {
-                resultsDiv.innerHTML = '<p style="color: var(--error-color);">Error fetching data. Please try again later.</p>';
                 console.error('Error:', error);
             } finally {
-                loadingSpinner.style.display = 'none';
+                showLoading(false);
             }
         }
 
-        // Fetch Trending Items
-        async function fetchTrending(searchType, page = 1) {
-            resultsDiv.innerHTML = '';
-            loadingSpinner.style.display = 'block';
-            try {
-                const endpoint = `${API_BASE_URL}/trending/${searchType}/day?api_key=${API_KEY}&page=${page}`;
-                const response = await fetch(endpoint);
-                if (!response.ok) throw new Error('Network response was not ok.');
-                const data = await response.json();
-                currentItems = data.results || [];
-                totalPages = data.total_pages || 1;
-                displayResults(currentItems);
-            } catch (error) {
-                resultsDiv.innerHTML = '<p style="color: var(--error-color);">Error fetching trending data. Please try again later.</p>';
-                console.error('Error:', error);
-            } finally {
-                loadingSpinner.style.display = 'none';
-            }
-        }
-
-        // Display Results
-        function displayResults(items) {
-            if (items.length === 0) {
-                resultsDiv.innerHTML = '<p>No results found.</p>';
-                return;
-            }
-
+        // Display Trending Content
+        function displayTrending(items, type) {
+            const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
             items.forEach(item => {
-                const card = document.createElement('div');
-                card.classList.add('card');
-
-                const posterPath = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://via.placeholder.com/500x750?text=No+Image';
-                const img = document.createElement('img');
-                img.src = posterPath;
-                img.alt = item.title || item.name;
-
-                const cardContent = document.createElement('div');
-                cardContent.classList.add('card-content');
-
-                const title = document.createElement('h3');
-                title.textContent = item.title || item.name;
-
-                const date = document.createElement('p');
-                const releaseDate = item.release_date || item.first_air_date || 'N/A';
-                date.textContent = (currentSearchType === 'movie' ? 'Release Date: ' : 'First Air Date: ') + releaseDate;
-
-                cardContent.appendChild(title);
-                cardContent.appendChild(date);
-
-                card.appendChild(img);
-                card.appendChild(cardContent);
-
-                // Click Event to Open Embed Modal
-                card.addEventListener('click', () => {
-                    openEmbedModal(item);
-                });
-
-                resultsDiv.appendChild(card);
+                const card = createCard(item, type);
+                container.appendChild(card);
             });
         }
 
-        // Open Embed Modal
-        async function openEmbedModal(item) {
-            embedModal.style.display = 'flex';
-            embedIframe.src = '';
-            fullscreenPrompt.style.display = 'none';
+        // Create Card Element
+        function createCard(item, type) {
+            const card = document.createElement('div');
+            card.classList.add('card');
 
-            // Show loading spinner inside modal
-            embedContent.querySelector('iframe').style.display = 'none';
-            fullscreenPrompt.style.display = 'none';
+            const posterPath = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://via.placeholder.com/500x750?text=No+Image';
+            const img = document.createElement('img');
+            img.src = posterPath;
+            img.alt = item.title || item.name;
 
-            // Generate Embed URL
-            const embedURL = await generateEmbedURL(item, currentSearchType);
-            if (!embedURL) {
-                embedContent.innerHTML += `<p style="color: var(--error-color); text-align: center;">Unable to load video.</p>`;
-                return;
+            const cardContent = document.createElement('div');
+            cardContent.classList.add('card-content');
+
+            const title = document.createElement('h3');
+            title.textContent = item.title || item.name;
+
+            const date = document.createElement('p');
+            const releaseDate = item.release_date || item.first_air_date || 'N/A';
+            date.textContent = (type === 'movie' ? 'Release Date: ' : 'First Air Date: ') + releaseDate;
+
+            cardContent.appendChild(title);
+            cardContent.appendChild(date);
+
+            card.appendChild(img);
+            card.appendChild(cardContent);
+
+            // Click Event to Open Embed Modal
+            card.addEventListener('click', () => {
+                openEmbedModal(item, type);
+            });
+
+            return card;
+        }
+
+        // Search Content
+        async function searchContent(query, type, filter) {
+            const endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
+            trendingMoviesDiv.innerHTML = '';
+            trendingSeriesDiv.innerHTML = '';
+            showLoading(true);
+            try {
+                let finalEndpoint = endpoint;
+                if (filter === 'trending') {
+                    finalEndpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=1`;
+                } else if (filter === 'popular') {
+                    finalEndpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1&sort_by=popularity.desc`;
+                } else if (filter === 'top_rated') {
+                    finalEndpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1&sort_by=vote_average.desc`;
+                }
+
+                const response = await fetch(finalEndpoint);
+                if (!response.ok) throw new Error('Failed to fetch search results.');
+                const data = await response.json();
+                const items = data.results.slice(0, 15);
+                const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
+                container.innerHTML = '';
+                items.forEach(item => {
+                    const card = createCard(item, type);
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
+                container.innerHTML = '<p style="color: var(--error-color);">Error fetching search results.</p>';
+                console.error('Error:', error);
+            } finally {
+                showLoading(false);
             }
+        }
 
-            // Set iframe src and display
-            embedIframe.src = embedURL;
-            embedIframe.style.display = 'block';
+        // Show or Hide Loading Spinner
+        function showLoading(show) {
+            loadingSpinner.style.display = show ? 'block' : 'none';
+        }
 
-            // If Series, prompt for fullscreen
-            if (currentSearchType === 'tv') {
-                fullscreenPrompt.style.display = 'flex';
+        // Open Embed Modal
+        async function openEmbedModal(item, type) {
+            embedModal.style.display = 'flex';
+            embedContent.querySelector('iframe').src = '';
+            showLoading(true);
+            try {
+                const embedURL = await generateEmbedURL(item, type);
+                if (!embedURL) {
+                    embedContent.innerHTML += `<p style="color: var(--error-color); text-align: center;">Unable to load video.</p>`;
+                    return;
+                }
+                embedContent.querySelector('iframe').src = embedURL;
+            } catch (error) {
+                embedContent.innerHTML += `<p style="color: var(--error-color); text-align: center;">Error loading video.</p>`;
+                console.error('Error:', error);
+            } finally {
+                showLoading(false);
             }
         }
 
         // Generate Embed URL
-        async function generateEmbedURL(item, searchType) {
-            let embedURL = `${EMBED_BASE_URL}/${searchType}/${item.id}`;
-            if (searchType === 'tv') {
+        async function generateEmbedURL(item, type) {
+            let embedURL = `${EMBED_BASE_URL}/${type}/${item.id}`;
+            if (type === 'tv') {
                 try {
                     const response = await fetch(`${API_BASE_URL}/tv/${item.id}?api_key=${API_KEY}`);
                     if (!response.ok) throw new Error('Failed to fetch TV details.');
