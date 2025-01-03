@@ -155,6 +155,10 @@
             font-size: 1em;
         }
 
+        .search-box .search-input-container input[type="text"]::placeholder {
+            color: #bbb;
+        }
+
         .search-box .search-input-container .material-icons {
             cursor: pointer;
             color: var(--on-surface-color);
@@ -426,6 +430,22 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
+        /* Loading Spinner */
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid var(--primary-color);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 50px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Responsive Design */
         @media (max-width: 600px) {
             .search-box {
@@ -451,6 +471,10 @@
 
             .card img {
                 height: 220px;
+            }
+
+            main {
+                padding: 10px;
             }
         }
     </style>
@@ -491,6 +515,18 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Global Sort Options for Homepage -->
+        <div class="trending-section">
+            <div class="sort-by">
+                <label for="homepage-sort-by">Sort Homepage By:</label>
+                <select id="homepage-sort-by">
+                    <option value="trending">Trending</option>
+                    <option value="popular">Popular</option>
+                    <option value="top_rated">Top Rated</option>
+                </select>
             </div>
         </div>
 
@@ -537,6 +573,7 @@
         const searchForm = document.getElementById('search-form');
         const searchInput = document.getElementById('search-input');
         const sortBySelect = document.getElementById('sort-by');
+        const homepageSortBySelect = document.getElementById('homepage-sort-by');
         const loadingSpinner = document.getElementById('loading');
         const embedModal = document.getElementById('embed-modal');
         const embedContent = document.getElementById('embed-content');
@@ -558,11 +595,12 @@
         let currentPageSeries = 1;
         let currentQuery = '';
         let currentFilter = 'default';
+        let homepageSortFilter = 'trending';
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
-            loadTrending('movie');
-            loadTrending('tv');
+            loadTrending('movie', homepageSortFilter);
+            loadTrending('tv', homepageSortFilter);
         });
 
         // Open Search Overlay
@@ -594,7 +632,15 @@
             document.body.style.overflow = 'auto';
         });
 
-        // Handle Filter Change
+        // Allow Enter Key to Submit Search
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchForm.dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // Handle Filter Change in Search Overlay
         sortBySelect.addEventListener('change', () => {
             const query = currentQuery;
             const type = currentSearchType;
@@ -602,6 +648,15 @@
             if (query !== '') {
                 searchContent(query, type, filter);
             }
+        });
+
+        // Handle Homepage Sort Change
+        homepageSortBySelect.addEventListener('change', () => {
+            homepageSortFilter = homepageSortBySelect.value;
+            currentPageMovies = 1;
+            currentPageSeries = 1;
+            loadTrending('movie', homepageSortFilter);
+            loadTrending('tv', homepageSortFilter);
         });
 
         // Handle Search Type Change
@@ -619,12 +674,12 @@
         // See More Buttons
         seeMoreMoviesBtn.addEventListener('click', () => {
             currentPageMovies += 1;
-            loadTrending('movie', currentPageMovies);
+            loadTrending('movie', homepageSortFilter, currentPageMovies);
         });
 
         seeMoreSeriesBtn.addEventListener('click', () => {
             currentPageSeries += 1;
-            loadTrending('tv', currentPageSeries);
+            loadTrending('tv', homepageSortFilter, currentPageSeries);
         });
 
         // Close Embed Modal
@@ -651,31 +706,30 @@
 
         // Functions
 
-        // Load Trending Content
-        async function loadTrending(type, page = 1) {
-            if (type === 'movie') {
-                if (page === 1) {
-                    trendingMoviesDiv.innerHTML = '';
-                }
-            } else if (type === 'tv') {
-                if (page === 1) {
-                    trendingSeriesDiv.innerHTML = '';
-                }
+        // Load Trending Content with Sort Filter
+        async function loadTrending(type, sortFilter, page = 1) {
+            const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
+            if (page === 1) {
+                container.innerHTML = '';
             }
             showLoading(true);
             try {
-                const endpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=${page}`;
+                let endpoint = '';
+                if (sortFilter === 'trending') {
+                    endpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=${page}`;
+                } else if (sortFilter === 'popular') {
+                    endpoint = `${API_BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
+                } else if (sortFilter === 'top_rated') {
+                    endpoint = `${API_BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/top_rated?api_key=${API_KEY}&language=en-US&page=${page}`;
+                }
+
                 const response = await fetch(endpoint);
                 if (!response.ok) throw new Error('Failed to fetch trending data.');
                 const data = await response.json();
                 const items = data.results.slice(0, 15);
-                displayTrending(items, type);
+                displayTrending(items, type, container);
             } catch (error) {
-                if (type === 'movie') {
-                    trendingMoviesDiv.innerHTML = '<p style="color: var(--error-color);">Error fetching trending movies.</p>';
-                } else if (type === 'tv') {
-                    trendingSeriesDiv.innerHTML = '<p style="color: var(--error-color);">Error fetching trending series.</p>';
-                }
+                container.innerHTML = `<p style="color: var(--error-color);">Error fetching trending ${type === 'movie' ? 'movies' : 'series'}.</p>`;
                 console.error('Error:', error);
             } finally {
                 showLoading(false);
@@ -683,8 +737,7 @@
         }
 
         // Display Trending Content
-        function displayTrending(items, type) {
-            const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
+        function displayTrending(items, type, container) {
             items.forEach(item => {
                 const card = createCard(item, type);
                 container.appendChild(card);
@@ -727,28 +780,34 @@
 
         // Search Content
         async function searchContent(query, type, filter) {
+            const endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
             const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
             container.innerHTML = '';
             showLoading(true);
             try {
-                let endpoint = '';
+                let finalEndpoint = '';
                 if (filter === 'trending') {
-                    endpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=1`;
+                    finalEndpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=1`;
                 } else if (filter === 'popular') {
-                    endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1&sort_by=popularity.desc`;
+                    finalEndpoint = `${API_BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/popular?api_key=${API_KEY}&language=en-US&page=1`;
                 } else if (filter === 'top_rated') {
-                    endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1&sort_by=vote_average.desc`;
+                    finalEndpoint = `${API_BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/top_rated?api_key=${API_KEY}&language=en-US&page=1`;
                 } else {
-                    endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
+                    finalEndpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
                 }
 
-                const response = await fetch(endpoint);
+                const response = await fetch(finalEndpoint);
                 if (!response.ok) throw new Error('Failed to fetch search results.');
                 const data = await response.json();
-                const items = data.results.slice(0, 15);
-                displayTrending(items, type);
+                let items = [];
+                if (filter === 'trending') {
+                    items = data.results.slice(0, 15);
+                } else {
+                    items = data.results.slice(0, 15);
+                }
+                displayTrending(items, type, container);
             } catch (error) {
-                container.innerHTML = '<p style="color: var(--error-color);">Error fetching search results.</p>';
+                container.innerHTML = `<p style="color: var(--error-color);">Error fetching search results.</p>`;
                 console.error('Error:', error);
             } finally {
                 showLoading(false);
