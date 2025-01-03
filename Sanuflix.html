@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Responsive Design and Preventing User Zoom -->
+    <!-- Preventing User Zoom -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sanuu Flix</title>
     <!-- Google Fonts and Material Icons -->
@@ -63,8 +63,9 @@
             box-shadow: 0 2px 4px var(--shadow-color);
             background-color: var(--background-color);
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
+            gap: 15px;
         }
 
         header h1 {
@@ -75,123 +76,78 @@
             gap: 10px;
             letter-spacing: 2px;
             color: var(--on-surface-color);
+            cursor: pointer; /* Make it clickable */
+            user-select: none;
         }
 
         header h1 .material-icons {
             font-size: 1.5em;
         }
 
-        /* Search Icon */
-        .search-icon {
-            cursor: pointer;
-            color: var(--on-surface-color);
-            transition: color var(--transition-speed) ease;
-        }
-
-        .search-icon:hover {
-            color: var(--secondary-color);
-        }
-
-        /* Search Bar Overlay */
-        #search-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* Search Bar */
+        .search-bar {
             width: 100%;
-            height: 100vh;
-            background-color: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        #search-bar.active {
+            max-width: 800px;
             display: flex;
-        }
-
-        .search-container {
-            background-color: var(--surface-color);
-            padding: 20px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            width: 90%;
-            max-width: 600px;
-            animation: slideIn 0.3s ease;
-        }
-
-        .search-container form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .search-input-container {
-            display: flex;
+            flex-wrap: wrap;
             align-items: center;
             gap: 10px;
         }
 
-        .search-input-container input[type="text"] {
+        .search-bar input[type="text"] {
             flex: 1;
             padding: 10px 15px;
             border: none;
             border-radius: 25px;
-            background-color: var(--background-color);
+            background-color: var(--surface-color);
             color: var(--on-surface-color);
             outline: none;
             box-shadow: 0 2px 4px var(--shadow-color);
             font-size: 1em;
         }
 
-        .search-input-container input[type="text"]::placeholder {
+        .search-bar input[type="text"]::placeholder {
             color: #bbb;
         }
 
-        .search-input-container button {
-            background: none;
+        .search-bar button {
+            padding: 10px 20px;
             border: none;
-            cursor: pointer;
+            border-radius: 25px;
+            background-color: var(--primary-color);
             color: var(--on-surface-color);
-            transition: color var(--transition-speed) ease;
-        }
-
-        .search-input-container button:hover {
-            color: var(--secondary-color);
-        }
-
-        .search-input-container .close-search {
             cursor: pointer;
-            color: var(--on-surface-color);
-            transition: color var(--transition-speed) ease;
-            font-size: 1.5em;
-        }
-
-        .search-input-container .close-search:hover {
-            color: var(--error-color);
-        }
-
-        .filters {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
             align-items: center;
+            gap: 5px;
+            transition: background-color var(--transition-speed) ease;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            font-weight: 500;
+            font-size: 1em;
         }
 
-        .search-type {
+        .search-bar button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Series/Movie Switcher */
+        .switcher {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .switcher label {
             display: flex;
             align-items: center;
             gap: 5px;
             cursor: pointer;
             position: relative;
-            padding-left: 25px;
             user-select: none;
             font-weight: 500;
         }
 
-        .search-type input[type="radio"] {
+        .switcher input[type="radio"] {
             position: absolute;
             opacity: 0;
             cursor: pointer;
@@ -199,33 +155,30 @@
             width: 0;
         }
 
-        .search-type .checkmark {
-            position: absolute;
-            top: 50%;
-            left: 0;
+        .switcher .checkmark {
+            position: relative;
             height: 15px;
             width: 15px;
             background-color: #ccc;
             border-radius: 50%;
-            transform: translateY(-50%);
             transition: background-color var(--transition-speed) ease;
         }
 
-        .search-type input[type="radio"]:checked ~ .checkmark {
+        .switcher input[type="radio"]:checked ~ .checkmark {
             background-color: var(--secondary-color);
         }
 
-        .search-type .checkmark:after {
+        .switcher .checkmark:after {
             content: "";
             position: absolute;
             display: none;
         }
 
-        .search-type input[type="radio"]:checked ~ .checkmark:after {
+        .switcher input[type="radio"]:checked ~ .checkmark:after {
             display: block;
         }
 
-        .search-type .checkmark:after {
+        .switcher .checkmark:after {
             top: 4px;
             left: 4px;
             width: 7px;
@@ -234,40 +187,17 @@
             background: var(--on-surface-color);
         }
 
-        .sort-by {
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 20px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
-            font-weight: 500;
+            transition: filter var(--transition-speed) ease;
         }
 
-        .sort-by select {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 8px;
-            background-color: var(--background-color);
-            color: var(--on-surface-color);
-            outline: none;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            cursor: pointer;
-            font-size: 1em;
-            appearance: none;
-            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="%23FFFFFF" d="M7 10l5 5 5-5z"/%3E%3C/svg%3E');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 16px 16px;
-        }
-
-        .sort-by select::-ms-expand {
-            display: none;
-        }
-
-        .sort-by select option {
-            background-color: var(--surface-color);
-            color: var(--on-surface-color);
-        }
-
-        /* Trending Sections */
+        /* Trending and Search Sections */
         .trending-section {
             width: 100%;
             max-width: 1200px;
@@ -285,6 +215,40 @@
 
         .trending-section h2 .material-icons {
             font-size: 1.2em;
+        }
+
+        /* Sort Dropdown Above Trending Sections */
+        .trending-section .sort-by {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .trending-section .sort-by select {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--surface-color);
+            color: var(--on-surface-color);
+            outline: none;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            cursor: pointer;
+            font-size: 1em;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="%23FFFFFF" d="M7 10l5 5 5-5z"/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px 16px;
+        }
+
+        .trending-section .sort-by select::-ms-expand {
+            display: none;
+        }
+
+        .trending-section .sort-by select option {
+            background-color: var(--surface-color);
+            color: var(--on-surface-color);
         }
 
         /* Results Grid */
@@ -382,7 +346,7 @@
         #embed-modal {
             display: none;
             position: fixed;
-            z-index: 3000;
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
@@ -393,10 +357,6 @@
             align-items: center;
             padding: 20px;
             animation: fadeIn 0.3s ease;
-        }
-
-        #embed-modal.active {
-            display: flex;
         }
 
         #embed-content {
@@ -464,17 +424,20 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 600px) {
-            .search-container {
-                padding: 15px 20px;
-            }
-
-            .filters {
+        @media (max-width: 800px) {
+            .trending-section .sort-by {
                 flex-direction: column;
                 align-items: flex-start;
             }
+        }
 
-            .sort-by {
+        @media (max-width: 600px) {
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-bar button {
                 width: 100%;
             }
 
@@ -499,71 +462,54 @@
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-
-            /* Adjust iframe height on smaller screens */
-            #embed-content iframe {
-                height: 250px;
-            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1><span class="material-icons">movie</span> Sanuu Flix</h1>
-        <span class="material-icons search-icon" id="open-search">search</span>
+        <h1 id="app-title"><span class="material-icons">movie</span> Sanuu Flix</h1>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search for movies or series..." required>
+            <button id="search-button">
+                <span class="material-icons">search</span> Search
+            </button>
+        </div>
+        <div class="switcher">
+            <label for="search-movie">
+                <input type="radio" name="search-type" value="movie" id="search-movie" checked>
+                Movie
+                <span class="checkmark"></span>
+            </label>
+            <label for="search-series">
+                <input type="radio" name="search-type" value="tv" id="search-series">
+                Series
+                <span class="checkmark"></span>
+            </label>
+        </div>
     </header>
     <main id="main-content">
-        <!-- Search Bar Overlay -->
-        <div id="search-bar">
-            <div class="search-container">
-                <form id="search-form">
-                    <div class="search-input-container">
-                        <input type="text" id="search-input" placeholder="Search for movies or series..." required>
-                        <button type="submit" aria-label="Search">
-                            <span class="material-icons">search</span>
-                        </button>
-                        <span class="material-icons close-search" id="close-search">close</span>
-                    </div>
-                    <div class="filters">
-                        <div class="search-type">
-                            <input type="radio" name="search-type" value="movie" id="search-movie" checked>
-                            Movie
-                            <span class="checkmark"></span>
-                        </div>
-                        <div class="search-type">
-                            <input type="radio" name="search-type" value="tv" id="search-series">
-                            Series
-                            <span class="checkmark"></span>
-                        </div>
-                        <div class="sort-by">
-                            <label for="sort-by">Sort By:</label>
-                            <select id="sort-by">
-                                <option value="default">Default</option>
-                                <option value="trending">Trending</option>
-                                <option value="popular">Popular</option>
-                                <option value="top_rated">Top Rated</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
+        <!-- Search Results Section -->
+        <div class="trending-section" id="search-results-section" style="display: none;">
+            <h2 id="search-results-heading"><span class="material-icons">search</span> Search Results</h2>
+            <div class="results-grid" id="search-results"></div>
+            <div class="see-more-container">
+                <button id="see-more-search-results">
+                    <span class="material-icons">expand_more</span> See More Results
+                </button>
             </div>
         </div>
 
-        <!-- Global Sort Options for Homepage -->
-        <div class="trending-section">
+        <!-- Trending Movies Section -->
+        <div class="trending-section" id="trending-movies-section">
             <div class="sort-by">
-                <label for="homepage-sort-by">Sort Homepage By:</label>
-                <select id="homepage-sort-by">
+                <label for="sort-movies">Sort Movies By:</label>
+                <select id="sort-movies">
                     <option value="trending">Trending</option>
                     <option value="popular">Popular</option>
                     <option value="top_rated">Top Rated</option>
                 </select>
             </div>
-        </div>
-
-        <!-- Trending Movies Section -->
-        <div class="trending-section">
-            <h2><span class="material-icons">local_fire_department</span> Trending Movies</h2>
+            <h2 id="movies-heading"><span class="material-icons">local_fire_department</span> Trending Movies</h2>
             <div class="results-grid" id="trending-movies"></div>
             <div class="see-more-container">
                 <button id="see-more-movies">
@@ -573,8 +519,16 @@
         </div>
 
         <!-- Trending Series Section -->
-        <div class="trending-section">
-            <h2><span class="material-icons">tv</span> Trending Series</h2>
+        <div class="trending-section" id="trending-series-section">
+            <div class="sort-by">
+                <label for="sort-series">Sort Series By:</label>
+                <select id="sort-series">
+                    <option value="trending">Trending</option>
+                    <option value="popular">Popular</option>
+                    <option value="top_rated">Top Rated</option>
+                </select>
+            </div>
+            <h2 id="series-heading"><span class="material-icons">tv</span> Trending Series</h2>
             <div class="results-grid" id="trending-series"></div>
             <div class="see-more-container">
                 <button id="see-more-series">
@@ -598,156 +552,159 @@
     <!-- JavaScript -->
     <script>
         // DOM Elements
-        const searchIcon = document.getElementById('open-search');
-        const searchBar = document.getElementById('search-bar');
-        const closeSearchIcon = document.getElementById('close-search');
-        const searchForm = document.getElementById('search-form');
         const searchInput = document.getElementById('search-input');
-        const sortBySelect = document.getElementById('sort-by');
-        const homepageSortBySelect = document.getElementById('homepage-sort-by');
-        const loadingSpinner = document.getElementById('loading');
-        const embedModal = document.getElementById('embed-modal');
-        const embedContent = document.getElementById('embed-content');
-        const closeButton = embedContent.querySelector('.close-button');
-
+        const searchButton = document.getElementById('search-button');
+        const searchMovieRadio = document.getElementById('search-movie');
+        const searchSeriesRadio = document.getElementById('search-series');
+        const sortMoviesSelect = document.getElementById('sort-movies');
+        const sortSeriesSelect = document.getElementById('sort-series');
         const trendingMoviesDiv = document.getElementById('trending-movies');
         const trendingSeriesDiv = document.getElementById('trending-series');
         const seeMoreMoviesBtn = document.getElementById('see-more-movies');
         const seeMoreSeriesBtn = document.getElementById('see-more-series');
+        const loadingSpinner = document.getElementById('loading');
+        const embedModal = document.getElementById('embed-modal');
+        const embedContent = document.getElementById('embed-content');
+        const closeButton = document.querySelector('.close-button');
+        const appTitle = document.getElementById('app-title');
+        const moviesHeading = document.getElementById('movies-heading');
+        const seriesHeading = document.getElementById('series-heading');
+
+        // Search Results Elements
+        const searchResultsSection = document.getElementById('search-results-section');
+        const searchResultsDiv = document.getElementById('search-results');
+        const searchResultsHeading = document.getElementById('search-results-heading');
+        const seeMoreSearchResultsBtn = document.getElementById('see-more-search-results');
+
+        // Trending Sections (Define Missing Variables)
+        const trendingMoviesSection = document.getElementById('trending-movies-section');
+        const trendingSeriesSection = document.getElementById('trending-series-section');
 
         // API Configuration
-        const API_KEY = '5e38ca50480518c0d1cde63718225f6c'; // Replace with your actual API key
+        const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
         const API_BASE_URL = 'https://api.themoviedb.org/3';
         const EMBED_BASE_URL = 'https://embed.su/embed';
 
         // State Variables
-        let currentSearchType = 'movie';
         let currentPageMovies = 1;
         let currentPageSeries = 1;
+        let currentPageSearch = 1;
+        let currentFilterMovies = 'trending';
+        let currentFilterSeries = 'trending';
         let currentQuery = '';
-        let currentFilter = 'default';
-        let homepageSortFilter = 'trending';
+        let currentSearchType = 'movie'; // Default search type
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
-            loadTrending('movie', homepageSortFilter);
-            loadTrending('tv', homepageSortFilter);
+            loadTrending('movie', currentFilterMovies, currentPageMovies);
+            loadTrending('tv', currentFilterSeries, currentPageSeries);
         });
 
-        // Open Search Bar
-        searchIcon.addEventListener('click', () => {
-            searchBar.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        });
-
-        // Close Search Bar
-        closeSearchIcon.addEventListener('click', () => {
-            searchBar.classList.remove('active');
-            document.body.style.overflow = 'auto';
-            searchForm.reset();
-        });
-
-        // Handle Search Form Submission
-        searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+        // Handle Search Button Click
+        searchButton.addEventListener('click', () => {
             const query = searchInput.value.trim();
             if (query === '') {
                 alert('Please enter a search term.');
                 return;
             }
             currentQuery = query;
-            currentSearchType = document.querySelector('input[name="search-type"]:checked').value;
-            currentFilter = sortBySelect.value;
-            searchContent(query, currentSearchType, currentFilter);
-            searchBar.classList.remove('active');
-            document.body.style.overflow = 'auto';
+            currentSearchType = searchMovieRadio.checked ? 'movie' : 'tv';
+            currentPageSearch = 1;
+            searchContent(query, currentSearchType);
         });
 
         // Allow Enter Key to Submit Search
         searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                searchForm.dispatchEvent(new Event('submit'));
+                searchButton.click();
             }
         });
 
-        // Handle Filter Change in Search Bar
-        sortBySelect.addEventListener('change', () => {
-            const query = currentQuery;
-            const type = currentSearchType;
-            const filter = sortBySelect.value;
-            if (query !== '') {
-                searchContent(query, type, filter);
-            }
-        });
-
-        // Handle Homepage Sort Change
-        homepageSortBySelect.addEventListener('change', () => {
-            homepageSortFilter = homepageSortBySelect.value;
+        // Handle Sort Selection for Movies
+        sortMoviesSelect.addEventListener('change', () => {
+            currentFilterMovies = sortMoviesSelect.value;
             currentPageMovies = 1;
+            trendingMoviesDiv.innerHTML = '';
+            if (currentQuery === '' || currentSearchType !== 'movie') {
+                loadTrending('movie', currentFilterMovies, currentPageMovies);
+            } else if (currentSearchType === 'movie') {
+                searchContent(currentQuery, 'movie');
+            }
+        });
+
+        // Handle Sort Selection for Series
+        sortSeriesSelect.addEventListener('change', () => {
+            currentFilterSeries = sortSeriesSelect.value;
             currentPageSeries = 1;
-            loadTrending('movie', homepageSortFilter);
-            loadTrending('tv', homepageSortFilter);
+            trendingSeriesDiv.innerHTML = '';
+            if (currentQuery === '' || currentSearchType !== 'tv') {
+                loadTrending('tv', currentFilterSeries, currentPageSeries);
+            } else if (currentSearchType === 'tv') {
+                searchContent(currentQuery, 'tv');
+            }
         });
 
-        // Handle Search Type Change
-        const radioButtons = document.querySelectorAll('input[name="search-type"]');
-        radioButtons.forEach(radio => {
-            radio.addEventListener('change', () => {
-                currentSearchType = radio.value;
-                if (currentQuery !== '') {
-                    currentFilter = sortBySelect.value;
-                    searchContent(currentQuery, currentSearchType, currentFilter);
-                }
-            });
-        });
-
-        // See More Buttons
+        // Handle "See More" for Movies
         seeMoreMoviesBtn.addEventListener('click', () => {
             currentPageMovies += 1;
-            loadTrending('movie', homepageSortFilter, currentPageMovies);
+            if (currentQuery === '' || currentSearchType !== 'movie') {
+                loadTrending('movie', currentFilterMovies, currentPageMovies);
+            } else if (currentSearchType === 'movie') {
+                loadMoreSearchResults('movie');
+            }
         });
 
+        // Handle "See More" for Series
         seeMoreSeriesBtn.addEventListener('click', () => {
             currentPageSeries += 1;
-            loadTrending('tv', homepageSortFilter, currentPageSeries);
+            if (currentQuery === '' || currentSearchType !== 'tv') {
+                loadTrending('tv', currentFilterSeries, currentPageSeries);
+            } else if (currentSearchType === 'tv') {
+                loadMoreSearchResults('tv');
+            }
+        });
+
+        // Handle "See More" for Search Results
+        seeMoreSearchResultsBtn.addEventListener('click', () => {
+            currentPageSearch += 1;
+            loadMoreSearchResults(currentSearchType);
         });
 
         // Close Embed Modal
         closeButton.addEventListener('click', () => {
-            embedModal.classList.remove('active');
+            embedModal.style.display = 'none';
             embedContent.querySelector('iframe').src = '';
         });
 
         // Click outside modal to close
         window.addEventListener('click', (e) => {
             if (e.target === embedModal) {
-                embedModal.classList.remove('active');
+                embedModal.style.display = 'none';
                 embedContent.querySelector('iframe').src = '';
             }
         });
 
         // Keyboard Accessibility for Modal
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && embedModal.classList.contains('active')) {
-                embedModal.classList.remove('active');
+            if (e.key === 'Escape' && embedModal.style.display === 'flex') {
+                embedModal.style.display = 'none';
                 embedContent.querySelector('iframe').src = '';
+            }
+        });
+
+        // Click on App Title to Reset Search
+        appTitle.addEventListener('click', () => {
+            if (currentQuery !== '') {
+                resetSearch();
             }
         });
 
         // Functions
 
-        /**
-         * Load Trending Content (Movies or Series) with Sorting and Pagination
-         * @param {string} type - 'movie' or 'tv'
-         * @param {string} sortFilter - 'trending', 'popular', 'top_rated'
-         * @param {number} page - Page number for pagination
-         */
+        // Load Trending Content with Sort Filter
         async function loadTrending(type, sortFilter, page = 1) {
             const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
-            if (page === 1) {
-                container.innerHTML = '';
-            }
             showLoading(true);
             try {
                 let endpoint = '';
@@ -759,11 +716,11 @@
                     endpoint = `${API_BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/top_rated?api_key=${API_KEY}&language=en-US&page=${page}`;
                 }
 
-                // Fetch data from API
                 const response = await fetch(endpoint);
                 if (!response.ok) throw new Error('Failed to fetch trending data.');
                 const data = await response.json();
-                const items = data.results.slice(0, 15); // Limit to 15 items per load
+                const items = data.results;
+
                 displayTrending(items, type, container);
             } catch (error) {
                 container.innerHTML = `<p style="color: var(--error-color);">Error fetching trending ${type === 'movie' ? 'movies' : 'series'}.</p>`;
@@ -773,25 +730,47 @@
             }
         }
 
-        /**
-         * Display Trending Content in the Specified Container
-         * @param {Array} items - Array of movie or series objects
-         * @param {string} type - 'movie' or 'tv'
-         * @param {HTMLElement} container - The container element to append cards to
-         */
+        // Load More Search Results
+        async function loadMoreSearchResults(type) {
+            const container = searchResultsDiv;
+            showLoading(true);
+            try {
+                const endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(currentQuery)}&page=${currentPageSearch}`;
+
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error('Failed to fetch search results.');
+                const data = await response.json();
+                const items = data.results;
+
+                if (items.length === 0) {
+                    // Optionally inform the user that there are no more results
+                    alert('No more results found.');
+                    return;
+                }
+
+                displayTrending(items, type, container);
+            } catch (error) {
+                alert(`Error loading more ${type === 'movie' ? 'movies' : 'series'}.`);
+                console.error('Error:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Display Trending or Search Results
         function displayTrending(items, type, container) {
+            if (items.length === 0) {
+                container.innerHTML += `<p>No results found.</p>`;
+                return;
+            }
+
             items.forEach(item => {
                 const card = createCard(item, type);
                 container.appendChild(card);
             });
         }
 
-        /**
-         * Create a Card Element for a Movie or Series
-         * @param {Object} item - Movie or Series object from API
-         * @param {string} type - 'movie' or 'tv'
-         * @returns {HTMLElement} - The card element
-         */
+        // Create Card Element
         function createCard(item, type) {
             const card = document.createElement('div');
             card.classList.add('card');
@@ -825,62 +804,70 @@
             return card;
         }
 
-        /**
-         * Handle Search Functionality Based on User Query, Type, and Filter
-         * @param {string} query - User's search query
-         * @param {string} type - 'movie' or 'tv'
-         * @param {string} filter - 'trending', 'popular', 'top_rated', or 'default'
-         */
-        async function searchContent(query, type, filter) {
-            const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
-            container.innerHTML = '';
+        // Search Content
+        async function searchContent(query, type) {
+            // Show search results section and hide trending sections
+            searchResultsSection.style.display = 'block';
+            trendingMoviesSection.style.display = 'none';
+            trendingSeriesSection.style.display = 'none';
+
+            searchResultsDiv.innerHTML = '';
             showLoading(true);
             try {
-                let finalEndpoint = '';
-                if (filter === 'trending') {
-                    finalEndpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=1`;
-                } else if (filter === 'popular') {
-                    finalEndpoint = `${API_BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/popular?api_key=${API_KEY}&language=en-US&page=1`;
-                } else if (filter === 'top_rated') {
-                    finalEndpoint = `${API_BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/top_rated?api_key=${API_KEY}&language=en-US&page=1`;
-                } else {
-                    finalEndpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
-                }
+                const endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${currentPageSearch}`;
 
-                // Fetch data from API
-                const response = await fetch(finalEndpoint);
+                const response = await fetch(endpoint);
                 if (!response.ok) throw new Error('Failed to fetch search results.');
                 const data = await response.json();
-                let items = [];
-                if (filter === 'trending') {
-                    items = data.results.slice(0, 15);
-                } else {
-                    items = data.results.slice(0, 15);
+                const items = data.results;
+
+                if (items.length === 0) {
+                    searchResultsDiv.innerHTML = `<p>No results found for "${query}".</p>`;
+                    searchResultsHeading.innerHTML = `<span class="material-icons">search</span> No Results for "${query}"`;
+                    return;
                 }
-                displayTrending(items, type, container);
+
+                displayTrending(items, type, searchResultsDiv);
+                searchResultsHeading.innerHTML = `<span class="material-icons">search</span> Search Results for "${query}"`;
             } catch (error) {
-                container.innerHTML = `<p style="color: var(--error-color);">Error fetching search results.</p>`;
+                searchResultsDiv.innerHTML = `<p style="color: var(--error-color);">Error fetching search results.</p>`;
                 console.error('Error:', error);
             } finally {
                 showLoading(false);
             }
         }
 
-        /**
-         * Show or Hide the Loading Spinner
-         * @param {boolean} show - Whether to show the spinner
-         */
+        // Reset Search and Return to Homepage
+        function resetSearch() {
+            currentQuery = '';
+            searchInput.value = '';
+            searchResultsDiv.innerHTML = '';
+            searchResultsHeading.innerHTML = `<span class="material-icons">search</span> Search Results`;
+
+            // Hide search results section and show trending sections
+            searchResultsSection.style.display = 'none';
+            trendingMoviesSection.style.display = 'block';
+            trendingSeriesSection.style.display = 'block';
+
+            // Reset headings
+            moviesHeading.innerHTML = `<span class="material-icons">local_fire_department</span> Trending Movies`;
+            seriesHeading.innerHTML = `<span class="material-icons">tv</span> Trending Series`;
+
+            // Reload trending content
+            trendingMoviesDiv.innerHTML = '';
+            trendingSeriesDiv.innerHTML = '';
+            loadTrending('movie', currentFilterMovies, currentPageMovies);
+            loadTrending('tv', currentFilterSeries, currentPageSeries);
+        }
+
+        // Show or Hide Loading Spinner
         function showLoading(show) {
             loadingSpinner.style.display = show ? 'block' : 'none';
         }
 
-        /**
-         * Open the Embed Modal with the Selected Movie or Series
-         * @param {Object} item - Movie or Series object from API
-         * @param {string} type - 'movie' or 'tv'
-         */
+        // Open Embed Modal
         async function openEmbedModal(item, type) {
-            embedModal.classList.add('active');
+            embedModal.style.display = 'flex';
             embedContent.querySelector('iframe').src = '';
             showLoading(true);
             try {
@@ -898,12 +885,7 @@
             }
         }
 
-        /**
-         * Generate the Embed URL Based on the Selected Movie or Series
-         * @param {Object} item - Movie or Series object from API
-         * @param {string} type - 'movie' or 'tv'
-         * @returns {string|null} - The embed URL or null if not found
-         */
+        // Generate Embed URL
         async function generateEmbedURL(item, type) {
             let embedURL = `${EMBED_BASE_URL}/${type}/${item.id}`;
             if (type === 'tv') {
