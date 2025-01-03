@@ -61,13 +61,15 @@
             z-index: 1000;
             box-shadow: 0 2px 4px var(--shadow-color);
             background-color: var(--background-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         header h1 {
             margin: 0;
             font-size: var(--font-size-title);
             display: flex;
-            justify-content: center;
             align-items: center;
             gap: 10px;
             letter-spacing: 2px;
@@ -78,6 +80,17 @@
             font-size: 1.5em;
         }
 
+        /* Search Icon */
+        .search-icon {
+            cursor: pointer;
+            color: var(--on-surface-color);
+            transition: color var(--transition-speed) ease;
+        }
+
+        .search-icon:hover {
+            color: var(--secondary-color);
+        }
+
         /* Main Content */
         main {
             flex: 1;
@@ -85,40 +98,92 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: filter var(--transition-speed) ease;
         }
 
-        /* Search Container */
-        .search-container {
+        /* Floating Search Overlay */
+        #search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        #search-overlay.active {
+            display: flex;
+        }
+
+        .search-box {
             background-color: var(--surface-color);
-            padding: 15px 25px;
+            padding: 20px 30px;
             border-radius: 12px;
             box-shadow: 0 4px 8px var(--shadow-color);
-            width: 100%;
-            max-width: 700px;
-            margin-bottom: 20px;
-            transition: background-color var(--transition-speed) ease;
+            width: 90%;
+            max-width: 600px;
+            animation: slideIn 0.3s ease;
         }
 
-        .search-container form {
+        .search-box form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-box .search-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box .search-input-container input[type="text"] {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
+            background-color: var(--background-color);
+            color: var(--on-surface-color);
+            outline: none;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            font-size: 1em;
+        }
+
+        .search-box .search-input-container .material-icons {
+            cursor: pointer;
+            color: var(--on-surface-color);
+            transition: color var(--transition-speed) ease;
+        }
+
+        .search-box .search-input-container .material-icons:hover {
+            color: var(--secondary-color);
+        }
+
+        .search-box .filters {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             align-items: center;
-            justify-content: center;
         }
 
-        .search-container label {
+        .search-box .filters .search-type {
             display: flex;
             align-items: center;
             gap: 5px;
             cursor: pointer;
             position: relative;
-            padding-left: 35px;
+            padding-left: 25px;
             user-select: none;
             font-weight: 500;
         }
 
-        .search-container input[type="radio"] {
+        .search-box .filters .search-type input[type="radio"] {
             position: absolute;
             opacity: 0;
             cursor: pointer;
@@ -126,109 +191,61 @@
             width: 0;
         }
 
-        .checkmark {
+        .search-box .filters .search-type .checkmark {
             position: absolute;
             top: 50%;
             left: 0;
-            height: 20px;
-            width: 20px;
+            height: 15px;
+            width: 15px;
             background-color: #ccc;
             border-radius: 50%;
             transform: translateY(-50%);
             transition: background-color var(--transition-speed) ease;
         }
 
-        .search-container input[type="radio"]:checked ~ .checkmark {
+        .search-box .filters .search-type input[type="radio"]:checked ~ .checkmark {
             background-color: var(--secondary-color);
         }
 
-        .checkmark:after {
+        .search-box .filters .search-type .checkmark:after {
             content: "";
             position: absolute;
             display: none;
         }
 
-        .search-container input[type="radio"]:checked ~ .checkmark:after {
+        .search-box .filters .search-type input[type="radio"]:checked ~ .checkmark:after {
             display: block;
         }
 
-        .search-container .checkmark:after {
-            top: 6px;
-            left: 6px;
-            width: 8px;
-            height: 8px;
+        .search-box .filters .search-type .checkmark:after {
+            top: 4px;
+            left: 4px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: var(--on-surface-color);
         }
 
-        #search-input {
-            flex: 1 1 200px;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 25px;
-            background-color: var(--background-color);
-            color: var(--on-surface-color);
-            outline: none;
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            font-size: 1em;
-        }
-
-        #search-input::placeholder {
-            color: #bbb;
-        }
-
-        .search-container button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 25px;
-            background-color: var(--secondary-color);
-            color: var(--on-surface-color);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: background-color var(--transition-speed) ease;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            font-weight: 500;
-            font-size: 1em;
-        }
-
-        .search-container button:hover {
-            background-color: var(--primary-color);
-        }
-
-        .search-container button .material-icons {
-            font-size: 1.2em;
-        }
-
-        /* Sort Container */
-        #sort-container {
+        .search-box .filters .sort-by {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-top: 15px;
-            justify-content: center;
-        }
-
-        #sort-container label {
             font-weight: 500;
         }
 
-        #sort-by {
+        .search-box .filters .sort-by select {
             padding: 8px 12px;
             border: none;
             border-radius: 8px;
             background-color: var(--background-color);
             color: var(--on-surface-color);
             outline: none;
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
             box-shadow: 0 2px 4px var(--shadow-color);
             cursor: pointer;
             font-size: 1em;
         }
 
-        #sort-by option {
+        .search-box .filters .sort-by select option {
             background-color: var(--surface-color);
             color: var(--on-surface-color);
         }
@@ -258,6 +275,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
+            animation: fadeIn 0.5s ease;
         }
 
         /* Card Styles */
@@ -397,46 +415,38 @@
             color: var(--secondary-color);
         }
 
-        /* Loading Spinner */
-        .spinner {
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid var(--primary-color);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin: 50px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         /* Responsive Design */
         @media (max-width: 600px) {
-            .search-container form {
-                flex-direction: column;
+            .search-box {
+                padding: 15px 20px;
             }
 
-            #search-input {
-                width: 100%;
-                margin-right: 0;
-            }
-
-            #sort-container {
+            .search-box .filters {
                 flex-direction: column;
                 align-items: flex-start;
             }
 
-            .results-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 15px;
+            .search-box .filters .sort-by {
+                width: 100%;
+            }
+
+            .trending-section h2 {
+                font-size: 1.3em;
+            }
+
+            .trending-section h2 .material-icons {
+                font-size: 1em;
             }
 
             .card img {
@@ -448,33 +458,39 @@
 <body>
     <header>
         <h1><span class="material-icons">movie</span> Sanuu Flix</h1>
+        <span class="material-icons search-icon" id="open-search">search</span>
     </header>
-    <main>
-        <div class="search-container">
-            <form id="search-form">
-                <label>
-                    <input type="radio" name="search-type" value="movie" checked>
-                    Movie
-                    <span class="checkmark"></span>
-                </label>
-                <label>
-                    <input type="radio" name="search-type" value="tv">
-                    Series
-                    <span class="checkmark"></span>
-                </label>
-                <input type="text" id="search-input" placeholder="Search for movies or series..." required>
-                <button type="submit">
-                    <span class="material-icons">search</span> Search
-                </button>
-            </form>
-            <div id="sort-container">
-                <label for="sort-by">Sort By:</label>
-                <select id="sort-by">
-                    <option value="default">Default</option>
-                    <option value="trending">Trending</option>
-                    <option value="popular">Popular</option>
-                    <option value="top_rated">Top Rated</option>
-                </select>
+    <main id="main-content">
+        <!-- Floating Search Overlay -->
+        <div id="search-overlay">
+            <div class="search-box">
+                <form id="search-form">
+                    <div class="search-input-container">
+                        <input type="text" id="search-input" placeholder="Search for movies or series..." required>
+                        <span class="material-icons" id="close-search">close</span>
+                    </div>
+                    <div class="filters">
+                        <div class="search-type">
+                            <input type="radio" name="search-type" value="movie" id="search-movie" checked>
+                            Movie
+                            <span class="checkmark"></span>
+                        </div>
+                        <div class="search-type">
+                            <input type="radio" name="search-type" value="tv" id="search-series">
+                            Series
+                            <span class="checkmark"></span>
+                        </div>
+                        <div class="sort-by">
+                            <label for="sort-by">Sort By:</label>
+                            <select id="sort-by">
+                                <option value="default">Default</option>
+                                <option value="trending">Trending</option>
+                                <option value="popular">Popular</option>
+                                <option value="top_rated">Top Rated</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -515,6 +531,9 @@
     <!-- JavaScript -->
     <script>
         // DOM Elements
+        const searchIcon = document.getElementById('open-search');
+        const searchOverlay = document.getElementById('search-overlay');
+        const closeSearchIcon = document.getElementById('close-search');
         const searchForm = document.getElementById('search-form');
         const searchInput = document.getElementById('search-input');
         const sortBySelect = document.getElementById('sort-by');
@@ -546,6 +565,20 @@
             loadTrending('tv');
         });
 
+        // Open Search Overlay
+        searchIcon.addEventListener('click', () => {
+            searchOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        });
+
+        // Close Search Overlay
+        closeSearchIcon.addEventListener('click', () => {
+            searchOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            searchForm.reset();
+        });
+
+        // Handle Search Form Submission
         searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const query = searchInput.value.trim();
@@ -557,8 +590,11 @@
             currentSearchType = document.querySelector('input[name="search-type"]:checked').value;
             currentFilter = sortBySelect.value;
             searchContent(query, currentSearchType, currentFilter);
+            searchOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
         });
 
+        // Handle Filter Change
         sortBySelect.addEventListener('change', () => {
             const query = currentQuery;
             const type = currentSearchType;
@@ -568,6 +604,19 @@
             }
         });
 
+        // Handle Search Type Change
+        const radioButtons = document.querySelectorAll('input[name="search-type"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', () => {
+                currentSearchType = radio.value;
+                if (currentQuery !== '') {
+                    currentFilter = sortBySelect.value;
+                    searchContent(currentQuery, currentSearchType, currentFilter);
+                }
+            });
+        });
+
+        // See More Buttons
         seeMoreMoviesBtn.addEventListener('click', () => {
             currentPageMovies += 1;
             loadTrending('movie', currentPageMovies);
@@ -578,11 +627,13 @@
             loadTrending('tv', currentPageSeries);
         });
 
+        // Close Embed Modal
         closeButton.addEventListener('click', () => {
             embedModal.style.display = 'none';
             embedContent.querySelector('iframe').src = '';
         });
 
+        // Click outside modal to close
         window.addEventListener('click', (e) => {
             if (e.target === embedModal) {
                 embedModal.style.display = 'none';
@@ -590,6 +641,7 @@
             }
         });
 
+        // Keyboard Accessibility for Modal
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && embedModal.style.display === 'flex') {
                 embedModal.style.display = 'none';
@@ -602,9 +654,13 @@
         // Load Trending Content
         async function loadTrending(type, page = 1) {
             if (type === 'movie') {
-                trendingMoviesDiv.innerHTML = '';
+                if (page === 1) {
+                    trendingMoviesDiv.innerHTML = '';
+                }
             } else if (type === 'tv') {
-                trendingSeriesDiv.innerHTML = '';
+                if (page === 1) {
+                    trendingSeriesDiv.innerHTML = '';
+                }
             }
             showLoading(true);
             try {
@@ -671,32 +727,27 @@
 
         // Search Content
         async function searchContent(query, type, filter) {
-            const endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
-            trendingMoviesDiv.innerHTML = '';
-            trendingSeriesDiv.innerHTML = '';
+            const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
+            container.innerHTML = '';
             showLoading(true);
             try {
-                let finalEndpoint = endpoint;
+                let endpoint = '';
                 if (filter === 'trending') {
-                    finalEndpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=1`;
+                    endpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=1`;
                 } else if (filter === 'popular') {
-                    finalEndpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1&sort_by=popularity.desc`;
+                    endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1&sort_by=popularity.desc`;
                 } else if (filter === 'top_rated') {
-                    finalEndpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1&sort_by=vote_average.desc`;
+                    endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1&sort_by=vote_average.desc`;
+                } else {
+                    endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
                 }
 
-                const response = await fetch(finalEndpoint);
+                const response = await fetch(endpoint);
                 if (!response.ok) throw new Error('Failed to fetch search results.');
                 const data = await response.json();
                 const items = data.results.slice(0, 15);
-                const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
-                container.innerHTML = '';
-                items.forEach(item => {
-                    const card = createCard(item, type);
-                    container.appendChild(card);
-                });
+                displayTrending(items, type);
             } catch (error) {
-                const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
                 container.innerHTML = '<p style="color: var(--error-color);">Error fetching search results.</p>';
                 console.error('Error:', error);
             } finally {
