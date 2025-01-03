@@ -17,8 +17,8 @@
             --surface-color: #1E1E1E; /* Surface */
             --on-surface-color: #FFFFFF; /* Text on Surface */
             --error-color: #CF6679; /* Error */
-            --success-color: #4CAF50; /* Success */
             --info-color: #2196F3; /* Info */
+            --success-color: #4CAF50; /* Success */
             --warning-color: #FB8C00; /* Warning */
             --shadow-color: rgba(0, 0, 0, 0.5);
             --transition-speed: 0.3s;
@@ -157,7 +157,7 @@
         }
 
         #search-input {
-            flex: 1 1 300px;
+            flex: 1 1 250px;
             padding: 12px 20px;
             border: none;
             border-radius: 25px;
@@ -288,44 +288,6 @@
             color: #bbb;
         }
 
-        .favorite-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #FFEB3B;
-            font-size: 1.5em;
-            opacity: 0.8;
-            cursor: pointer;
-            transition: transform var(--transition-speed) ease, opacity var(--transition-speed) ease;
-        }
-
-        .favorite-icon:hover {
-            transform: scale(1.2);
-            opacity: 1;
-        }
-
-        /* Load More Button */
-        #load-more-btn {
-            padding: 10px 20px;
-            margin: 20px auto;
-            display: none;
-            border: none;
-            border-radius: 25px;
-            background-color: var(--secondary-color);
-            color: var(--on-surface-color);
-            cursor: pointer;
-            transition: background-color var(--transition-speed) ease;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            font-size: 1em;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        #load-more-btn:hover {
-            background-color: var(--primary-color);
-        }
-
         /* Embed Modal */
         #embed-modal {
             display: none;
@@ -426,51 +388,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Favorite Notification */
-        #favorite-notification {
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: var(--on-surface-color);
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            z-index: 3000;
-        }
-
-        #favorite-notification.show {
-            opacity: 1;
-        }
-
-        /* Dark Mode Toggle */
-        .toggle-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--surface-color);
-            padding: 10px;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            cursor: pointer;
-            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
-            z-index: 1000;
-        }
-
-        .toggle-container:hover {
-            transform: rotate(20deg);
-        }
-
-        .toggle-container .material-icons {
-            color: var(--on-surface-color);
-            font-size: 1.5em;
-        }
-
         /* Responsive Design */
         @media (max-width: 600px) {
             .search-container form {
@@ -523,18 +440,15 @@
             <div id="sort-container">
                 <label for="sort-by">Sort By:</label>
                 <select id="sort-by">
-                    <option value="latest">Latest</option>
-                    <option value="title">Title</option>
+                    <option value="default">Default</option>
+                    <option value="trending">Trending</option>
+                    <option value="popular">Popular</option>
+                    <option value="top_rated">Top Rated</option>
                 </select>
             </div>
         </div>
 
         <div id="results"></div>
-
-        <!-- Load More Button -->
-        <button id="load-more-btn">
-            <span class="material-icons">expand_more</span> Load More
-        </button>
 
         <!-- Loading Spinner -->
         <div id="loading" class="spinner" style="display: none;"></div>
@@ -542,7 +456,7 @@
         <!-- Embed Modal -->
         <div id="embed-modal">
             <div id="embed-content">
-                <span class="close-button">&times;</span>
+                <span class="material-icons close-button">close</span>
                 <iframe src="" allowfullscreen allow="fullscreen; autoplay"></iframe>
                 <div id="fullscreen-prompt" style="display: none;">
                     <button id="fullscreen-yes"><span class="material-icons">fullscreen</span> Yes</button>
@@ -550,17 +464,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Favorite Notification -->
-        <div id="favorite-notification">
-            <span class="material-icons">favorite</span> Added to Favorites!
-        </div>
     </main>
-
-    <!-- Dark Mode Toggle -->
-    <div class="toggle-container" id="dark-mode-toggle" title="Toggle Dark/Light Mode">
-        <span class="material-icons">brightness_4</span>
-    </div>
 
     <!-- JavaScript -->
     <script>
@@ -568,18 +472,15 @@
         const searchForm = document.getElementById('search-form');
         const searchInput = document.getElementById('search-input');
         const resultsDiv = document.getElementById('results');
-        const loadMoreBtn = document.getElementById('load-more-btn');
-        const loadingSpinner = document.getElementById('loading');
         const sortBySelect = document.getElementById('sort-by');
+        const loadingSpinner = document.getElementById('loading');
         const embedModal = document.getElementById('embed-modal');
         const embedContent = document.getElementById('embed-content');
-        const closeButton = embedModal.querySelector('.close-button');
-        const embedIframe = embedModal.querySelector('iframe');
+        const closeButton = embedContent.querySelector('.close-button');
+        const embedIframe = embedContent.querySelector('iframe');
         const fullscreenPrompt = document.getElementById('fullscreen-prompt');
         const fullscreenYesButton = document.getElementById('fullscreen-yes');
         const fullscreenNoButton = document.getElementById('fullscreen-no');
-        const favoriteNotification = document.getElementById('favorite-notification');
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
 
         // API Configuration
         const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
@@ -592,6 +493,7 @@
         let currentPage = 1;
         let totalPages = 1;
         let currentQuery = '';
+        let currentFilter = 'default';
 
         // Event Listeners
         searchForm.addEventListener('submit', (e) => {
@@ -603,25 +505,49 @@
             }
             currentQuery = query;
             currentPage = 1;
-            searchItems(query, currentSearchType, currentPage);
+            currentFilter = sortBySelect.value;
+            searchItems(query, currentSearchType, currentPage, currentFilter);
         });
 
         sortBySelect.addEventListener('change', () => {
-            sortAndDisplayResults();
-        });
-
-        loadMoreBtn.addEventListener('click', () => {
-            if (currentPage < totalPages) {
-                currentPage += 1;
-                searchItems(currentQuery, currentSearchType, currentPage);
+            currentFilter = sortBySelect.value;
+            currentPage = 1;
+            if (currentFilter === 'trending') {
+                fetchTrending(currentSearchType, currentPage);
+            } else if (currentFilter === 'default') {
+                searchItems(currentQuery, currentSearchType, currentPage, currentFilter);
+            } else {
+                searchItems(currentQuery, currentSearchType, currentPage, currentFilter);
             }
         });
 
+        // Radio Buttons for Search Type
+        const radioButtons = document.querySelectorAll('input[name="search-type"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', () => {
+                currentSearchType = radio.value;
+                if (currentQuery !== '') {
+                    currentPage = 1;
+                    currentFilter = sortBySelect.value;
+                    if (currentFilter === 'trending') {
+                        fetchTrending(currentSearchType, currentPage);
+                    } else if (currentFilter === 'default') {
+                        searchItems(currentQuery, currentSearchType, currentPage, currentFilter);
+                    } else {
+                        searchItems(currentQuery, currentSearchType, currentPage, currentFilter);
+                    }
+                }
+            });
+        });
+
+        // Close Modal
         closeButton.addEventListener('click', () => {
             embedModal.style.display = 'none';
             embedIframe.src = '';
+            fullscreenPrompt.style.display = 'none';
         });
 
+        // Fullscreen Prompt Buttons
         fullscreenNoButton.addEventListener('click', () => {
             fullscreenPrompt.style.display = 'none';
         });
@@ -631,43 +557,48 @@
             window.open(embedIframe.src, '_blank', 'noopener,noreferrer');
         });
 
-        darkModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            toggleDarkModeIcon();
+        // Click outside modal to close
+        window.addEventListener('click', (e) => {
+            if (e.target === embedModal) {
+                embedModal.style.display = 'none';
+                embedIframe.src = '';
+                fullscreenPrompt.style.display = 'none';
+            }
         });
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            toggleDarkModeIcon();
+        // Keyboard Accessibility for Modal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && embedModal.style.display === 'flex') {
+                embedModal.style.display = 'none';
+                embedIframe.src = '';
+                fullscreenPrompt.style.display = 'none';
+            }
         });
 
         // Functions
 
-        // Toggle Dark Mode Icon
-        function toggleDarkModeIcon() {
-            const icon = darkModeToggle.querySelector('.material-icons');
-            if (document.body.classList.contains('light-mode')) {
-                icon.textContent = 'dark_mode';
-            } else {
-                icon.textContent = 'brightness_4';
-            }
-        }
-
         // Search Items
-        async function searchItems(query, searchType, page = 1) {
+        async function searchItems(query, searchType, page = 1, filter = 'default') {
             resultsDiv.innerHTML = '';
-            loadMoreBtn.style.display = 'none';
             loadingSpinner.style.display = 'block';
             try {
-                const response = await fetch(`${API_BASE_URL}/search/${searchType}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`);
+                let endpoint = '';
+                if (filter === 'trending') {
+                    endpoint = `${API_BASE_URL}/trending/${searchType}/day?api_key=${API_KEY}&page=${page}`;
+                } else if (filter === 'popular') {
+                    endpoint = `${API_BASE_URL}/search/${searchType}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}&sort_by=popularity.desc`;
+                } else if (filter === 'top_rated') {
+                    endpoint = `${API_BASE_URL}/search/${searchType}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}&sort_by=vote_average.desc`;
+                } else {
+                    endpoint = `${API_BASE_URL}/search/${searchType}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`;
+                }
+
+                const response = await fetch(endpoint);
                 if (!response.ok) throw new Error('Network response was not ok.');
                 const data = await response.json();
                 currentItems = data.results || [];
                 totalPages = data.total_pages || 1;
-                sortAndDisplayResults();
-                if (page < totalPages) {
-                    loadMoreBtn.style.display = 'flex';
-                }
+                displayResults(currentItems);
             } catch (error) {
                 resultsDiv.innerHTML = '<p style="color: var(--error-color);">Error fetching data. Please try again later.</p>';
                 console.error('Error:', error);
@@ -676,28 +607,24 @@
             }
         }
 
-        // Sort and Display Results
-        function sortAndDisplayResults() {
-            let sortedItems = sortItems([...currentItems], sortBySelect.value);
-            displayResults(sortedItems);
-        }
-
-        // Sort Items
-        function sortItems(items, sortBy) {
-            if (sortBy === 'title') {
-                return items.sort((a, b) => {
-                    const titleA = (a.title || a.name || '').toLowerCase();
-                    const titleB = (b.title || b.name || '').toLowerCase();
-                    return titleA.localeCompare(titleB);
-                });
-            } else if (sortBy === 'latest') {
-                return items.sort((a, b) => {
-                    const dateA = new Date(a.release_date || a.first_air_date || '0000-00-00');
-                    const dateB = new Date(b.release_date || b.first_air_date || '0000-00-00');
-                    return dateB - dateA;
-                });
+        // Fetch Trending Items
+        async function fetchTrending(searchType, page = 1) {
+            resultsDiv.innerHTML = '';
+            loadingSpinner.style.display = 'block';
+            try {
+                const endpoint = `${API_BASE_URL}/trending/${searchType}/day?api_key=${API_KEY}&page=${page}`;
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const data = await response.json();
+                currentItems = data.results || [];
+                totalPages = data.total_pages || 1;
+                displayResults(currentItems);
+            } catch (error) {
+                resultsDiv.innerHTML = '<p style="color: var(--error-color);">Error fetching trending data. Please try again later.</p>';
+                console.error('Error:', error);
+            } finally {
+                loadingSpinner.style.display = 'none';
             }
-            return items;
         }
 
         // Display Results
@@ -729,19 +656,8 @@
                 cardContent.appendChild(title);
                 cardContent.appendChild(date);
 
-                // Favorite Icon
-                const favoriteIcon = document.createElement('span');
-                favoriteIcon.classList.add('material-icons', 'favorite-icon');
-                favoriteIcon.textContent = isFavorite(item.id) ? 'favorite' : 'favorite_border';
-                favoriteIcon.style.color = isFavorite(item.id) ? '#FF5252' : '#FFFFFF';
-                favoriteIcon.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleFavorite(item.id, favoriteIcon);
-                });
-
                 card.appendChild(img);
                 card.appendChild(cardContent);
-                card.appendChild(favoriteIcon);
 
                 // Click Event to Open Embed Modal
                 card.addEventListener('click', () => {
@@ -749,7 +665,7 @@
                 });
 
                 resultsDiv.appendChild(card);
-            });
+            }
         }
 
         // Open Embed Modal
@@ -798,55 +714,6 @@
             }
             return embedURL;
         }
-
-        // Favorites Management
-        function getFavorites() {
-            const favorites = localStorage.getItem('favorites');
-            return favorites ? JSON.parse(favorites) : [];
-        }
-
-        function isFavorite(id) {
-            const favorites = getFavorites();
-            return favorites.includes(id);
-        }
-
-        function toggleFavorite(id, iconElement) {
-            let favorites = getFavorites();
-            if (favorites.includes(id)) {
-                favorites = favorites.filter(favId => favId !== id);
-                iconElement.textContent = 'favorite_border';
-                iconElement.style.color = '#FFFFFF';
-            } else {
-                favorites.push(id);
-                iconElement.textContent = 'favorite';
-                iconElement.style.color = '#FF5252';
-                showFavoriteNotification();
-            }
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-        }
-
-        function showFavoriteNotification() {
-            favoriteNotification.classList.add('show');
-            setTimeout(() => {
-                favoriteNotification.classList.remove('show');
-            }, 2000);
-        }
-
-        // Close Modal on Outside Click
-        window.addEventListener('click', (e) => {
-            if (e.target === embedModal) {
-                embedModal.style.display = 'none';
-                embedIframe.src = '';
-            }
-        });
-
-        // Keyboard Accessibility for Modal
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && embedModal.style.display === 'flex') {
-                embedModal.style.display = 'none';
-                embedIframe.src = '';
-            }
-        });
     </script>
 </body>
 </html>
