@@ -160,14 +160,26 @@
             color: #bbb;
         }
 
-        .search-box .search-input-container .material-icons {
+        .search-box .search-input-container button {
+            background: none;
+            border: none;
             cursor: pointer;
             color: var(--on-surface-color);
             transition: color var(--transition-speed) ease;
         }
 
-        .search-box .search-input-container .material-icons:hover {
+        .search-box .search-input-container button:hover {
             color: var(--secondary-color);
+        }
+
+        .search-box .search-input-container .material-icons#close-search {
+            cursor: pointer;
+            color: var(--on-surface-color);
+            transition: color var(--transition-speed) ease;
+        }
+
+        .search-box .search-input-container .material-icons#close-search:hover {
+            color: var(--error-color);
         }
 
         .search-box .filters {
@@ -507,8 +519,8 @@
                 <form id="search-form">
                     <div class="search-input-container">
                         <input type="text" id="search-input" placeholder="Search for movies or series..." required>
-                        <button type="submit" aria-label="Search" style="background: none; border: none; cursor: pointer;">
-                            <span class="material-icons" id="submit-search" style="color: var(--on-surface-color);">search</span>
+                        <button type="submit" aria-label="Search">
+                            <span class="material-icons" id="submit-search">search</span>
                         </button>
                         <span class="material-icons" id="close-search">close</span>
                     </div>
@@ -747,7 +759,7 @@
                 } else if (sortFilter === 'top_rated') {
                     endpoint = `${API_BASE_URL}/${type === 'movie' ? 'movie' : 'tv'}/top_rated?api_key=${API_KEY}&language=en-US&page=${page}`;
                 }
-
+                // Fetch data from API
                 const response = await fetch(endpoint);
                 if (!response.ok) throw new Error('Failed to fetch trending data.');
                 const data = await response.json();
@@ -805,7 +817,6 @@
 
         // Search Content
         async function searchContent(query, type, filter) {
-            const endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
             const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
             container.innerHTML = '';
             showLoading(true);
@@ -821,6 +832,7 @@
                     finalEndpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
                 }
 
+                // Fetch data from API
                 const response = await fetch(finalEndpoint);
                 if (!response.ok) throw new Error('Failed to fetch search results.');
                 const data = await response.json();
