@@ -76,7 +76,7 @@
             gap: 10px;
             letter-spacing: 2px;
             color: var(--on-surface-color);
-            cursor: pointer; /* Make it clickable */
+            cursor: pointer;
             user-select: none;
         }
 
@@ -254,7 +254,7 @@
         /* Results Grid */
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 columns per row */
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             animation: fadeIn 0.5s ease;
         }
@@ -368,6 +368,9 @@
             max-width: 800px;
             box-shadow: 0 4px 8px var(--shadow-color);
             transition: background-color var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         #embed-content iframe {
@@ -396,15 +399,56 @@
             color: var(--secondary-color);
         }
 
+        /* Season and Episode Selectors */
+        .selectors {
+            display: none;
+            flex-direction: row;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .selectors select {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--surface-color);
+            color: var(--on-surface-color);
+            outline: none;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            cursor: pointer;
+            font-size: 1em;
+            appearance: none;
+        }
+
+        /* API Selector */
+        .api-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .api-selector select {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--surface-color);
+            color: var(--on-surface-color);
+            outline: none;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            cursor: pointer;
+            font-size: 1em;
+            appearance: none;
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Loading Spinner */
@@ -416,11 +460,6 @@
             height: 60px;
             animation: spin 1s linear infinite;
             margin: 50px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         /* Responsive Design */
@@ -457,10 +496,13 @@
                 padding: 10px;
             }
 
-            /* Adjust grid to single column on very small screens */
             .results-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
+            }
+
+            #embed-content iframe {
+                height: 300px;
             }
         }
     </style>
@@ -544,7 +586,23 @@
         <div id="embed-modal">
             <div id="embed-content">
                 <span class="material-icons close-button">close</span>
-                <iframe src="" allowfullscreen allow="fullscreen; autoplay"></iframe>
+                <div class="api-selector">
+                    <label for="api-select">Select Embed Provider:</label>
+                    <select id="api-select">
+                        <option value="embed-su">Embed.su</option>
+                        <option value="vidlink">VidLink</option>
+                    </select>
+                </div>
+                <div class="selectors" id="season-episode-selectors">
+                    <select id="season-selector">
+                        <option value="">Select Season</option>
+                    </select>
+                    <select id="episode-selector" disabled>
+                        <option value="">Select Episode</option>
+                    </select>
+                </div>
+                <iframe src="" allow="fullscreen; autoplay"></iframe>
+                <div class="iframe-overlay" id="iframe-overlay"></div>
             </div>
         </div>
     </main>
@@ -570,20 +628,28 @@
         const moviesHeading = document.getElementById('movies-heading');
         const seriesHeading = document.getElementById('series-heading');
 
+        const trendingMoviesSection = document.getElementById('trending-movies-section');
+        const trendingSeriesSection = document.getElementById('trending-series-section');
+
         // Search Results Elements
         const searchResultsSection = document.getElementById('search-results-section');
         const searchResultsDiv = document.getElementById('search-results');
         const searchResultsHeading = document.getElementById('search-results-heading');
         const seeMoreSearchResultsBtn = document.getElementById('see-more-search-results');
 
-        // Trending Sections (Define Missing Variables)
-        const trendingMoviesSection = document.getElementById('trending-movies-section');
-        const trendingSeriesSection = document.getElementById('trending-series-section');
+        // Embed Modal Elements
+        const apiSelect = document.getElementById('api-select');
+        const embedIframe = embedContent.querySelector('iframe');
+        const iframeOverlay = document.getElementById('iframe-overlay');
+        const seasonEpisodeSelectors = document.getElementById('season-episode-selectors');
+        const seasonSelector = document.getElementById('season-selector');
+        const episodeSelector = document.getElementById('episode-selector');
 
         // API Configuration
         const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
         const API_BASE_URL = 'https://api.themoviedb.org/3';
-        const EMBED_BASE_URL = 'https://embed.su/embed';
+        const MAIN_SERVER_BASE_URL = 'https://embed.su/embed'; // Embed.su as Main Server
+        const ALTERNATIVE_SERVER_BASE_URL = 'https://vidlink.pro'; // VidLink as Alternative Server
 
         // State Variables
         let currentPageMovies = 1;
@@ -593,6 +659,9 @@
         let currentFilterSeries = 'trending';
         let currentQuery = '';
         let currentSearchType = 'movie'; // Default search type
+        let currentEmbedItem = null; // Currently selected item for embedding
+        let embedTimeout = null; // Timeout for Main Server failure
+        let isAlternativeActive = false; // Flag to indicate if Alternative Server is active
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
@@ -674,14 +743,16 @@
         // Close Embed Modal
         closeButton.addEventListener('click', () => {
             embedModal.style.display = 'none';
-            embedContent.querySelector('iframe').src = '';
+            embedIframe.src = '';
+            resetEmbedModal();
         });
 
         // Click outside modal to close
         window.addEventListener('click', (e) => {
             if (e.target === embedModal) {
                 embedModal.style.display = 'none';
-                embedContent.querySelector('iframe').src = '';
+                embedIframe.src = '';
+                resetEmbedModal();
             }
         });
 
@@ -689,7 +760,8 @@
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && embedModal.style.display === 'flex') {
                 embedModal.style.display = 'none';
-                embedContent.querySelector('iframe').src = '';
+                embedIframe.src = '';
+                resetEmbedModal();
             }
         });
 
@@ -697,6 +769,49 @@
         appTitle.addEventListener('click', () => {
             if (currentQuery !== '') {
                 resetSearch();
+            }
+        });
+
+        // Handle API Selector Change
+        apiSelect.addEventListener('change', () => {
+            if (currentEmbedItem) {
+                loadEmbedVideo();
+            }
+        });
+
+        // Handle Season Selector Change
+        seasonSelector.addEventListener('change', async () => {
+            const selectedSeason = seasonSelector.value;
+            if (selectedSeason === '') {
+                episodeSelector.innerHTML = '<option value="">Select Episode</option>';
+                episodeSelector.disabled = true;
+                return;
+            }
+
+            if (currentSearchType !== 'tv' || !currentEmbedItem) return;
+
+            showLoading(true);
+            try {
+                const tvId = currentEmbedItem.id;
+                const endpoint = `${API_BASE_URL}/tv/${tvId}/season/${selectedSeason}?api_key=${API_KEY}`;
+
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error('Failed to fetch episodes.');
+                const data = await response.json();
+                const episodes = data.episodes;
+
+                populateEpisodeSelector(episodes);
+            } catch (error) {
+                console.error('Error fetching episodes:', error);
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        // Handle Episode Selector Change
+        episodeSelector.addEventListener('change', () => {
+            if (currentEmbedItem) {
+                loadEmbedVideo();
             }
         });
 
@@ -743,7 +858,6 @@
                 const items = data.results;
 
                 if (items.length === 0) {
-                    // Optionally inform the user that there are no more results
                     alert('No more results found.');
                     return;
                 }
@@ -796,7 +910,10 @@
             card.appendChild(img);
             card.appendChild(cardContent);
 
-            // Click Event to Open Embed Modal
+            if (type === 'tv') {
+                card.setAttribute('data-tv-id', item.id);
+            }
+
             card.addEventListener('click', () => {
                 openEmbedModal(item, type);
             });
@@ -806,7 +923,6 @@
 
         // Search Content
         async function searchContent(query, type) {
-            // Show search results section and hide trending sections
             searchResultsSection.style.display = 'block';
             trendingMoviesSection.style.display = 'none';
             trendingSeriesSection.style.display = 'none';
@@ -844,16 +960,16 @@
             searchResultsDiv.innerHTML = '';
             searchResultsHeading.innerHTML = `<span class="material-icons">search</span> Search Results`;
 
-            // Hide search results section and show trending sections
             searchResultsSection.style.display = 'none';
             trendingMoviesSection.style.display = 'block';
             trendingSeriesSection.style.display = 'block';
 
-            // Reset headings
+            currentEmbedProvider = 'embed-su';
+            isAlternativeActive = false;
+
             moviesHeading.innerHTML = `<span class="material-icons">local_fire_department</span> Trending Movies`;
             seriesHeading.innerHTML = `<span class="material-icons">tv</span> Trending Series`;
 
-            // Reload trending content
             trendingMoviesDiv.innerHTML = '';
             trendingSeriesDiv.innerHTML = '';
             loadTrending('movie', currentFilterMovies, currentPageMovies);
@@ -866,44 +982,184 @@
         }
 
         // Open Embed Modal
-        async function openEmbedModal(item, type) {
+        function openEmbedModal(item, type) {
+            currentEmbedItem = item;
+            currentSearchType = type;
             embedModal.style.display = 'flex';
-            embedContent.querySelector('iframe').src = '';
+            embedIframe.src = '';
+            resetEmbedModal();
+            setTimeout(() => {
+                loadEmbedVideo();
+            }, 100); // Slight delay to ensure modal is visible
+        }
+
+        // Reset Embed Modal
+        function resetEmbedModal() {
+            // Reset API Selector to default
+            apiSelect.value = 'embed-su';
+            isAlternativeActive = false;
+
+            // Hide season and episode selectors
+            seasonEpisodeSelectors.style.display = 'none';
+            episodeSelector.disabled = true;
+            episodeSelector.innerHTML = '<option value="">Select Episode</option>';
+
+            if (currentSearchType === 'tv') {
+                fetchSeasons(currentEmbedItem);
+            }
+        }
+
+        // Fetch Seasons for a TV Show (Used when Alternative Server is selected)
+        async function fetchSeasons(item) {
+            if (currentSearchType !== 'tv' || !item) return;
+
             showLoading(true);
             try {
-                const embedURL = await generateEmbedURL(item, type);
-                if (!embedURL) {
-                    embedContent.innerHTML += `<p style="color: var(--error-color); text-align: center;">Unable to load video.</p>`;
-                    return;
-                }
-                embedContent.querySelector('iframe').src = embedURL;
+                const tvId = item.id;
+                const endpoint = `${API_BASE_URL}/tv/${tvId}?api_key=${API_KEY}`;
+
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error('Failed to fetch TV details.');
+                const data = await response.json();
+                const seasons = data.seasons.filter(season => season.season_number !== 0);
+
+                populateSeasonSelector(seasons);
             } catch (error) {
-                embedContent.innerHTML += `<p style="color: var(--error-color); text-align: center;">Error loading video.</p>`;
-                console.error('Error:', error);
+                console.error('Error fetching TV details:', error);
             } finally {
                 showLoading(false);
             }
         }
 
-        // Generate Embed URL
-        async function generateEmbedURL(item, type) {
-            let embedURL = `${EMBED_BASE_URL}/${type}/${item.id}`;
-            if (type === 'tv') {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/tv/${item.id}?api_key=${API_KEY}`);
-                    if (!response.ok) throw new Error('Failed to fetch TV details.');
-                    const data = await response.json();
-                    if (data && data.seasons && data.seasons.length > 0) {
-                        let firstValidSeason = data.seasons.find(season => season.season_number !== 0)?.season_number || 1;
-                        embedURL = `${EMBED_BASE_URL}/tv/${item.id}/${firstValidSeason}/1`;
+        // Populate Season Selector
+        function populateSeasonSelector(seasons) {
+            seasonSelector.innerHTML = '<option value="">Select Season</option>';
+            seasons.forEach(season => {
+                const option = document.createElement('option');
+                option.value = season.season_number;
+                option.textContent = `Season ${season.season_number}`;
+                seasonSelector.appendChild(option);
+            });
+
+            seasonSelector.disabled = false;
+            seasonEpisodeSelectors.style.display = 'flex';
+        }
+
+        // Populate Episode Selector
+        function populateEpisodeSelector(episodes) {
+            episodeSelector.innerHTML = '<option value="">Select Episode</option>';
+            episodes.forEach(episode => {
+                const option = document.createElement('option');
+                option.value = episode.episode_number;
+                option.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
+                episodeSelector.appendChild(option);
+            });
+
+            episodeSelector.disabled = false;
+        }
+
+        // Generate Embed URL based on Provider and Content Type
+        async function generateEmbedURL() {
+            if (!currentEmbedItem) return null;
+
+            const selectedProvider = apiSelect.value;
+
+            if (selectedProvider === 'embed-su') {
+                let embedURL = `${MAIN_SERVER_BASE_URL}/${currentSearchType}/${currentEmbedItem.id}`;
+                if (currentSearchType === 'tv') {
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/tv/${currentEmbedItem.id}?api_key=${API_KEY}`);
+                        if (!response.ok) throw new Error('Failed to fetch TV details.');
+                        const data = await response.json();
+                        if (data && data.seasons && data.seasons.length > 0) {
+                            let firstValidSeason = data.seasons.find(season => season.season_number !== 0)?.season_number || 1;
+                            embedURL = `${MAIN_SERVER_BASE_URL}/tv/${currentEmbedItem.id}/${firstValidSeason}/1`;
+                        }
+                    } catch (error) {
+                        console.error('Error fetching TV details:', error);
+                        return null;
                     }
-                } catch (error) {
-                    console.error('Error fetching TV details:', error);
-                    return null;
+                }
+                return embedURL;
+            } else if (selectedProvider === 'vidlink') {
+                if (currentSearchType === 'movie') {
+                    return `${ALTERNATIVE_SERVER_BASE_URL}/movie/${currentEmbedItem.id}`;
+                } else if (currentSearchType === 'tv') {
+                    const selectedSeason = seasonSelector.value;
+                    const selectedEpisode = episodeSelector.value;
+                    if (selectedSeason === '' || selectedEpisode === '') {
+                        alert('Please select both season and episode.');
+                        return null;
+                    }
+                    return `${ALTERNATIVE_SERVER_BASE_URL}/tv/${currentEmbedItem.id}/${selectedSeason}/${selectedEpisode}`;
                 }
             }
-            return embedURL;
+            return null;
         }
+
+        // Load Embed Video with Automatic Provider Switching
+        async function loadEmbedVideo() {
+            const embedURL = await generateEmbedURL();
+            if (!embedURL) return;
+
+            iframeOverlay.style.display = 'none';
+            isAlternativeActive = false;
+
+            embedIframe.src = embedURL;
+
+            // If using Alternative Server and it's a TV show, ensure episode is selected
+            const selectedProvider = apiSelect.value;
+            if (selectedProvider === 'vidlink' && currentSearchType === 'tv') {
+                const selectedSeason = seasonSelector.value;
+                const selectedEpisode = episodeSelector.value;
+                if (selectedSeason !== '' && selectedEpisode !== '') {
+                    iframeOverlay.style.display = 'block';
+                }
+            }
+
+            // Set a timeout to check if Main Server fails
+            if (selectedProvider === 'embed-su') {
+                embedTimeout = setTimeout(() => {
+                    if (!isAlternativeActive) {
+                        switchToAlternativeProvider();
+                    }
+                }, 10000); // 10 seconds timeout
+            }
+        }
+
+        // Switch to Alternative Provider (VidLink)
+        async function switchToAlternativeProvider() {
+            if (currentEmbedProvider === 'vidlink') return;
+
+            apiSelect.value = 'vidlink';
+            isAlternativeActive = true;
+
+            const embedURL = await generateEmbedURL();
+            if (embedURL) {
+                embedIframe.src = embedURL;
+                iframeOverlay.style.display = 'block';
+            }
+        }
+
+        // Monitor iframe load success
+        embedIframe.addEventListener('load', () => {
+            if (embedTimeout) {
+                clearTimeout(embedTimeout);
+            }
+
+            const selectedProvider = apiSelect.value;
+            if (selectedProvider === 'vidlink' && currentSearchType === 'tv') {
+                iframeOverlay.style.display = 'block';
+            }
+        });
+
+        // Monitor iframe error
+        embedIframe.addEventListener('error', () => {
+            const selectedProvider = apiSelect.value;
+            if (selectedProvider === 'embed-su') {
+                switchToAlternativeProvider();
+            }
+        });
     </script>
 </body>
 </html>
