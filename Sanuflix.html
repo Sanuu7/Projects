@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        /* Root Variables for Theme Colors */
         :root {
             --primary-color: #7C4DFF;
             --secondary-color: #651FFF;
@@ -15,9 +14,6 @@
             --surface-color: #1E1E1E;
             --on-surface-color: #FFFFFF;
             --error-color: #CF6679;
-            --info-color: #2196F3;
-            --success-color: #4CAF50;
-            --warning-color: #FB8C00;
             --shadow-color: rgba(0, 0, 0, 0.5);
             --transition-speed: 0.3s;
             --card-hover-scale: 1.05;
@@ -85,6 +81,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .theme-button {
@@ -108,7 +106,6 @@
             font-size: 1em;
         }
 
-        /* Floating Search Bar */
         .search-backdrop {
             position: fixed;
             top: 0;
@@ -298,11 +295,6 @@
             background-size: 16px 16px;
         }
 
-        .sort-by select option {
-            background-color: var(--surface-color);
-            color: var(--on-surface-color);
-        }
-
         .results-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -442,10 +434,6 @@
             transition: transform var(--transition-speed) ease;
         }
 
-        #embed-content iframe:hover {
-            transform: scale(1.02);
-        }
-
         .close-button {
             position: absolute;
             top: 15px;
@@ -519,10 +507,6 @@
             background-color: var(--primary-color);
         }
 
-        .share-button:hover, .trailer-button:hover, .back-button:hover {
-            background-color: var(--secondary-color);
-        }
-
         .blur {
             filter: blur(5px);
         }
@@ -559,16 +543,14 @@
         }
 
         @media (max-width: 600px) {
-            .header-controls {
-                flex-direction: column;
-                align-items: stretch;
+            .header-controls button, .header-controls select {
+                padding: 5px;
+                font-size: 0.9em;
             }
-
             .results-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-
             #embed-content iframe {
                 height: 300px;
             }
@@ -715,7 +697,6 @@
                     </select>
                 </div>
                 <iframe src="" allow="fullscreen; autoplay"></iframe>
-                <div class="iframe-overlay" id="iframe-overlay"></div>
                 <button id="share-button" class="share-button">
                     <span class="material-icons">share</span> Share
                 </button>
@@ -730,11 +711,9 @@
     </main>
 
     <script>
-        // DOM Elements
         const searchToggle = document.getElementById('search-toggle');
         const searchBackdrop = document.getElementById('search-backdrop');
-        const floatingSearch = document.getElementById('floating-search');
-        const closeSearch = document.querySelector('.close-search');
+        const closeSearchBtn = document.querySelector('.close-search');
         const searchInput = document.getElementById('search-input');
         const searchButton = document.getElementById('search-button');
         const searchMovieRadio = document.getElementById('search-movie');
@@ -762,7 +741,6 @@
         const seeMoreSearchResultsBtn = document.getElementById('see-more-search-results');
         const apiSelect = document.getElementById('api-select');
         const embedIframe = embedContent.querySelector('iframe');
-        const iframeOverlay = document.getElementById('iframe-overlay');
         const seasonEpisodeSelectors = document.getElementById('season-episode-selectors');
         const seasonSelector = document.getElementById('season-selector');
         const episodeSelector = document.getElementById('episode-selector');
@@ -856,16 +834,17 @@
             }
         };
 
-        // Search Functions
         function openSearch() {
+            console.log('Opening search');
             searchBackdrop.style.display = 'block';
             setTimeout(() => { searchBackdrop.classList.add('show'); }, 10);
             header.classList.add('blur');
             mainContent.classList.add('blur');
-            searchInput.focus();
+            setTimeout(() => searchInput.focus(), 100);
         }
 
         function closeSearch() {
+            console.log('Closing search');
             searchBackdrop.classList.remove('show');
             setTimeout(() => { 
                 searchBackdrop.style.display = 'none'; 
@@ -921,6 +900,7 @@
         }
 
         function displayBookmarked() {
+            console.log('Displaying bookmarked items:', watchlist.length);
             bookmarkedItemsDiv.innerHTML = '';
             if (watchlist.length > 0) {
                 watchlist.forEach(item => {
@@ -953,6 +933,7 @@
         }
 
         function displayRecentlyViewedItems() {
+            console.log('Displaying recently viewed items:', recentlyViewed.length);
             recentlyViewedItemsDiv.innerHTML = '';
             if (recentlyViewed.length > 0) {
                 recentlyViewed.forEach(item => {
@@ -1029,6 +1010,7 @@
         }
 
         async function loadTrending(type, sortFilter, page = 1) {
+            console.log('Loading trending:', type, sortFilter, page);
             showLoading(true);
             let endpoint;
             if (sortFilter === 'trending') {
@@ -1042,8 +1024,10 @@
             }
             try {
                 const response = await fetch(endpoint);
+                console.log('Fetch response for trending:', response);
                 if (!response.ok) throw new Error('Failed to fetch trending data.');
                 const data = await response.json();
+                console.log('Fetched data for trending:', data);
                 let items = data.results;
                 if (sortFilter === 'release_date') {
                     items.sort((a, b) => new Date(b.release_date || b.first_air_date) - new Date(a.release_date || a.first_air_date));
@@ -1053,6 +1037,7 @@
                 const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
                 if (page === 1) container.innerHTML = '';
                 displayItems(items, type, container);
+                console.log('Displayed trending items:', items.length);
                 if (type === 'movie') currentPageMovies = page;
                 else currentPageSeries = page;
             } catch (error) {
@@ -1064,12 +1049,15 @@
         }
 
         async function searchContent(query, type, page = 1) {
+            console.log('Starting search for:', query, type, page);
             showLoading(true);
             const endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}&language=${currentLanguage}`;
             try {
                 const response = await fetch(endpoint);
+                console.log('Fetch response for search:', response);
                 if (!response.ok) throw new Error('Failed to fetch search results.');
                 const data = await response.json();
+                console.log('Fetched data for search:', data);
                 searchResultsSection.style.display = 'block';
                 mainSections.querySelector('#trending-movies-section').style.display = 'none';
                 mainSections.querySelector('#trending-series-section').style.display = 'none';
@@ -1082,6 +1070,7 @@
                 } else {
                     displayItems(data.results, type, searchResultsDiv);
                     searchResultsHeading.innerHTML = `<span class="material-icons">search</span> ${translations[currentLanguage].searchResultsHeading} for "${query}"`;
+                    console.log('Displayed search items:', data.results.length);
                 }
                 currentPageSearch = page;
                 seeMoreSearchResultsBtn.style.display = data.total_pages > page ? 'block' : 'none';
@@ -1186,6 +1175,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded');
             loadTrending('movie', currentFilterMovies);
             loadTrending('tv', currentFilterSeries);
             displayWatchlist();
@@ -1193,13 +1183,23 @@
             updateUI();
         });
 
-        searchToggle.addEventListener('click', openSearch);
-        closeSearch.addEventListener('click', closeSearch);
+        searchToggle.addEventListener('click', () => {
+            console.log('Search toggle clicked');
+            openSearch();
+        });
+        closeSearchBtn.addEventListener('click', () => {
+            console.log('Close search clicked');
+            closeSearch();
+        });
         searchBackdrop.addEventListener('click', (e) => {
-            if (e.target === searchBackdrop) closeSearch();
+            if (e.target === searchBackdrop) {
+                console.log('Clicked outside search bar');
+                closeSearch();
+            }
         });
 
         searchButton.addEventListener('click', () => {
+            console.log('Search button clicked');
             const query = searchInput.value.trim();
             if (query === '') return;
             currentQuery = query;
@@ -1297,6 +1297,7 @@
         });
 
         bookmarksRecentToggle.addEventListener('click', () => {
+            console.log('Switching to bookmarked layout');
             mainSections.style.display = 'none';
             bookmarksRecent.style.display = 'block';
             displayBookmarked();
@@ -1304,6 +1305,7 @@
         });
 
         backToMain.addEventListener('click', () => {
+            console.log('Switching back to main layout');
             bookmarksRecent.style.display = 'none';
             mainSections.style.display = 'block';
             resetSearch();
@@ -1323,6 +1325,7 @@
         }
 
         function resetSearch() {
+            console.log('Resetting search');
             currentQuery = '';
             searchInput.value = '';
             searchResultsDiv.innerHTML = '';
