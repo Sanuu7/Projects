@@ -5,7 +5,6 @@ on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -36,9 +35,9 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3 # Updated to v3 for compatibility with v4 artifacts
+        uses: actions/upload-pages-artifact@v3 # Latest as of Dec 2023; check for @v4 if available
         with:
-          path: '.'
+          path: '.' # Uploads all files in the root directory
 
       - name: Deploy to GitHub Pages
         id: deployment
