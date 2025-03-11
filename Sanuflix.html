@@ -297,7 +297,7 @@
 
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, 1fr); /* Explicitly set to 2 columns */
             gap: 20px;
             animation: fadeIn 0.5s ease;
         }
@@ -548,7 +548,7 @@
                 font-size: 0.9em;
             }
             .results-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* Single column on mobile */
                 gap: 15px;
             }
             #embed-content iframe {
@@ -564,8 +564,11 @@
             <button id="search-toggle" class="theme-button">
                 <span class="material-icons">search</span>
             </button>
-            <button id="bookmarks-recent-toggle" class="theme-button">
+            <button id="bookmarks-toggle" class="theme-button">
                 <span class="material-icons">bookmark</span>
+            </button>
+            <button id="recently-watched-toggle" class="theme-button">
+                <span class="material-icons">history</span>
             </button>
             <select id="language-select">
                 <option value="en-US">English</option>
@@ -662,14 +665,20 @@
             </div>
         </div>
 
-        <div id="bookmarks-recent" style="display: none;">
-            <button id="back-to-main" class="back-button">
+        <div id="bookmarks-section" style="display: none;">
+            <button id="back-to-main-bookmarks" class="back-button">
                 <span class="material-icons">arrow_back</span> Back
             </button>
             <div class="trending-section">
                 <h2><span class="material-icons">bookmark</span> Bookmarked Items</h2>
                 <div class="results-grid" id="bookmarked-items"></div>
             </div>
+        </div>
+
+        <div id="recently-watched-section" style="display: none;">
+            <button id="back-to-main-recently" class="back-button">
+                <span class="material-icons">arrow_back</span> Back
+            </button>
             <div class="trending-section">
                 <h2><span class="material-icons">history</span> Recently Viewed</h2>
                 <div class="results-grid" id="recently-viewed-items"></div>
@@ -749,10 +758,13 @@
         const backButton = document.getElementById('back-button');
         const header = document.querySelector('header');
         const mainContent = document.getElementById('main-content');
-        const bookmarksRecentToggle = document.getElementById('bookmarks-recent-toggle');
+        const bookmarksToggle = document.getElementById('bookmarks-toggle');
+        const recentlyWatchedToggle = document.getElementById('recently-watched-toggle');
         const mainSections = document.getElementById('main-sections');
-        const bookmarksRecent = document.getElementById('bookmarks-recent');
-        const backToMain = document.getElementById('back-to-main');
+        const bookmarksSection = document.getElementById('bookmarks-section');
+        const recentlyWatchedSection = document.getElementById('recently-watched-section');
+        const backToMainBookmarks = document.getElementById('back-to-main-bookmarks');
+        const backToMainRecently = document.getElementById('back-to-main-recently');
         const bookmarkedItemsDiv = document.getElementById('bookmarked-items');
         const recentlyViewedItemsDiv = document.getElementById('recently-viewed-items');
 
@@ -1296,17 +1308,32 @@
             backButton.style.display = 'none';
         });
 
-        bookmarksRecentToggle.addEventListener('click', () => {
-            console.log('Switching to bookmarked layout');
+        bookmarksToggle.addEventListener('click', () => {
+            console.log('Switching to bookmarks layout');
             mainSections.style.display = 'none';
-            bookmarksRecent.style.display = 'block';
+            bookmarksSection.style.display = 'block';
+            recentlyWatchedSection.style.display = 'none';
             displayBookmarked();
+        });
+
+        recentlyWatchedToggle.addEventListener('click', () => {
+            console.log('Switching to recently watched layout');
+            mainSections.style.display = 'none';
+            recentlyWatchedSection.style.display = 'block';
+            bookmarksSection.style.display = 'none';
             displayRecentlyViewedItems();
         });
 
-        backToMain.addEventListener('click', () => {
-            console.log('Switching back to main layout');
-            bookmarksRecent.style.display = 'none';
+        backToMainBookmarks.addEventListener('click', () => {
+            console.log('Switching back to main layout from bookmarks');
+            bookmarksSection.style.display = 'none';
+            mainSections.style.display = 'block';
+            resetSearch();
+        });
+
+        backToMainRecently.addEventListener('click', () => {
+            console.log('Switching back to main layout from recently watched');
+            recentlyWatchedSection.style.display = 'none';
             mainSections.style.display = 'block';
             resetSearch();
         });
