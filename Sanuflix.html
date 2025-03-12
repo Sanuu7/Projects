@@ -48,21 +48,15 @@
 
     header {
       padding: 10px 20px;
-      position: sticky;
-      top: 0;
+      position: relative;
       z-index: 1000;
       box-shadow: 0 2px 4px var(--shadow-color);
       background-color: var(--background-color);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      transition: filter var(--transition-speed) ease;
+      /* Using relative positioning for centering the title */
     }
 
     header h1 {
-      margin: 0;
+      margin: 0 auto;
       font-size: var(--font-size-title);
       display: flex;
       align-items: center;
@@ -75,21 +69,14 @@
       cursor: pointer;
       user-select: none;
       animation: titleAnimation 1.5s ease-out;
+      text-align: center;
     }
 
-    /* Keyframes for title animation */
-    @keyframes titleAnimation {
-      0% {
-        opacity: 0;
-        transform: translateX(-20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
+    /* Position the header controls absolutely so the title can be centered */
     .header-controls {
+      position: absolute;
+      top: 10px;
+      right: 20px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -568,6 +555,18 @@
         height: 300px;
       }
     }
+
+    /* Keyframes for title animation */
+    @keyframes titleAnimation {
+      0% {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
   </style>
 </head>
 <body>
@@ -706,6 +705,7 @@
         <div class="api-selector">
           <label for="api-select">Select Embed Provider:</label>
           <select id="api-select">
+            <option value="sanu-flix-v2" selected>SanuFlix V2 Server</option>
             <option value="embed-su">SanuuFlix Server (Premium)</option>
             <option value="vidlink">Alternative server (Might contain ads)</option>
           </select>
@@ -1155,7 +1155,16 @@
     async function generateEmbedURL() {
       if (!currentEmbedItem) return null;
       const selectedProvider = apiSelect.value;
-      if (selectedProvider === 'embed-su') {
+      if (selectedProvider === 'sanu-flix-v2') {
+        // VIDEASY embed implementation for SanuFlix V2 Server
+        if (currentSearchType === 'movie') {
+          return `https://player.videasy.net/movie/${currentEmbedItem.id}`;
+        } else if (currentSearchType === 'tv') {
+          const season = seasonSelector.value || 1;
+          const episode = episodeSelector.value || 1;
+          return `https://player.videasy.net/tv/${currentEmbedItem.id}/${season}/${episode}`;
+        }
+      } else if (selectedProvider === 'embed-su') {
         let embedURL = `${MAIN_SERVER_BASE_URL}/${currentSearchType}/${currentEmbedItem.id}`;
         if (currentSearchType === 'tv') {
           const season = seasonSelector.value || 1;
@@ -1357,7 +1366,8 @@
       embedModal.style.display = 'flex';
       embedIframe.src = '';
       backButton.style.display = 'none';
-      apiSelect.value = 'embed-su';
+      // Set default embed API to SanuFlix V2 Server
+      apiSelect.value = 'sanu-flix-v2';
       seasonEpisodeSelectors.style.display = type === 'tv' ? 'flex' : 'none';
       if (type === 'tv') fetchSeasons(item);
       addToRecentlyViewed({ ...item, media_type: type });
