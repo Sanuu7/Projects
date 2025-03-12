@@ -43,7 +43,6 @@
       transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
       overflow-x: hidden;
     }
-    /* Header Layout */
     header {
       display: flex;
       align-items: center;
@@ -97,7 +96,6 @@
       cursor: pointer;
       font-size: 1em;
     }
-    /* Search Overlay */
     .search-backdrop {
       position: fixed;
       top: 0;
@@ -320,7 +318,6 @@
       transition: color var(--transition-speed) ease;
     }
     .watchlist-btn:hover { color: var(--primary-color); }
-    /* Overlay tooltip covering the entire card */
     .card-tooltip {
       position: absolute;
       top: 0;
@@ -362,7 +359,6 @@
       font-size: 1em;
     }
     .see-more-container button:hover { background-color: var(--primary-color); }
-    /* Embed modal styling */
     #embed-modal {
       display: none;
       position: fixed;
@@ -461,7 +457,6 @@
       font-size: 1em;
     }
     .trailer-button { background-color: var(--primary-color); }
-    /* New Watched Button in embed modal */
     .watched-button {
       padding: 10px 20px;
       border: none;
@@ -522,11 +517,9 @@
         <option value="de-DE">German</option>
       </select>
       <button id="theme-toggle" class="theme-button"><span class="material-icons">brightness_6</span></button>
-      <!-- New Trakt Login Button -->
       <button id="trakt-login" class="theme-button"><span class="material-icons" id="trakt-icon">account_circle</span></button>
     </div>
   </header>
-
   <div id="search-backdrop" class="search-backdrop">
     <div id="floating-search" class="floating-search">
       <span class="material-icons close-search">close</span>
@@ -546,7 +539,6 @@
       </button>
     </div>
   </div>
-
   <main id="main-content">
     <div id="main-sections">
       <div class="trending-section" id="search-results-section" style="display: none;">
@@ -558,7 +550,6 @@
           </button>
         </div>
       </div>
-
       <div class="trending-section" id="trending-movies-section">
         <div class="sort-by">
           <label for="sort-movies">Sort Movies By:</label>
@@ -578,7 +569,6 @@
           </button>
         </div>
       </div>
-
       <div class="trending-section" id="trending-series-section">
         <div class="sort-by">
           <label for="sort-series">Sort Series By:</label>
@@ -598,40 +588,34 @@
           </button>
         </div>
       </div>
-
       <div class="trending-section" id="watchlist-section" style="display: none;">
         <h2 id="watchlist-heading"><span class="material-icons">bookmark</span> Watchlist</h2>
         <div class="results-grid" id="watchlist"></div>
       </div>
-
-      <div class="trending-section" id="recently-viewed-section" style="display: none;">
-        <h2 id="recently-viewed-heading"><span class="material-icons">history</span> Recently Viewed</h2>
+      <div class="trending-section" id="recently-watched-section" style="display: none;">
+        <h2 id="recently-watched-heading"><span class="material-icons">history</span> History</h2>
         <div class="results-grid" id="recently-viewed"></div>
       </div>
     </div>
-
     <div id="bookmarks-section" style="display: none;">
       <button id="back-to-main-bookmarks" class="back-button">
         <span class="material-icons">arrow_back</span> Back
       </button>
       <div class="trending-section">
-        <h2><span class="material-icons">bookmark</span> Bookmarked Items</h2>
+        <h2><span class="material-icons">bookmark</span> Watchlist</h2>
         <div class="results-grid" id="bookmarked-items"></div>
       </div>
     </div>
-
     <div id="recently-watched-section" style="display: none;">
       <button id="back-to-main-recently" class="back-button">
         <span class="material-icons">arrow_back</span> Back
       </button>
       <div class="trending-section">
-        <h2><span class="material-icons">history</span> Recently Viewed</h2>
+        <h2><span class="material-icons">history</span> History</h2>
         <div class="results-grid" id="recently-viewed-items"></div>
       </div>
     </div>
-
     <div id="loading" class="spinner" style="display: none;"></div>
-
     <div id="embed-modal">
       <div id="embed-content">
         <span class="material-icons close-button">close</span>
@@ -669,15 +653,11 @@
       </div>
     </div>
   </main>
-
   <script>
-    // -------------------- Trakt API Credentials --------------------
     const TRAKT_CLIENT_ID = "eb2d86c63302fde62738f8e599453d0c0198fc82c8ff6d2b2a58e453a7bad85e";
     const TRAKT_CLIENT_SECRET = "25eb850f6cfab1d8a4dc5040e5be4e4ab2aed1e5644db5e3db2bc9eef8a1ed18";
     const TRAKT_REDIRECT_URI = "https://sanuu7.github.io/Projects/Sanuflix.html";
     const TRAKT_AUTH_URL = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKT_CLIENT_ID}&redirect_uri=${TRAKT_REDIRECT_URI}`;
-
-    // -------------------- DOM Elements --------------------
     const searchToggle = document.getElementById("search-toggle");
     const searchBackdrop = document.getElementById("search-backdrop");
     const closeSearchBtn = document.querySelector(".close-search");
@@ -700,7 +680,7 @@
     const seriesHeading = document.getElementById("series-heading");
     const watchlistSection = document.getElementById("watchlist-section");
     const watchlistDiv = document.getElementById("watchlist");
-    const recentlyViewedSection = document.getElementById("recently-viewed-section");
+    const recentlyWatchedSection = document.getElementById("recently-watched-section");
     const recentlyViewedDiv = document.getElementById("recently-viewed");
     const searchResultsSection = document.getElementById("search-results-section");
     const searchResultsDiv = document.getElementById("search-results");
@@ -722,11 +702,7 @@
     const recentlyWatchedSection = document.getElementById("recently-watched-section");
     const traktLoginBtn = document.getElementById("trakt-login");
     const traktIcon = document.getElementById("trakt-icon");
-
-    // New Watched button in embed modal
     const watchedButton = document.getElementById("watched-button");
-
-    // -------------------- Other Variables --------------------
     const API_KEY = "5e38ca50480518c0d1cde63718225f6c";
     const API_BASE_URL = "https://api.themoviedb.org/3";
     const MAIN_SERVER_BASE_URL = "https://embed.su/embed";
@@ -741,8 +717,7 @@
     let currentEmbedItem = null;
     let currentLanguage = localStorage.getItem("language") || "en-US";
     let watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
-    let recentlyViewed = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
-
+    let historyArr = JSON.parse(localStorage.getItem("history")) || [];
     const translations = {
       "en-US": {
         appTitle: "Sanuu Flix",
@@ -768,7 +743,7 @@
         releaseDateSeriesHeading: "Series by Release Date",
         voteAverageSeriesHeading: "Series by Rating",
         watchlistHeading: "Watchlist",
-        recentlyViewedHeading: "Recently Viewed",
+        recentlyWatchedHeading: "History",
         noResults: "No results found.",
         errorFetching: "Error fetching data.",
         seeMoreResults: "See More Results",
@@ -805,7 +780,7 @@
         releaseDateSeriesHeading: "Serien nach Veröffentlichungsdatum",
         voteAverageSeriesHeading: "Serien nach Bewertung",
         watchlistHeading: "Merkliste",
-        recentlyViewedHeading: "Zuletzt angesehen",
+        recentlyWatchedHeading: "Zuletzt angesehen",
         noResults: "Keine Ergebnisse gefunden.",
         errorFetching: "Fehler beim Abrufen der Daten.",
         seeMoreResults: "Mehr Ergebnisse anzeigen",
@@ -820,7 +795,6 @@
       }
     };
 
-    // -------------------- Trakt OAuth Functions --------------------
     function traktLogin() {
       window.location.href = TRAKT_AUTH_URL;
     }
@@ -847,15 +821,15 @@
           localStorage.setItem("trakt_token", data.access_token);
           alert("Trakt account linked!");
           traktIcon.innerText = "verified_user";
+          window.history.replaceState({}, document.title, TRAKT_REDIRECT_URI);
         } else {
           alert("Failed to link Trakt account.");
         }
       } catch (error) {
-        console.error("Error exchanging token:", error);
+        console.error(error);
         alert("Error during Trakt authentication.");
       }
     }
-    // Check for OAuth callback code
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("code")) {
       exchangeTraktToken(urlParams.get("code"));
@@ -870,7 +844,6 @@
       }
     });
 
-    // -------------------- Trakt Sync Functions --------------------
     async function markMovieAsWatched(movieId, movieTitle) {
       const token = localStorage.getItem("trakt_token");
       if (!token) { alert("Please log in to Trakt first!"); return; }
@@ -893,15 +866,18 @@
         });
         if (response.ok) {
           alert(`"${movieTitle}" marked as watched on Trakt!`);
+          let watched = JSON.parse(localStorage.getItem("watchedMovies")) || [];
+          if (!watched.includes(movieId)) { watched.push(movieId); }
+          localStorage.setItem("watchedMovies", JSON.stringify(watched));
           watchedButton.disabled = true;
           watchedButton.innerText = "Already Watched";
         } else {
-          const errorText = await response.text();
-          console.error("Error marking as watched:", errorText);
+          const err = await response.text();
+          console.error(err);
           alert("Failed to mark as watched on Trakt.");
         }
       } catch (error) {
-        console.error("Error marking as watched:", error);
+        console.error(error);
         alert("Error marking as watched on Trakt.");
       }
     }
@@ -924,17 +900,16 @@
         if (response.ok) {
           alert(`"${movieTitle}" added to your Trakt watchlist!`);
         } else {
-          const errorText = await response.text();
-          console.error("Error adding to watchlist:", errorText);
+          const err = await response.text();
+          console.error(err);
           alert("Failed to add to Trakt watchlist.");
         }
       } catch (error) {
-        console.error("Error adding to watchlist:", error);
+        console.error(error);
         alert("Error adding to Trakt watchlist.");
       }
     }
 
-    // -------------------- TMDb & UI Functions --------------------
     function openSearch() {
       searchBackdrop.style.display = "block";
       setTimeout(() => { searchBackdrop.classList.add("show"); }, 10);
@@ -966,13 +941,12 @@
       loadTrending("movie", currentFilterMovies);
       loadTrending("tv", currentFilterSeries);
       displayWatchlist();
-      displayRecentlyViewed();
+      displayHistory();
     });
     function toggleWatchlist(item) {
-      const index = watchlist.findIndex((w) => w.id === item.id && w.media_type === item.media_type);
+      const index = watchlist.findIndex(w => w.id === item.id && w.media_type === item.media_type);
       if (index === -1) {
         watchlist.push(item);
-        // Also add to Trakt watchlist
         addToTraktWatchlist(item.id, item.title || item.name);
       } else {
         watchlist.splice(index, 1);
@@ -984,7 +958,7 @@
       watchlistDiv.innerHTML = "";
       if (watchlist.length > 0) {
         watchlistSection.style.display = "block";
-        watchlist.forEach((item) => {
+        watchlist.forEach(item => {
           const card = createCard(item, item.media_type);
           watchlistDiv.appendChild(card);
         });
@@ -992,29 +966,28 @@
         watchlistSection.style.display = "none";
       }
     }
-    function addToRecentlyViewed(item) {
-      recentlyViewed = recentlyViewed.filter((i) => i.id !== item.id || i.media_type !== item.media_type);
-      recentlyViewed.unshift(item);
-      recentlyViewed = recentlyViewed.slice(0, 5);
-      localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
-      displayRecentlyViewed();
+    function addToHistory(item) {
+      historyArr = historyArr.filter(i => i.id !== item.id || i.media_type !== item.media_type);
+      historyArr.unshift(item);
+      historyArr = historyArr.slice(0, 10);
+      localStorage.setItem("history", JSON.stringify(historyArr));
+      displayHistory();
     }
-    function displayRecentlyViewed() {
+    function displayHistory() {
       recentlyViewedDiv.innerHTML = "";
-      if (recentlyViewed.length > 0) {
-        recentlyViewedSection.style.display = "block";
-        recentlyViewed.forEach((item) => {
+      if (historyArr.length > 0) {
+        recentlyWatchedSection.style.display = "block";
+        historyArr.forEach(item => {
           const card = createCard(item, item.media_type);
           recentlyViewedDiv.appendChild(card);
         });
       } else {
-        recentlyViewedSection.style.display = "none";
+        recentlyWatchedSection.style.display = "none";
       }
     }
     function showLoading(show) {
       loadingSpinner.style.display = show ? "block" : "none";
     }
-    // Create card with full overlay tooltip for IMDb rating and overview
     function createCard(item, type) {
       const card = document.createElement("div");
       card.classList.add("card");
@@ -1077,7 +1050,7 @@
       else if (currentFilterSeries === "vote_average")
         seriesHeading.innerHTML = `<span class="material-icons">tv</span> ${t.voteAverageSeriesHeading}`;
       document.getElementById("watchlist-heading").innerHTML = `<span class="material-icons">bookmark</span> ${t.watchlistHeading}`;
-      document.getElementById("recently-viewed-heading").innerHTML = `<span class="material-icons">history</span> ${t.recentlyViewedHeading}`;
+      document.getElementById("recently-watched-heading").innerHTML = `<span class="material-icons">history</span> ${t.recentlyWatchedHeading}`;
       sortMoviesSelect.options[0].text = t.trendingOption;
       sortMoviesSelect.options[1].text = t.popularOption;
       sortMoviesSelect.options[2].text = t.topRatedOption;
@@ -1126,7 +1099,7 @@
         if (type === "movie") currentPageMovies = page;
         else currentPageSeries = page;
       } catch (error) {
-        console.error("Error:", error);
+        console.error(error);
         alert(translations[currentLanguage].errorFetching);
       } finally {
         showLoading(false);
@@ -1139,9 +1112,7 @@
         const response = await fetch(endpoint);
         if (!response.ok) throw new Error("Failed to fetch search results.");
         const data = await response.json();
-        if (type === "movie") {
-          data.results.sort((a, b) => b.popularity - a.popularity);
-        }
+        if (type === "movie") data.results.sort((a, b) => b.popularity - a.popularity);
         searchResultsSection.style.display = "block";
         mainSections.querySelector("#trending-movies-section").style.display = "none";
         mainSections.querySelector("#trending-series-section").style.display = "none";
@@ -1161,14 +1132,14 @@
         currentPageSearch = page;
         seeMoreSearchResultsBtn.style.display = data.total_pages > page ? "block" : "none";
       } catch (error) {
-        console.error("Error:", error);
+        console.error(error);
         searchResultsDiv.innerHTML = `<p style="color: var(--error-color);">${translations[currentLanguage].errorFetching}</p>`;
       } finally {
         showLoading(false);
       }
     }
     function displayItems(items, type, container) {
-      items.forEach((item) => {
+      items.forEach(item => {
         const card = createCard(item, type);
         container.appendChild(card);
       });
@@ -1179,9 +1150,9 @@
         const response = await fetch(`${API_BASE_URL}/tv/${item.id}?api_key=${API_KEY}&language=${currentLanguage}`);
         if (!response.ok) throw new Error("Failed to fetch TV details.");
         const data = await response.json();
-        const seasons = data.seasons.filter((season) => season.season_number !== 0);
+        const seasons = data.seasons.filter(season => season.season_number !== 0);
         seasonSelector.innerHTML = `<option value="">${translations[currentLanguage].seasonPlaceholder}</option>`;
-        seasons.forEach((season) => {
+        seasons.forEach(season => {
           const option = document.createElement("option");
           option.value = season.season_number;
           option.textContent = `Season ${season.season_number}`;
@@ -1189,7 +1160,7 @@
         });
         seasonEpisodeSelectors.style.display = "flex";
       } catch (error) {
-        console.error("Error fetching seasons:", error);
+        console.error(error);
       }
     }
     async function fetchEpisodes(seasonNumber) {
@@ -1198,7 +1169,7 @@
         if (!response.ok) throw new Error("Failed to fetch episodes.");
         const data = await response.json();
         episodeSelector.innerHTML = `<option value="">${translations[currentLanguage].episodePlaceholder}</option>`;
-        data.episodes.forEach((episode) => {
+        data.episodes.forEach(episode => {
           const option = document.createElement("option");
           option.value = episode.episode_number;
           option.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
@@ -1206,7 +1177,7 @@
         });
         episodeSelector.disabled = false;
       } catch (error) {
-        console.error("Error fetching episodes:", error);
+        console.error(error);
       }
     }
     async function generateEmbedURL() {
@@ -1250,7 +1221,7 @@
         const response = await fetch(endpoint);
         if (!response.ok) throw new Error("Failed to fetch trailer.");
         const data = await response.json();
-        const trailer = data.results.find((v) => v.type === "Trailer" && v.site === "YouTube");
+        const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
         if (trailer) {
           embedIframe.src = `https://www.youtube.com/embed/${trailer.key}`;
           backButton.style.display = "block";
@@ -1258,16 +1229,21 @@
           alert("No trailer available.");
         }
       } catch (error) {
-        console.error("Error fetching trailer:", error);
+        console.error(error);
       }
     }
-    // -------------------- Event Listeners --------------------
     document.addEventListener("DOMContentLoaded", () => {
       loadTrending("movie", currentFilterMovies);
       loadTrending("tv", currentFilterSeries);
       displayWatchlist();
-      displayRecentlyViewed();
+      displayHistory();
       updateUI();
+      if (localStorage.getItem("trakt_token")) {
+        traktIcon.innerText = "verified_user";
+      }
+      if (!localStorage.getItem("watchedMovies")) {
+        localStorage.setItem("watchedMovies", JSON.stringify([]));
+      }
     });
     searchToggle.addEventListener("click", () => { openSearch(); });
     closeSearchBtn.addEventListener("click", () => { closeSearch(); });
@@ -1331,7 +1307,7 @@
     });
     recentlyWatchedToggle.addEventListener("click", () => {
       mainSections.style.display = "none";
-      recentlyViewedSection.style.display = "block";
+      recentlyWatchedSection.style.display = "block";
     });
     document.getElementById("back-to-main-bookmarks")?.addEventListener("click", () => {
       bookmarksSection.style.display = "none";
@@ -1339,7 +1315,7 @@
       resetSearch();
     });
     document.getElementById("back-to-main-recently")?.addEventListener("click", () => {
-      recentlyViewedSection.style.display = "none";
+      recentlyWatchedSection.style.display = "none";
       mainSections.style.display = "block";
       resetSearch();
     });
@@ -1349,15 +1325,19 @@
       embedModal.style.display = "flex";
       embedIframe.src = "";
       backButton.style.display = "none";
-      // Set default embed API to SanuFlix V2 Server
       apiSelect.value = "sanu-flix-v2";
       seasonEpisodeSelectors.style.display = type === "tv" ? "flex" : "none";
       if (type === "tv") fetchSeasons(item);
-      addToRecentlyViewed({ ...item, media_type: type });
+      addToHistory({ ...item, media_type: type });
       loadEmbedVideo();
-      // Optionally, you can auto-mark as watched here or let the user press "Mark as Watched".
-      watchedButton.disabled = false;
-      watchedButton.innerText = "Mark as Watched";
+      let watched = JSON.parse(localStorage.getItem("watchedMovies")) || [];
+      if (watched.includes(item.id)) {
+        watchedButton.disabled = true;
+        watchedButton.innerText = "Already Watched";
+      } else {
+        watchedButton.disabled = false;
+        watchedButton.innerText = "Mark as Watched";
+      }
     }
     function resetSearch() {
       currentQuery = "";
