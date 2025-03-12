@@ -475,10 +475,7 @@
     .watched-button:hover { background-color: var(--secondary-color); }
     .blur { filter: blur(5px); }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .spinner {
       border: 6px solid #f3f3f3;
       border-top: 6px solid var(--primary-color);
@@ -498,10 +495,7 @@
       .results-grid { grid-template-columns: 1fr; gap: 15px; }
       #embed-content iframe { height: 300px; }
     }
-    @keyframes titleAnimation {
-      0% { opacity: 0; transform: translateX(-20px); }
-      100% { opacity: 1; transform: translateX(0); }
-    }
+    @keyframes titleAnimation { 0% { opacity: 0; transform: translateX(-20px); } 100% { opacity: 1; transform: translateX(0); } }
   </style>
 </head>
 <body>
@@ -592,67 +586,48 @@
         <h2 id="watchlist-heading"><span class="material-icons">bookmark</span> Watchlist</h2>
         <div class="results-grid" id="watchlist"></div>
       </div>
-      <div class="trending-section" id="recently-watched-section" style="display: none;">
-        <h2 id="recently-watched-heading"><span class="material-icons">history</span> History</h2>
+      <div class="trending-section" id="history-section" style="display: none;">
+        <h2 id="history-heading"><span class="material-icons">history</span> History</h2>
         <div class="results-grid" id="recently-viewed"></div>
       </div>
     </div>
-    <div id="bookmarks-section" style="display: none;">
-      <button id="back-to-main-bookmarks" class="back-button">
-        <span class="material-icons">arrow_back</span> Back
-      </button>
-      <div class="trending-section">
-        <h2><span class="material-icons">bookmark</span> Watchlist</h2>
-        <div class="results-grid" id="bookmarked-items"></div>
-      </div>
-    </div>
-    <div id="recently-watched-section" style="display: none;">
-      <button id="back-to-main-recently" class="back-button">
-        <span class="material-icons">arrow_back</span> Back
-      </button>
-      <div class="trending-section">
-        <h2><span class="material-icons">history</span> History</h2>
-        <div class="results-grid" id="recently-viewed-items"></div>
-      </div>
-    </div>
-    <div id="loading" class="spinner" style="display: none;"></div>
-    <div id="embed-modal">
-      <div id="embed-content">
-        <span class="material-icons close-button">close</span>
-        <div class="api-selector">
-          <label for="api-select">Select Embed Provider:</label>
-          <select id="api-select">
-            <option value="sanu-flix-v2" selected>SanuFlix V2 Server</option>
-            <option value="embed-su">SanuuFlix Server (Premium)</option>
-            <option value="vidlink">Alternative server (Might contain ads)</option>
-          </select>
-        </div>
-        <div class="selectors" id="season-episode-selectors">
-          <select id="season-selector">
-            <option value="">Select Season</option>
-          </select>
-          <select id="episode-selector" disabled>
-            <option value="">Select Episode</option>
-          </select>
-        </div>
-        <iframe src="" allow="fullscreen; autoplay"></iframe>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <button id="share-button" class="share-button">
-            <span class="material-icons">share</span> Share
-          </button>
-          <button id="watched-button" class="watched-button">
-            <span class="material-icons">check_circle</span> Mark as Watched
-          </button>
-          <button id="trailer-button" class="trailer-button">
-            <span class="material-icons">play_circle</span> Trailer
-          </button>
-          <button id="back-button" class="back-button" style="display: none;">
-            <span class="material-icons">arrow_back</span> Back to Content
-          </button>
-        </div>
-      </div>
-    </div>
   </main>
+  <div id="embed-modal">
+    <div id="embed-content">
+      <span class="material-icons close-button">close</span>
+      <div class="api-selector">
+        <label for="api-select">Select Embed Provider:</label>
+        <select id="api-select">
+          <option value="sanu-flix-v2" selected>SanuFlix V2 Server</option>
+          <option value="embed-su">SanuuFlix Server (Premium)</option>
+          <option value="vidlink">Alternative server (Might contain ads)</option>
+        </select>
+      </div>
+      <div class="selectors" id="season-episode-selectors">
+        <select id="season-selector">
+          <option value="">Select Season</option>
+        </select>
+        <select id="episode-selector" disabled>
+          <option value="">Select Episode</option>
+        </select>
+      </div>
+      <iframe src="" allow="fullscreen; autoplay"></iframe>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button id="share-button" class="share-button">
+          <span class="material-icons">share</span> Share
+        </button>
+        <button id="watched-button" class="watched-button">
+          <span class="material-icons">check_circle</span> Mark as Watched
+        </button>
+        <button id="trailer-button" class="trailer-button">
+          <span class="material-icons">play_circle</span> Trailer
+        </button>
+        <button id="back-button" class="back-button" style="display: none;">
+          <span class="material-icons">arrow_back</span> Back to Content
+        </button>
+      </div>
+    </div>
+  </div>
   <script>
     const TRAKT_CLIENT_ID = "eb2d86c63302fde62738f8e599453d0c0198fc82c8ff6d2b2a58e453a7bad85e";
     const TRAKT_CLIENT_SECRET = "25eb850f6cfab1d8a4dc5040e5be4e4ab2aed1e5644db5e3db2bc9eef8a1ed18";
@@ -680,7 +655,7 @@
     const seriesHeading = document.getElementById("series-heading");
     const watchlistSection = document.getElementById("watchlist-section");
     const watchlistDiv = document.getElementById("watchlist");
-    const recentlyWatchedSection = document.getElementById("recently-watched-section");
+    const historySection = document.getElementById("history-section");
     const recentlyViewedDiv = document.getElementById("recently-viewed");
     const searchResultsSection = document.getElementById("search-results-section");
     const searchResultsDiv = document.getElementById("search-results");
@@ -698,8 +673,6 @@
     const bookmarksToggle = document.getElementById("bookmarks-toggle");
     const recentlyWatchedToggle = document.getElementById("recently-watched-toggle");
     const mainSections = document.getElementById("main-sections");
-    const bookmarksSection = document.getElementById("bookmarks-section");
-    const recentlyWatchedSection = document.getElementById("recently-watched-section");
     const traktLoginBtn = document.getElementById("trakt-login");
     const traktIcon = document.getElementById("trakt-icon");
     const watchedButton = document.getElementById("watched-button");
@@ -843,7 +816,6 @@
         traktLogin();
       }
     });
-
     async function markMovieAsWatched(movieId, movieTitle) {
       const token = localStorage.getItem("trakt_token");
       if (!token) { alert("Please log in to Trakt first!"); return; }
@@ -909,7 +881,6 @@
         alert("Error adding to Trakt watchlist.");
       }
     }
-
     function openSearch() {
       searchBackdrop.style.display = "block";
       setTimeout(() => { searchBackdrop.classList.add("show"); }, 10);
@@ -958,6 +929,9 @@
       watchlistDiv.innerHTML = "";
       if (watchlist.length > 0) {
         watchlistSection.style.display = "block";
+        document.getElementById("trending-movies-section").style.display = "none";
+        document.getElementById("trending-series-section").style.display = "none";
+        document.getElementById("history-section").style.display = "none";
         watchlist.forEach(item => {
           const card = createCard(item, item.media_type);
           watchlistDiv.appendChild(card);
@@ -976,13 +950,16 @@
     function displayHistory() {
       recentlyViewedDiv.innerHTML = "";
       if (historyArr.length > 0) {
-        recentlyWatchedSection.style.display = "block";
+        historySection.style.display = "block";
+        document.getElementById("trending-movies-section").style.display = "none";
+        document.getElementById("trending-series-section").style.display = "none";
+        document.getElementById("watchlist-section").style.display = "none";
         historyArr.forEach(item => {
           const card = createCard(item, item.media_type);
           recentlyViewedDiv.appendChild(card);
         });
       } else {
-        recentlyWatchedSection.style.display = "none";
+        historySection.style.display = "none";
       }
     }
     function showLoading(show) {
@@ -1050,7 +1027,7 @@
       else if (currentFilterSeries === "vote_average")
         seriesHeading.innerHTML = `<span class="material-icons">tv</span> ${t.voteAverageSeriesHeading}`;
       document.getElementById("watchlist-heading").innerHTML = `<span class="material-icons">bookmark</span> ${t.watchlistHeading}`;
-      document.getElementById("recently-watched-heading").innerHTML = `<span class="material-icons">history</span> ${t.recentlyWatchedHeading}`;
+      document.getElementById("history-heading").innerHTML = `<span class="material-icons">history</span> ${t.recentlyWatchedHeading}`;
       sortMoviesSelect.options[0].text = t.trendingOption;
       sortMoviesSelect.options[1].text = t.popularOption;
       sortMoviesSelect.options[2].text = t.topRatedOption;
@@ -1114,8 +1091,8 @@
         const data = await response.json();
         if (type === "movie") data.results.sort((a, b) => b.popularity - a.popularity);
         searchResultsSection.style.display = "block";
-        mainSections.querySelector("#trending-movies-section").style.display = "none";
-        mainSections.querySelector("#trending-series-section").style.display = "none";
+        document.getElementById("trending-movies-section").style.display = "none";
+        document.getElementById("trending-series-section").style.display = "none";
         if (page === 1) searchResultsDiv.innerHTML = "";
         if (data.results.length === 0) {
           if (page === 1) {
@@ -1302,22 +1279,16 @@
       }
     });
     bookmarksToggle.addEventListener("click", () => {
-      mainSections.style.display = "none";
-      bookmarksSection.style.display = "block";
+      document.getElementById("trending-movies-section").style.display = "none";
+      document.getElementById("trending-series-section").style.display = "none";
+      document.getElementById("history-section").style.display = "none";
+      watchlistSection.style.display = "block";
     });
     recentlyWatchedToggle.addEventListener("click", () => {
-      mainSections.style.display = "none";
-      recentlyWatchedSection.style.display = "block";
-    });
-    document.getElementById("back-to-main-bookmarks")?.addEventListener("click", () => {
-      bookmarksSection.style.display = "none";
-      mainSections.style.display = "block";
-      resetSearch();
-    });
-    document.getElementById("back-to-main-recently")?.addEventListener("click", () => {
-      recentlyWatchedSection.style.display = "none";
-      mainSections.style.display = "block";
-      resetSearch();
+      document.getElementById("trending-movies-section").style.display = "none";
+      document.getElementById("trending-series-section").style.display = "none";
+      watchlistSection.style.display = "none";
+      historySection.style.display = "block";
     });
     function openEmbedModal(item, type) {
       currentEmbedItem = item;
@@ -1344,8 +1315,10 @@
       searchInput.value = "";
       searchResultsDiv.innerHTML = "";
       searchResultsSection.style.display = "none";
-      mainSections.querySelector("#trending-movies-section").style.display = "block";
-      mainSections.querySelector("#trending-series-section").style.display = "block";
+      document.getElementById("trending-movies-section").style.display = "block";
+      document.getElementById("trending-series-section").style.display = "block";
+      watchlistSection.style.display = "none";
+      historySection.style.display = "none";
       trendingMoviesDiv.innerHTML = "";
       trendingSeriesDiv.innerHTML = "";
       currentPageMovies = 1;
