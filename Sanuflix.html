@@ -43,7 +43,6 @@
       transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
       overflow-x: hidden;
     }
-    /* Updated header layout with a spacer for centering */
     header {
       display: flex;
       align-items: center;
@@ -97,93 +96,158 @@
     }
     .search-backdrop {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(0, 0, 0, 0.5);
-      display: none; z-index: 999;
-      opacity: 0; transition: opacity 0.3s ease;
+      display: none;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
     .search-backdrop.show { opacity: 1; }
     .floating-search {
       position: absolute;
-      top: 50%; left: 50%;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
       background: var(--surface-color);
-      padding: 20px; border-radius: 10px;
-      width: 80%; max-width: 500px;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
       box-shadow: 0 4px 8px var(--shadow-color);
     }
     .close-search {
-      position: absolute; top: 10px; right: 10px;
-      cursor: pointer; color: var(--on-surface-color);
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      color: var(--on-surface-color);
     }
     .floating-search input[type="text"] {
-      width: 100%; padding: 10px; margin-bottom: 10px;
-      border: none; border-radius: 5px;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
       background-color: var(--background-color);
-      color: var(--on-surface-color); font-size: 1em;
+      color: var(--on-surface-color);
+      font-size: 1em;
     }
     .floating-search .switcher {
-      display: flex; justify-content: center;
-      gap: 20px; margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 10px;
     }
     .floating-search .switcher label {
-      display: flex; align-items: center; gap: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
     .floating-search button {
-      width: 100%; padding: 10px; border: none;
-      border-radius: 5px; background-color: var(--primary-color);
-      color: var(--on-surface-color); cursor: pointer;
-      display: flex; align-items: center;
-      justify-content: center; gap: 5px; font-size: 1em;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--primary-color);
+      color: var(--on-surface-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-size: 1em;
     }
     .floating-search button:hover { background-color: var(--secondary-color); }
-    .switcher { display: flex; align-items: center; gap: 20px; }
+    .switcher {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
     .switcher label {
-      display: flex; align-items: center; gap: 5px;
-      cursor: pointer; position: relative;
-      user-select: none; font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+      font-weight: 500;
     }
     .switcher input[type="radio"] {
-      position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
     }
     .switcher .checkmark {
-      position: relative; height: 15px; width: 15px;
-      background-color: #ccc; border-radius: 50%;
+      position: relative;
+      height: 15px;
+      width: 15px;
+      background-color: #ccc;
+      border-radius: 50%;
       transition: background-color var(--transition-speed) ease;
     }
-    .switcher input[type="radio"]:checked ~ .checkmark { background-color: var(--secondary-color); }
-    .switcher .checkmark:after { content: ""; position: absolute; display: none; }
-    .switcher input[type="radio"]:checked ~ .checkmark:after { display: block; }
+    .switcher input[type="radio"]:checked ~ .checkmark {
+      background-color: var(--secondary-color);
+    }
     .switcher .checkmark:after {
-      top: 4px; left: 4px; width: 7px; height: 7px;
-      border-radius: 50%; background: var(--on-surface-color);
+      content: "";
+      position: absolute;
+      display: none;
+    }
+    .switcher input[type="radio"]:checked ~ .checkmark:after {
+      display: block;
+    }
+    .switcher .checkmark:after {
+      top: 4px;
+      left: 4px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--on-surface-color);
     }
     main {
-      flex: 1; padding: 20px;
-      display: flex; flex-direction: column;
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       transition: filter var(--transition-speed) ease;
     }
     .trending-section {
-      width: 100%; max-width: 1200px; margin-bottom: 40px;
+      width: 100%;
+      max-width: 1200px;
+      margin-bottom: 40px;
     }
     .trending-section h2 {
-      font-size: 1.5em; margin-bottom: 20px;
+      font-size: 1.5em;
+      margin-bottom: 20px;
       color: var(--on-surface-color);
-      display: flex; align-items: center; gap: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     .trending-section h2 .material-icons { font-size: 1.2em; }
     .sort-by {
-      display: flex; align-items: center; gap: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 20px;
     }
     .sort-by select {
-      padding: 8px 12px; border: none;
-      border-radius: 8px; background-color: var(--surface-color);
-      color: var(--on-surface-color); outline: none;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--surface-color);
+      color: var(--on-surface-color);
+      outline: none;
       box-shadow: 0 2px 4px var(--shadow-color);
-      cursor: pointer; font-size: 1em;
+      cursor: pointer;
+      font-size: 1em;
       appearance: none;
       background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="%23FFFFFF" d="M7 10l5 5 5-5z"/%3E%3C/svg%3E');
       background-repeat: no-repeat;
@@ -191,17 +255,20 @@
       background-size: 16px 16px;
     }
     .results-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 20px; animation: fadeIn 0.5s ease;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      animation: fadeIn 0.5s ease;
     }
     .card {
       background-color: var(--surface-color);
-      border-radius: 12px; overflow: hidden;
+      border-radius: 12px;
+      overflow: hidden;
       box-shadow: 0 4px 8px var(--shadow-color);
-      cursor: pointer; display: flex;
+      cursor: pointer;
+      display: flex;
       flex-direction: column;
-      transition: transform var(--transition-speed) ease,
-                  box-shadow var(--transition-speed) ease;
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
       position: relative;
     }
     .card:hover {
@@ -210,14 +277,17 @@
       box-shadow: 0 8px 16px var(--shadow-color);
     }
     .card img {
-      width: 100%; height: 270px;
+      width: 100%;
+      height: 270px;
       object-fit: cover;
       transition: transform var(--transition-speed) ease;
     }
     .card:hover img { transform: scale(1.05); }
     .card-content {
-      padding: 15px; flex: 1;
-      display: flex; flex-direction: column;
+      padding: 15px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       justify-content: space-between;
       position: relative;
     }
@@ -226,7 +296,8 @@
       font-size: var(--font-size-card-title);
       line-height: 1.2em;
       height: 2.4em;
-      overflow: hidden; text-overflow: ellipsis;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .card-content p {
       margin: 0;
@@ -235,18 +306,22 @@
     }
     .watchlist-btn {
       position: absolute;
-      top: 10px; right: 10px;
-      background: none; border: none;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
       color: var(--on-surface-color);
-      cursor: pointer; font-size: 1.5em;
+      cursor: pointer;
+      font-size: 1.5em;
       transition: color var(--transition-speed) ease;
     }
     .watchlist-btn:hover { color: var(--primary-color); }
-    /* Overlay tooltip covers the entire card */
     .card-tooltip {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(0,0,0,0.75);
       color: #fff;
       padding: 20px;
@@ -263,10 +338,12 @@
     .card-tooltip p { margin: 5px 0; }
     .card-tooltip .rating { font-size: 1.2em; }
     .see-more-container {
-      text-align: center; margin-top: 20px;
+      text-align: center;
+      margin-top: 20px;
     }
     .see-more-container button {
-      padding: 10px 20px; border: none;
+      padding: 10px 20px;
+      border: none;
       border-radius: 25px;
       background-color: var(--secondary-color);
       color: var(--on-surface-color);
@@ -276,90 +353,133 @@
       gap: 5px;
       transition: background-color var(--transition-speed) ease;
       box-shadow: 0 2px 4px var(--shadow-color);
-      font-weight: 500; font-size: 1em;
+      font-weight: 500;
+      font-size: 1em;
     }
     .see-more-container button:hover { background-color: var(--primary-color); }
-    /* Updated embed modal styling */
     #embed-modal {
-      display: none; position: fixed;
-      z-index: 2000; left: 0; top: 0;
-      width: 100%; height: 100%;
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
       box-sizing: border-box;
       background-color: rgba(0,0,0,0.8);
-      justify-content: center; align-items: center;
-      padding: 20px; animation: fadeIn 0.3s ease;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
     }
     #embed-content {
       background-color: var(--surface-color);
       padding: 20px;
-      border-radius: 12px; position: relative;
-      width: 100%; max-width: 800px;
+      border-radius: 12px;
+      position: relative;
+      width: 100%;
+      max-width: 800px;
       box-shadow: 0 4px 8px var(--shadow-color);
       transition: background-color var(--transition-speed) ease;
-      display: flex; flex-direction: column;
+      display: flex;
+      flex-direction: column;
       gap: 15px;
     }
     #embed-content iframe {
-      width: 100%; height: 450px;
-      border: none; border-radius: 8px;
+      width: 100%;
+      height: 450px;
+      border: none;
+      border-radius: 8px;
       transition: transform var(--transition-speed) ease;
     }
     .close-button {
-      position: absolute; top: 15px; right: 20px;
+      position: absolute;
+      top: 15px;
+      right: 20px;
       color: var(--on-surface-color);
-      font-size: 2em; cursor: pointer;
+      font-size: 2em;
+      cursor: pointer;
       transition: color var(--transition-speed) ease;
     }
     .close-button:hover { color: var(--secondary-color); }
     .selectors {
-      display: none; flex-direction: row;
-      gap: 10px; margin-bottom: 10px;
+      display: none;
+      flex-direction: row;
+      gap: 10px;
+      margin-bottom: 10px;
     }
     .selectors select {
       padding: 8px 12px;
-      border: none; border-radius: 8px;
+      border: none;
+      border-radius: 8px;
       background-color: var(--surface-color);
       color: var(--on-surface-color);
-      outline: none; box-shadow: 0 2px 4px var(--shadow-color);
-      cursor: pointer; font-size: 1em;
+      outline: none;
+      box-shadow: 0 2px 4px var(--shadow-color);
+      cursor: pointer;
+      font-size: 1em;
       appearance: none;
     }
     .api-selector {
-      display: flex; flex-direction: column; gap: 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
     .api-selector select {
       padding: 8px 12px;
-      border: none; border-radius: 8px;
+      border: none;
+      border-radius: 8px;
       background-color: var(--surface-color);
       color: var(--on-surface-color);
-      outline: none; box-shadow: 0 2px 4px var(--shadow-color);
-      cursor: pointer; font-size: 1em;
+      outline: none;
+      box-shadow: 0 2px 4px var(--shadow-color);
+      cursor: pointer;
+      font-size: 1em;
       appearance: none;
     }
-    .share-button, .trailer-button, .back-button {
-      padding: 10px 20px; border: none;
+    .share-button,
+    .trailer-button,
+    .back-button {
+      padding: 10px 20px;
+      border: none;
       border-radius: 25px;
       background-color: var(--secondary-color);
       color: var(--on-surface-color);
       cursor: pointer;
-      display: flex; align-items: center;
+      display: flex;
+      align-items: center;
       gap: 5px;
       transition: background-color var(--transition-speed) ease;
       box-shadow: 0 2px 4px var(--shadow-color);
-      font-weight: 500; font-size: 1em;
+      font-weight: 500;
+      font-size: 1em;
     }
     .trailer-button { background-color: var(--primary-color); }
+    .watched-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background-color: var(--primary-color);
+      color: var(--on-surface-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background-color var(--transition-speed) ease;
+      box-shadow: 0 2px 4px var(--shadow-color);
+      font-weight: 500;
+      font-size: 1em;
+    }
+    .watched-button:hover { background-color: var(--secondary-color); }
     .blur { filter: blur(5px); }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .spinner {
       border: 6px solid #f3f3f3;
       border-top: 6px solid var(--primary-color);
       border-radius: 50%;
-      width: 60px; height: 60px;
+      width: 60px;
+      height: 60px;
       animation: spin 1s linear infinite;
       margin: 50px auto;
     }
@@ -373,10 +493,7 @@
       .results-grid { grid-template-columns: 1fr; gap: 15px; }
       #embed-content iframe { height: 300px; }
     }
-    @keyframes titleAnimation {
-      0% { opacity: 0; transform: translateX(-20px); }
-      100% { opacity: 1; transform: translateX(0); }
-    }
+    @keyframes titleAnimation { 0% { opacity: 0; transform: translateX(-20px); } 100% { opacity: 1; transform: translateX(0); } }
   </style>
 </head>
 <body>
@@ -392,9 +509,9 @@
         <option value="de-DE">German</option>
       </select>
       <button id="theme-toggle" class="theme-button"><span class="material-icons">brightness_6</span></button>
+      <button id="trakt-login" class="theme-button"><span class="material-icons" id="trakt-icon">account_circle</span></button>
     </div>
   </header>
-
   <div id="search-backdrop" class="search-backdrop">
     <div id="floating-search" class="floating-search">
       <span class="material-icons close-search">close</span>
@@ -414,16 +531,13 @@
       </button>
     </div>
   </div>
-
   <main id="main-content">
     <div id="main-sections">
       <div class="trending-section" id="search-results-section" style="display: none;">
         <h2 id="search-results-heading"><span class="material-icons">search</span> Search Results</h2>
         <div class="results-grid" id="search-results"></div>
         <div class="see-more-container">
-          <button id="see-more-search-results">
-            <span class="material-icons">expand_more</span> See More Results
-          </button>
+          <button id="see-more-search-results"><span class="material-icons">expand_more</span> See More Results</button>
         </div>
       </div>
       <div class="trending-section" id="trending-movies-section">
@@ -440,9 +554,7 @@
         <h2 id="movies-heading"><span class="material-icons">local_fire_department</span> Trending Movies</h2>
         <div class="results-grid" id="trending-movies"></div>
         <div class="see-more-container">
-          <button id="see-more-movies">
-            <span class="material-icons">expand_more</span> See More Movies
-          </button>
+          <button id="see-more-movies"><span class="material-icons">expand_more</span> See More Movies</button>
         </div>
       </div>
       <div class="trending-section" id="trending-series-section">
@@ -459,9 +571,7 @@
         <h2 id="series-heading"><span class="material-icons">tv</span> Trending Series</h2>
         <div class="results-grid" id="trending-series"></div>
         <div class="see-more-container">
-          <button id="see-more-series">
-            <span class="material-icons">expand_more</span> See More Series
-          </button>
+          <button id="see-more-series"><span class="material-icons">expand_more</span> See More Series</button>
         </div>
       </div>
       <div class="trending-section" id="watchlist-section" style="display: none;">
@@ -473,312 +583,262 @@
         <div class="results-grid" id="recently-viewed"></div>
       </div>
     </div>
-    <div id="bookmarks-section" style="display: none;">
-      <button id="back-to-main-bookmarks" class="back-button">
-        <span class="material-icons">arrow_back</span> Back
-      </button>
-      <div class="trending-section">
-        <h2><span class="material-icons">bookmark</span> Bookmarked Items</h2>
-        <div class="results-grid" id="bookmarked-items"></div>
-      </div>
-    </div>
-    <div id="recently-watched-section" style="display: none;">
-      <button id="back-to-main-recently" class="back-button">
-        <span class="material-icons">arrow_back</span> Back
-      </button>
-      <div class="trending-section">
-        <h2><span class="material-icons">history</span> Recently Viewed</h2>
-        <div class="results-grid" id="recently-viewed-items"></div>
-      </div>
-    </div>
-    <div id="loading" class="spinner" style="display: none;"></div>
-    <div id="embed-modal">
-      <div id="embed-content">
-        <span class="material-icons close-button">close</span>
-        <div class="api-selector">
-          <label for="api-select">Select Embed Provider:</label>
-          <select id="api-select">
-            <option value="sanu-flix-v2" selected>SanuFlix V2 Server</option>
-            <option value="embed-su">SanuuFlix Server (Premium)</option>
-            <option value="vidlink">Alternative server (Might contain ads)</option>
-          </select>
-        </div>
-        <div class="selectors" id="season-episode-selectors">
-          <select id="season-selector">
-            <option value="">Select Season</option>
-          </select>
-          <select id="episode-selector" disabled>
-            <option value="">Select Episode</option>
-          </select>
-        </div>
-        <iframe src="" allow="fullscreen; autoplay"></iframe>
-        <button id="share-button" class="share-button">
-          <span class="material-icons">share</span> Share
-        </button>
-        <button id="trailer-button" class="trailer-button">
-          <span class="material-icons">play_circle</span> Trailer
-        </button>
-        <button id="back-button" class="back-button" style="display: none;">
-          <span class="material-icons">arrow_back</span> Back to Content
-        </button>
-      </div>
-    </div>
   </main>
+  <div id="embed-modal">
+    <div id="embed-content">
+      <span class="material-icons close-button">close</span>
+      <div class="api-selector">
+        <label for="api-select">Select Embed Provider:</label>
+        <select id="api-select">
+          <option value="sanu-flix-v2" selected>SanuFlix V2 Server</option>
+          <option value="embed-su">SanuuFlix Server (Premium)</option>
+          <option value="vidlink">Alternative server (Might contain ads)</option>
+        </select>
+      </div>
+      <div class="selectors" id="season-episode-selectors">
+        <select id="season-selector">
+          <option value="">Select Season</option>
+        </select>
+        <select id="episode-selector" disabled>
+          <option value="">Select Episode</option>
+        </select>
+      </div>
+      <iframe src="" allow="fullscreen; autoplay"></iframe>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button id="share-button" class="share-button"><span class="material-icons">share</span> Share</button>
+        <button id="watched-button" class="watched-button"><span class="material-icons">check_circle</span> Mark as Watched</button>
+        <button id="trailer-button" class="trailer-button"><span class="material-icons">play_circle</span> Trailer</button>
+        <button id="back-button" class="back-button" style="display: none;"><span class="material-icons">arrow_back</span> Back to Content</button>
+      </div>
+    </div>
+  </div>
   <script>
-    const searchToggle = document.getElementById('search-toggle');
-    const searchBackdrop = document.getElementById('search-backdrop');
-    const closeSearchBtn = document.querySelector('.close-search');
-    const searchInput = document.getElementById('search-input');
-    const searchButton = document.getElementById('search-button');
-    const searchMovieRadio = document.getElementById('search-movie');
-    const searchSeriesRadio = document.getElementById('search-series');
-    const sortMoviesSelect = document.getElementById('sort-movies');
-    const sortSeriesSelect = document.getElementById('sort-series');
-    const trendingMoviesDiv = document.getElementById('trending-movies');
-    const trendingSeriesDiv = document.getElementById('trending-series');
-    const seeMoreMoviesBtn = document.getElementById('see-more-movies');
-    const seeMoreSeriesBtn = document.getElementById('see-more-series');
-    const loadingSpinner = document.getElementById('loading');
-    const embedModal = document.getElementById('embed-modal');
-    const embedContent = document.getElementById('embed-content');
-    const closeButton = document.querySelector('.close-button');
-    const appTitle = document.getElementById('app-title');
-    const moviesHeading = document.getElementById('movies-heading');
-    const seriesHeading = document.getElementById('series-heading');
-    const watchlistSection = document.getElementById('watchlist-section');
-    const watchlistDiv = document.getElementById('watchlist');
-    const recentlyViewedSection = document.getElementById('recently-viewed-section');
-    const recentlyViewedDiv = document.getElementById('recently-viewed');
-    const searchResultsSection = document.getElementById('search-results-section');
-    const searchResultsDiv = document.getElementById('search-results');
-    const searchResultsHeading = document.getElementById('search-results-heading');
-    const seeMoreSearchResultsBtn = document.getElementById('see-more-search-results');
-    const apiSelect = document.getElementById('api-select');
-    const embedIframe = embedContent.querySelector('iframe');
-    const seasonEpisodeSelectors = document.getElementById('season-episode-selectors');
-    const seasonSelector = document.getElementById('season-selector');
-    const episodeSelector = document.getElementById('episode-selector');
-    const shareButton = document.getElementById('share-button');
-    const trailerButton = document.getElementById('trailer-button');
-    const backButton = document.getElementById('back-button');
-    const header = document.querySelector('header');
-    const mainContent = document.getElementById('main-content');
-    const bookmarksToggle = document.getElementById('bookmarks-toggle');
-    const recentlyWatchedToggle = document.getElementById('recently-watched-toggle');
-    const mainSections = document.getElementById('main-sections');
-    const bookmarksSection = document.getElementById('bookmarks-section');
-    const recentlyWatchedSection = document.getElementById('recently-watched-section');
-    const backToMainBookmarks = document.getElementById('back-to-main-bookmarks');
-    const backToMainRecently = document.getElementById('back-to-main-recently');
-    const bookmarkedItemsDiv = document.getElementById('bookmarked-items');
-    const recentlyViewedItemsDiv = document.getElementById('recently-viewed-items');
-    const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
-    const API_BASE_URL = 'https://api.themoviedb.org/3';
-    const MAIN_SERVER_BASE_URL = 'https://embed.su/embed';
-    const ALTERNATIVE_SERVER_BASE_URL = 'https://vidlink.pro';
+    const TRAKT_CLIENT_ID = "eb2d86c63302fde62738f8e599453d0c0198fc82c8ff6d2b2a58e453a7bad85e";
+    const TRAKT_CLIENT_SECRET = "25eb850f6cfab1d8a4dc5040e5be4e4ab2aed1e5644db5e3db2bc9eef8a1ed18";
+    const TRAKT_REDIRECT_URI = "https://sanuu7.github.io/Projects/Sanuflix.html";
+    const TRAKT_AUTH_URL = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKT_CLIENT_ID}&redirect_uri=${TRAKT_REDIRECT_URI}`;
+    const searchToggle = document.getElementById("search-toggle");
+    const searchBackdrop = document.getElementById("search-backdrop");
+    const closeSearchBtn = document.querySelector(".close-search");
+    const searchInput = document.getElementById("search-input");
+    const searchButton = document.getElementById("search-button");
+    const searchMovieRadio = document.getElementById("search-movie");
+    const searchSeriesRadio = document.getElementById("search-series");
+    const sortMoviesSelect = document.getElementById("sort-movies");
+    const sortSeriesSelect = document.getElementById("sort-series");
+    const trendingMoviesDiv = document.getElementById("trending-movies");
+    const trendingSeriesDiv = document.getElementById("trending-series");
+    const seeMoreMoviesBtn = document.getElementById("see-more-movies");
+    const seeMoreSeriesBtn = document.getElementById("see-more-series");
+    const loadingSpinner = document.getElementById("loading");
+    const embedModal = document.getElementById("embed-modal");
+    const embedContent = document.getElementById("embed-content");
+    const closeButton = document.querySelector(".close-button");
+    const appTitle = document.getElementById("app-title");
+    const moviesHeading = document.getElementById("movies-heading");
+    const seriesHeading = document.getElementById("series-heading");
+    const watchlistSection = document.getElementById("watchlist-section");
+    const watchlistDiv = document.getElementById("watchlist");
+    const recentlyViewedSection = document.getElementById("recently-viewed-section");
+    const recentlyViewedDiv = document.getElementById("recently-viewed");
+    const searchResultsSection = document.getElementById("search-results-section");
+    const searchResultsDiv = document.getElementById("search-results");
+    const searchResultsHeading = document.getElementById("search-results-heading");
+    const seeMoreSearchResultsBtn = document.getElementById("see-more-search-results");
+    const apiSelect = document.getElementById("api-select");
+    const embedIframe = embedContent.querySelector("iframe");
+    const seasonEpisodeSelectors = document.getElementById("season-episode-selectors");
+    const seasonSelector = document.getElementById("season-selector");
+    const episodeSelector = document.getElementById("episode-selector");
+    const shareButton = document.getElementById("share-button");
+    const trailerButton = document.getElementById("trailer-button");
+    const backButton = document.getElementById("back-button");
+    const languageSelect = document.getElementById("language-select");
+    const bookmarksToggle = document.getElementById("bookmarks-toggle");
+    const recentlyWatchedToggle = document.getElementById("recently-watched-toggle");
+    const mainSections = document.getElementById("main-sections");
+    const bookmarksSection = document.getElementById("bookmarks-section");
+    const recentlyWatchedSection = document.getElementById("recently-watched-section");
+    const backToMainBookmarks = document.getElementById("back-to-main-bookmarks");
+    const backToMainRecently = document.getElementById("back-to-main-recently");
+    const API_KEY = "5e38ca50480518c0d1cde63718225f6c";
+    const API_BASE_URL = "https://api.themoviedb.org/3";
+    const MAIN_SERVER_BASE_URL = "https://embed.su/embed";
+    const ALTERNATIVE_SERVER_BASE_URL = "https://vidlink.pro";
     let currentPageMovies = 1;
     let currentPageSeries = 1;
     let currentPageSearch = 1;
-    let currentFilterMovies = 'trending';
-    let currentFilterSeries = 'trending';
-    let currentQuery = '';
-    let currentSearchType = 'movie';
+    let currentFilterMovies = "trending";
+    let currentFilterSeries = "trending";
+    let currentQuery = "";
+    let currentSearchType = "movie";
     let currentEmbedItem = null;
-    let currentLanguage = localStorage.getItem('language') || 'en-US';
-    let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-    let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
+    let currentLanguage = localStorage.getItem("language") || "en-US";
+    let watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    let recentlyViewed = JSON.parse(localStorage.getItem("recentlyViewed")) || [];
     const translations = {
-      'en-US': {
-        appTitle: 'Sanuu Flix',
-        searchPlaceholder: 'Search for movies or series...',
-        searchButton: 'Search',
-        movieLabel: 'Movie',
-        seriesLabel: 'Series',
-        sortByLabel: 'Sort By:',
-        trendingOption: 'Trending',
-        popularOption: 'Popular',
-        topRatedOption: 'Top Rated',
-        releaseDateOption: 'Release Date',
-        ratingOption: 'Rating',
-        searchResultsHeading: 'Search Results',
-        trendingMoviesHeading: 'Trending Movies',
-        popularMoviesHeading: 'Popular Movies',
-        topRatedMoviesHeading: 'Top Rated Movies',
-        releaseDateMoviesHeading: 'Movies by Release Date',
-        voteAverageMoviesHeading: 'Movies by Rating',
-        trendingSeriesHeading: 'Trending Series',
-        popularSeriesHeading: 'Popular Series',
-        topRatedSeriesHeading: 'Top Rated Series',
-        releaseDateSeriesHeading: 'Series by Release Date',
-        voteAverageSeriesHeading: 'Series by Rating',
-        watchlistHeading: 'Watchlist',
-        recentlyViewedHeading: 'Recently Viewed',
-        noResults: 'No results found.',
-        errorFetching: 'Error fetching data.',
-        seeMoreResults: 'See More Results',
-        seeMoreMovies: 'See More Movies',
-        seeMoreSeries: 'See More Series',
-        embedProviderLabel: 'Select Embed Provider:',
-        seasonPlaceholder: 'Select Season',
-        episodePlaceholder: 'Select Episode',
-        shareButton: 'Share',
-        trailerButton: 'Trailer',
-        backButton: 'Back to Content'
+      "en-US": {
+        appTitle: "Sanuu Flix",
+        searchPlaceholder: "Search for movies or series...",
+        searchButton: "Search",
+        movieLabel: "Movie",
+        seriesLabel: "Series",
+        sortByLabel: "Sort By:",
+        trendingOption: "Trending",
+        popularOption: "Popular",
+        topRatedOption: "Top Rated",
+        releaseDateOption: "Release Date",
+        ratingOption: "Rating",
+        searchResultsHeading: "Search Results",
+        trendingMoviesHeading: "Trending Movies",
+        popularMoviesHeading: "Popular Movies",
+        topRatedMoviesHeading: "Top Rated Movies",
+        releaseDateMoviesHeading: "Movies by Release Date",
+        voteAverageMoviesHeading: "Movies by Rating",
+        trendingSeriesHeading: "Trending Series",
+        popularSeriesHeading: "Popular Series",
+        topRatedSeriesHeading: "Top Rated Series",
+        releaseDateSeriesHeading: "Series by Release Date",
+        voteAverageSeriesHeading: "Series by Rating",
+        watchlistHeading: "Watchlist",
+        recentlyViewedHeading: "Recently Viewed",
+        noResults: "No results found.",
+        errorFetching: "Error fetching data.",
+        seeMoreResults: "See More Results",
+        seeMoreMovies: "See More Movies",
+        seeMoreSeries: "See More Series",
+        embedProviderLabel: "Select Embed Provider:",
+        seasonPlaceholder: "Select Season",
+        episodePlaceholder: "Select Episode",
+        shareButton: "Share",
+        trailerButton: "Trailer",
+        backButton: "Back to Content"
       },
-      'de-DE': {
-        appTitle: 'Sanuu Flix',
-        searchPlaceholder: 'Suche nach Filmen oder Serien...',
-        searchButton: 'Suchen',
-        movieLabel: 'Film',
-        seriesLabel: 'Serie',
-        sortByLabel: 'Sortieren nach:',
-        trendingOption: 'Trend',
-        popularOption: 'Beliebt',
-        topRatedOption: 'Am besten bewertet',
-        releaseDateOption: 'Veröffentlichungsdatum',
-        ratingOption: 'Bewertung',
-        searchResultsHeading: 'Suchergebnisse',
-        trendingMoviesHeading: 'Trendige Filme',
-        popularMoviesHeading: 'Beliebte Filme',
-        topRatedMoviesHeading: 'Am besten bewertete Filme',
-        releaseDateMoviesHeading: 'Filme nach Veröffentlichungsdatum',
-        voteAverageMoviesHeading: 'Filme nach Bewertung',
-        trendingSeriesHeading: 'Trendige Serien',
-        popularSeriesHeading: 'Beliebte Serien',
-        topRatedSeriesHeading: 'Am besten bewertete Serien',
-        releaseDateSeriesHeading: 'Serien nach Veröffentlichungsdatum',
-        voteAverageSeriesHeading: 'Serien nach Bewertung',
-        watchlistHeading: 'Merkliste',
-        recentlyViewedHeading: 'Zuletzt angesehen',
-        noResults: 'Keine Ergebnisse gefunden.',
-        errorFetching: 'Fehler beim Abrufen der Daten.',
-        seeMoreResults: 'Mehr Ergebnisse anzeigen',
-        seeMoreMovies: 'Mehr Filme anzeigen',
-        seeMoreSeries: 'Mehr Serien anzeigen',
-        embedProviderLabel: 'Wähle einen Anbieter:',
-        seasonPlaceholder: 'Staffel auswählen',
-        episodePlaceholder: 'Episode auswählen',
-        shareButton: 'Teilen',
-        trailerButton: 'Trailer',
-        backButton: 'Zurück zum Inhalt'
+      "de-DE": {
+        appTitle: "Sanuu Flix",
+        searchPlaceholder: "Suche nach Filmen oder Serien...",
+        searchButton: "Suchen",
+        movieLabel: "Film",
+        seriesLabel: "Serie",
+        sortByLabel: "Sortieren nach:",
+        trendingOption: "Trend",
+        popularOption: "Beliebt",
+        topRatedOption: "Am besten bewertet",
+        releaseDateOption: "Veröffentlichungsdatum",
+        ratingOption: "Bewertung",
+        searchResultsHeading: "Suchergebnisse",
+        trendingMoviesHeading: "Trendige Filme",
+        popularMoviesHeading: "Beliebte Filme",
+        topRatedMoviesHeading: "Am besten bewertete Filme",
+        releaseDateMoviesHeading: "Filme nach Veröffentlichungsdatum",
+        voteAverageMoviesHeading: "Filme nach Bewertung",
+        trendingSeriesHeading: "Trendige Serien",
+        popularSeriesHeading: "Beliebte Serien",
+        topRatedSeriesHeading: "Am besten bewertete Serien",
+        releaseDateSeriesHeading: "Serien nach Veröffentlichungsdatum",
+        voteAverageSeriesHeading: "Serien nach Bewertung",
+        watchlistHeading: "Merkliste",
+        recentlyViewedHeading: "Zuletzt angesehen",
+        noResults: "Keine Ergebnisse gefunden.",
+        errorFetching: "Fehler beim Abrufen der Daten.",
+        seeMoreResults: "Mehr Ergebnisse anzeigen",
+        seeMoreMovies: "Mehr Filme anzeigen",
+        seeMoreSeries: "Mehr Serien anzeigen",
+        embedProviderLabel: "Wähle einen Anbieter:",
+        seasonPlaceholder: "Staffel auswählen",
+        episodePlaceholder: "Episode auswählen",
+        shareButton: "Teilen",
+        trailerButton: "Trailer",
+        backButton: "Zurück zum Inhalt"
       }
     };
     function openSearch() {
-      console.log('Opening search');
-      searchBackdrop.style.display = 'block';
-      setTimeout(() => { searchBackdrop.classList.add('show'); }, 10);
-      header.classList.add('blur');
-      mainContent.classList.add('blur');
+      searchBackdrop.style.display = "block";
+      setTimeout(() => { searchBackdrop.classList.add("show"); }, 10);
+      header.classList.add("blur");
+      mainContent.classList.add("blur");
       setTimeout(() => searchInput.focus(), 100);
     }
     function closeSearch() {
-      console.log('Closing search');
-      searchBackdrop.classList.remove('show');
+      searchBackdrop.classList.remove("show");
       setTimeout(() => {
-        searchBackdrop.style.display = 'none';
-        header.classList.remove('blur');
-        mainContent.classList.remove('blur');
-        searchInput.value = '';
+        searchBackdrop.style.display = "none";
+        header.classList.remove("blur");
+        mainContent.classList.remove("blur");
+        searchInput.value = "";
       }, 300);
     }
-    const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('light-mode');
-      localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    const themeToggle = document.getElementById("theme-toggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+      localStorage.setItem("theme", document.body.classList.contains("light-mode") ? "light" : "dark");
     });
-    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
-    const languageSelect = document.getElementById('language-select');
+    if (localStorage.getItem("theme") === "light") document.body.classList.add("light-mode");
     languageSelect.value = currentLanguage;
-    languageSelect.addEventListener('change', (e) => {
-      currentLanguage = e.target.value;
-      localStorage.setItem('language', currentLanguage);
+    languageSelect.addEventListener("change", () => {
+      currentLanguage = languageSelect.value;
+      localStorage.setItem("language", currentLanguage);
       updateUI();
       resetSearch();
-      loadTrending('movie', currentFilterMovies);
-      loadTrending('tv', currentFilterSeries);
+      loadTrending("movie", currentFilterMovies);
+      loadTrending("tv", currentFilterSeries);
       displayWatchlist();
       displayRecentlyViewed();
     });
     function toggleWatchlist(item) {
       const index = watchlist.findIndex(w => w.id === item.id && w.media_type === item.media_type);
-      if (index === -1) {
-        watchlist.push(item);
-      } else {
-        watchlist.splice(index, 1);
-      }
-      localStorage.setItem('watchlist', JSON.stringify(watchlist));
+      if (index === -1) { watchlist.push(item); }
+      else { watchlist.splice(index, 1); }
+      localStorage.setItem("watchlist", JSON.stringify(watchlist));
       displayWatchlist();
-      displayBookmarked();
     }
     function displayWatchlist() {
-      watchlistDiv.innerHTML = '';
+      watchlistDiv.innerHTML = "";
       if (watchlist.length > 0) {
-        watchlistSection.style.display = 'block';
+        watchlistSection.style.display = "block";
         watchlist.forEach(item => {
           const card = createCard(item, item.media_type);
           watchlistDiv.appendChild(card);
         });
-      } else { watchlistSection.style.display = 'none'; }
-    }
-    function displayBookmarked() {
-      console.log('Displaying bookmarked items:', watchlist.length);
-      bookmarkedItemsDiv.innerHTML = '';
-      if (watchlist.length > 0) {
-        watchlist.forEach(item => {
-          const card = createCard(item, item.media_type);
-          bookmarkedItemsDiv.appendChild(card);
-        });
-      }
+      } else { watchlistSection.style.display = "none"; }
     }
     function addToRecentlyViewed(item) {
       recentlyViewed = recentlyViewed.filter(i => i.id !== item.id || i.media_type !== item.media_type);
       recentlyViewed.unshift(item);
       recentlyViewed = recentlyViewed.slice(0, 5);
-      localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
+      localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
       displayRecentlyViewed();
-      displayRecentlyViewedItems();
     }
     function displayRecentlyViewed() {
-      recentlyViewedDiv.innerHTML = '';
+      recentlyViewedDiv.innerHTML = "";
       if (recentlyViewed.length > 0) {
-        recentlyViewedSection.style.display = 'block';
+        recentlyViewedSection.style.display = "block";
         recentlyViewed.forEach(item => {
           const card = createCard(item, item.media_type);
           recentlyViewedDiv.appendChild(card);
         });
-      } else { recentlyViewedSection.style.display = 'none'; }
-    }
-    function displayRecentlyViewedItems() {
-      console.log('Displaying recently viewed items:', recentlyViewed.length);
-      recentlyViewedItemsDiv.innerHTML = '';
-      if (recentlyViewed.length > 0) {
-        recentlyViewed.forEach(item => {
-          const card = createCard(item, item.media_type);
-          recentlyViewedItemsDiv.appendChild(card);
-        });
-      }
+      } else { recentlyViewedSection.style.display = "none"; }
     }
     function showLoading(show) {
-      loadingSpinner.style.display = show ? 'block' : 'none';
+      loadingSpinner.style.display = show ? "block" : "none";
     }
-    // Updated createCard: entire card covered by overlay with star emoji for rating and overview info.
     function createCard(item, type) {
-      const card = document.createElement('div');
-      card.classList.add('card');
-      const img = document.createElement('img');
-      img.src = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://via.placeholder.com/500x750?text=No+Image';
+      const card = document.createElement("div");
+      card.classList.add("card");
+      const img = document.createElement("img");
+      img.src = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : "https://via.placeholder.com/500x750?text=No+Image";
       img.alt = item.title || item.name;
-      const cardContent = document.createElement('div');
-      cardContent.classList.add('card-content');
-      const title = document.createElement('h3');
+      const cardContent = document.createElement("div");
+      cardContent.classList.add("card-content");
+      const title = document.createElement("h3");
       title.textContent = item.title || item.name;
-      const date = document.createElement('p');
-      const releaseDate = item.release_date || item.first_air_date || 'N/A';
-      date.textContent = (type === 'movie' ? 'Release: ' : 'First Air: ') + releaseDate;
-      const watchlistBtn = document.createElement('button');
-      watchlistBtn.classList.add('watchlist-btn');
+      const date = document.createElement("p");
+      const releaseDate = item.release_date || item.first_air_date || "N/A";
+      date.textContent = (type === "movie" ? "Release: " : "First Air: ") + releaseDate;
+      const watchlistBtn = document.createElement("button");
+      watchlistBtn.classList.add("watchlist-btn");
       watchlistBtn.innerHTML = '<span class="material-icons">bookmark</span>';
-      watchlistBtn.addEventListener('click', (e) => {
+      watchlistBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         toggleWatchlist({ ...item, media_type: type });
       });
@@ -787,13 +847,12 @@
       cardContent.appendChild(date);
       card.appendChild(img);
       card.appendChild(cardContent);
-      // Tooltip overlay covering whole card
-      const tooltip = document.createElement('div');
-      tooltip.classList.add('card-tooltip');
-      tooltip.innerHTML = `<p class="rating">⭐ ${item.vote_average || 'N/A'}</p>
-                           <p>${item.overview ? item.overview.substring(0, 100) + '...' : 'No overview available.'}</p>`;
+      const tooltip = document.createElement("div");
+      tooltip.classList.add("card-tooltip");
+      tooltip.innerHTML = `<p class="rating">⭐ ${item.vote_average || "N/A"}</p>
+                           <p>${item.overview ? item.overview.substring(0, 100) + "..." : "No overview available."}</p>`;
       card.appendChild(tooltip);
-      card.addEventListener('click', () => openEmbedModal(item, type));
+      card.addEventListener("click", () => openEmbedModal(item, type));
       return card;
     }
     function updateUI() {
@@ -804,29 +863,28 @@
       document.querySelector('label[for="search-movie"]').childNodes[0].textContent = t.movieLabel;
       document.querySelector('label[for="search-series"]').childNodes[0].textContent = t.seriesLabel;
       searchResultsHeading.innerHTML = `<span class="material-icons">search</span> ${t.searchResultsHeading}`;
-      // Update trending headings based on current filter for movies and series.
-      if (currentFilterMovies === 'trending')
+      if (currentFilterMovies === "trending")
         moviesHeading.innerHTML = `<span class="material-icons">local_fire_department</span> ${t.trendingMoviesHeading}`;
-      else if (currentFilterMovies === 'popular')
+      else if (currentFilterMovies === "popular")
         moviesHeading.innerHTML = `<span class="material-icons">local_fire_department</span> ${t.popularMoviesHeading}`;
-      else if (currentFilterMovies === 'top_rated')
+      else if (currentFilterMovies === "top_rated")
         moviesHeading.innerHTML = `<span class="material-icons">local_fire_department</span> ${t.topRatedMoviesHeading}`;
-      else if (currentFilterMovies === 'release_date')
+      else if (currentFilterMovies === "release_date")
         moviesHeading.innerHTML = `<span class="material-icons">local_fire_department</span> ${t.releaseDateMoviesHeading}`;
-      else if (currentFilterMovies === 'vote_average')
+      else if (currentFilterMovies === "vote_average")
         moviesHeading.innerHTML = `<span class="material-icons">local_fire_department</span> ${t.voteAverageMoviesHeading}`;
-      if (currentFilterSeries === 'trending')
+      if (currentFilterSeries === "trending")
         seriesHeading.innerHTML = `<span class="material-icons">tv</span> ${t.trendingSeriesHeading}`;
-      else if (currentFilterSeries === 'popular')
+      else if (currentFilterSeries === "popular")
         seriesHeading.innerHTML = `<span class="material-icons">tv</span> ${t.popularSeriesHeading}`;
-      else if (currentFilterSeries === 'top_rated')
+      else if (currentFilterSeries === "top_rated")
         seriesHeading.innerHTML = `<span class="material-icons">tv</span> ${t.topRatedSeriesHeading}`;
-      else if (currentFilterSeries === 'release_date')
+      else if (currentFilterSeries === "release_date")
         seriesHeading.innerHTML = `<span class="material-icons">tv</span> ${t.releaseDateSeriesHeading}`;
-      else if (currentFilterSeries === 'vote_average')
+      else if (currentFilterSeries === "vote_average")
         seriesHeading.innerHTML = `<span class="material-icons">tv</span> ${t.voteAverageSeriesHeading}`;
-      document.getElementById('watchlist-heading').innerHTML = `<span class="material-icons">bookmark</span> ${t.watchlistHeading}`;
-      document.getElementById('recently-viewed-heading').innerHTML = `<span class="material-icons">history</span> ${t.recentlyViewedHeading}`;
+      document.getElementById("watchlist-heading").innerHTML = `<span class="material-icons">bookmark</span> ${t.watchlistHeading}`;
+      document.getElementById("recently-viewed-heading").innerHTML = `<span class="material-icons">history</span> ${t.recentlyViewedHeading}`;
       sortMoviesSelect.options[0].text = t.trendingOption;
       sortMoviesSelect.options[1].text = t.popularOption;
       sortMoviesSelect.options[2].text = t.topRatedOption;
@@ -840,7 +898,7 @@
       seeMoreSearchResultsBtn.innerHTML = `<span class="material-icons">expand_more</span> ${t.seeMoreResults}`;
       seeMoreMoviesBtn.innerHTML = `<span class="material-icons">expand_more</span> ${t.seeMoreMovies}`;
       seeMoreSeriesBtn.innerHTML = `<span class="material-icons">expand_more</span> ${t.seeMoreSeries}`;
-      document.querySelector('.api-selector label').textContent = t.embedProviderLabel;
+      document.querySelector(".api-selector label").textContent = t.embedProviderLabel;
       seasonSelector.options[0].text = t.seasonPlaceholder;
       episodeSelector.options[0].text = t.episodePlaceholder;
       shareButton.innerHTML = `<span class="material-icons">share</span> ${t.shareButton}`;
@@ -848,61 +906,50 @@
       backButton.innerHTML = `<span class="material-icons">arrow_back</span> ${t.backButton}`;
     }
     async function loadTrending(type, sortFilter, page = 1) {
-      console.log('Loading trending:', type, sortFilter, page);
       showLoading(true);
       let endpoint;
-      if (sortFilter === 'trending') {
+      if (sortFilter === "trending") {
         endpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=${page}&language=${currentLanguage}`;
       } else {
         endpoint = `${API_BASE_URL}/${type}/${
-          sortFilter === 'popular' ? 'popular' : 
-          sortFilter === 'top_rated' ? 'top_rated' : 
-          'popular'
+          sortFilter === "popular" ? "popular" : 
+          sortFilter === "top_rated" ? "top_rated" : 
+          "popular"
         }?api_key=${API_KEY}&language=${currentLanguage}&page=${page}`;
       }
       try {
         const response = await fetch(endpoint);
-        console.log('Fetch response for trending:', response);
-        if (!response.ok) throw new Error('Failed to fetch trending data.');
+        if (!response.ok) throw new Error("Failed to fetch trending data.");
         const data = await response.json();
-        console.log('Fetched data for trending:', data);
         let items = data.results;
-        if (sortFilter === 'release_date') {
+        if (sortFilter === "release_date") {
           items.sort((a, b) => new Date(b.release_date || b.first_air_date) - new Date(a.release_date || a.first_air_date));
-        } else if (sortFilter === 'vote_average') {
+        } else if (sortFilter === "vote_average") {
           items.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
         }
-        const container = type === 'movie' ? trendingMoviesDiv : trendingSeriesDiv;
-        if (page === 1) container.innerHTML = '';
+        const container = type === "movie" ? trendingMoviesDiv : trendingSeriesDiv;
+        if (page === 1) container.innerHTML = "";
         displayItems(items, type, container);
-        console.log('Displayed trending items:', items.length);
-        if (type === 'movie') currentPageMovies = page;
-        else currentPageSeries = page;
+        if (type === "movie") currentPageMovies = page; else currentPageSeries = page;
       } catch (error) {
-        console.error('Error:', error);
+        console.error(error);
         alert(translations[currentLanguage].errorFetching);
       } finally {
         showLoading(false);
       }
     }
     async function searchContent(query, type, page = 1) {
-      console.log('Starting search for:', query, type, page);
       showLoading(true);
       const endpoint = `${API_BASE_URL}/search/${type}?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}&language=${currentLanguage}`;
       try {
         const response = await fetch(endpoint);
-        console.log('Fetch response for search:', response);
-        if (!response.ok) throw new Error('Failed to fetch search results.');
+        if (!response.ok) throw new Error("Failed to fetch search results.");
         const data = await response.json();
-        // For movies, sort search results by popularity (trending)
-        if (type === 'movie') {
-          data.results.sort((a, b) => b.popularity - a.popularity);
-        }
-        console.log('Fetched data for search:', data);
-        searchResultsSection.style.display = 'block';
-        mainSections.querySelector('#trending-movies-section').style.display = 'none';
-        mainSections.querySelector('#trending-series-section').style.display = 'none';
-        if (page === 1) searchResultsDiv.innerHTML = '';
+        if (type === "movie") data.results.sort((a, b) => b.popularity - a.popularity);
+        searchResultsSection.style.display = "block";
+        document.getElementById("trending-movies-section").style.display = "none";
+        document.getElementById("trending-series-section").style.display = "none";
+        if (page === 1) searchResultsDiv.innerHTML = "";
         if (data.results.length === 0) {
           if (page === 1) {
             searchResultsDiv.innerHTML = `<p>${translations[currentLanguage].noResults}</p>`;
@@ -910,17 +957,15 @@
           }
         } else {
           displayItems(data.results, type, searchResultsDiv);
-          // Update heading to indicate trending order for movie search
-          if(type === 'movie')
+          if (type === "movie")
             searchResultsHeading.innerHTML = `<span class="material-icons">search</span> Trending ${translations[currentLanguage].searchResultsHeading} for "${query}"`;
           else
             searchResultsHeading.innerHTML = `<span class="material-icons">search</span> ${translations[currentLanguage].searchResultsHeading} for "${query}"`;
-          console.log('Displayed search items:', data.results.length);
         }
         currentPageSearch = page;
-        seeMoreSearchResultsBtn.style.display = data.total_pages > page ? 'block' : 'none';
+        seeMoreSearchResultsBtn.style.display = data.total_pages > page ? "block" : "none";
       } catch (error) {
-        console.error('Error:', error);
+        console.error(error);
         searchResultsDiv.innerHTML = `<p style="color: var(--error-color);">${translations[currentLanguage].errorFetching}</p>`;
       } finally {
         showLoading(false);
@@ -933,60 +978,60 @@
       });
     }
     async function fetchSeasons(item) {
-      if (currentSearchType !== 'tv' || !item) return;
+      if (currentSearchType !== "tv" || !item) return;
       try {
         const response = await fetch(`${API_BASE_URL}/tv/${item.id}?api_key=${API_KEY}&language=${currentLanguage}`);
-        if (!response.ok) throw new Error('Failed to fetch TV details.');
+        if (!response.ok) throw new Error("Failed to fetch TV details.");
         const data = await response.json();
         const seasons = data.seasons.filter(season => season.season_number !== 0);
         seasonSelector.innerHTML = `<option value="">${translations[currentLanguage].seasonPlaceholder}</option>`;
         seasons.forEach(season => {
-          const option = document.createElement('option');
+          const option = document.createElement("option");
           option.value = season.season_number;
           option.textContent = `Season ${season.season_number}`;
           seasonSelector.appendChild(option);
         });
-        seasonEpisodeSelectors.style.display = 'flex';
-      } catch (error) { console.error('Error fetching seasons:', error); }
+        seasonEpisodeSelectors.style.display = "flex";
+      } catch (error) { console.error(error); }
     }
     async function fetchEpisodes(seasonNumber) {
       try {
         const response = await fetch(`${API_BASE_URL}/tv/${currentEmbedItem.id}/season/${seasonNumber}?api_key=${API_KEY}&language=${currentLanguage}`);
-        if (!response.ok) throw new Error('Failed to fetch episodes.');
+        if (!response.ok) throw new Error("Failed to fetch episodes.");
         const data = await response.json();
         episodeSelector.innerHTML = `<option value="">${translations[currentLanguage].episodePlaceholder}</option>`;
         data.episodes.forEach(episode => {
-          const option = document.createElement('option');
+          const option = document.createElement("option");
           option.value = episode.episode_number;
           option.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
           episodeSelector.appendChild(option);
         });
         episodeSelector.disabled = false;
-      } catch (error) { console.error('Error fetching episodes:', error); }
+      } catch (error) { console.error(error); }
     }
     async function generateEmbedURL() {
       if (!currentEmbedItem) return null;
       const selectedProvider = apiSelect.value;
-      if (selectedProvider === 'sanu-flix-v2') {
-        if (currentSearchType === 'movie') {
+      if (selectedProvider === "sanu-flix-v2") {
+        if (currentSearchType === "movie") {
           return `https://player.videasy.net/movie/${currentEmbedItem.id}`;
-        } else if (currentSearchType === 'tv') {
+        } else if (currentSearchType === "tv") {
           const season = seasonSelector.value || 1;
           const episode = episodeSelector.value || 1;
           return `https://player.videasy.net/tv/${currentEmbedItem.id}/${season}/${episode}`;
         }
-      } else if (selectedProvider === 'embed-su') {
+      } else if (selectedProvider === "embed-su") {
         let embedURL = `${MAIN_SERVER_BASE_URL}/${currentSearchType}/${currentEmbedItem.id}`;
-        if (currentSearchType === 'tv') {
+        if (currentSearchType === "tv") {
           const season = seasonSelector.value || 1;
           const episode = episodeSelector.value || 1;
           embedURL += `/${season}/${episode}`;
         }
         return embedURL;
-      } else if (selectedProvider === 'vidlink') {
-        if (currentSearchType === 'movie') {
+      } else if (selectedProvider === "vidlink") {
+        if (currentSearchType === "movie") {
           return `${ALTERNATIVE_SERVER_BASE_URL}/movie/${currentEmbedItem.id}`;
-        } else if (currentSearchType === 'tv') {
+        } else if (currentSearchType === "tv") {
           const season = seasonSelector.value;
           const episode = episodeSelector.value;
           if (!season || !episode) return null;
@@ -1003,112 +1048,128 @@
       try {
         const endpoint = `${API_BASE_URL}/${currentSearchType}/${currentEmbedItem.id}/videos?api_key=${API_KEY}&language=${currentLanguage}`;
         const response = await fetch(endpoint);
-        if (!response.ok) throw new Error('Failed to fetch trailer.');
+        if (!response.ok) throw new Error("Failed to fetch trailer.");
         const data = await response.json();
-        const trailer = data.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+        const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
         if (trailer) {
           embedIframe.src = `https://www.youtube.com/embed/${trailer.key}`;
-          backButton.style.display = 'block';
-        } else { alert('No trailer available.'); }
-      } catch (error) { console.error('Error fetching trailer:', error); }
+          backButton.style.display = "block";
+        } else { alert("No trailer available."); }
+      } catch (error) { console.error(error); }
     }
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('DOM loaded');
-      loadTrending('movie', currentFilterMovies);
-      loadTrending('tv', currentFilterSeries);
+    document.addEventListener("DOMContentLoaded", async () => {
+      await loadTrending("movie", currentFilterMovies);
+      await loadTrending("tv", currentFilterSeries);
       displayWatchlist();
       displayRecentlyViewed();
       updateUI();
+      if (localStorage.getItem("trakt_token")) {
+        traktToken = localStorage.getItem("trakt_token");
+        document.getElementById("trakt-login").textContent = "Trakt Connected";
+      }
     });
-    searchToggle.addEventListener('click', () => { console.log('Search toggle clicked'); openSearch(); });
-    closeSearchBtn.addEventListener('click', () => { console.log('Close search clicked'); closeSearch(); });
-    searchBackdrop.addEventListener('click', (e) => { if (e.target === searchBackdrop) { console.log('Clicked outside search bar'); closeSearch(); } });
-    searchButton.addEventListener('click', () => {
-      console.log('Search button clicked');
+    searchToggle.addEventListener("click", () => { openSearch(); });
+    closeSearchBtn.addEventListener("click", () => { closeSearch(); });
+    searchBackdrop.addEventListener("click", (e) => { if (e.target === searchBackdrop) { closeSearch(); } });
+    searchButton.addEventListener("click", () => {
       const query = searchInput.value.trim();
-      if (query === '') return;
+      if (query === "") return;
       currentQuery = query;
-      currentSearchType = searchMovieRadio.checked ? 'movie' : 'tv';
+      currentSearchType = searchMovieRadio.checked ? "movie" : "tv";
       currentPageSearch = 1;
       searchContent(query, currentSearchType, currentPageSearch);
       closeSearch();
     });
-    searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { searchButton.click(); } });
-    sortMoviesSelect.addEventListener('change', () => {
+    searchInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { searchButton.click(); } });
+    sortMoviesSelect.addEventListener("change", () => {
       currentFilterMovies = sortMoviesSelect.value;
       currentPageMovies = 1;
-      trendingMoviesDiv.innerHTML = '';
-      loadTrending('movie', currentFilterMovies);
+      trendingMoviesDiv.innerHTML = "";
+      loadTrending("movie", currentFilterMovies);
       updateUI();
     });
-    sortSeriesSelect.addEventListener('change', () => {
+    sortSeriesSelect.addEventListener("change", () => {
       currentFilterSeries = sortSeriesSelect.value;
       currentPageSeries = 1;
-      trendingSeriesDiv.innerHTML = '';
-      loadTrending('tv', currentFilterSeries);
+      trendingSeriesDiv.innerHTML = "";
+      loadTrending("tv", currentFilterSeries);
       updateUI();
     });
-    seeMoreMoviesBtn.addEventListener('click', () => { currentPageMovies++; loadTrending('movie', currentFilterMovies, currentPageMovies); });
-    seeMoreSeriesBtn.addEventListener('click', () => { currentPageSeries++; loadTrending('tv', currentFilterSeries, currentPageSeries); });
-    seeMoreSearchResultsBtn.addEventListener('click', () => { currentPageSearch++; searchContent(currentQuery, currentSearchType, currentPageSearch); });
-    closeButton.addEventListener('click', () => { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; });
-    window.addEventListener('click', (e) => { if (e.target === embedModal) { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; } });
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && embedModal.style.display === 'flex') { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; } });
-    appTitle.addEventListener('click', resetSearch);
-    apiSelect.addEventListener('change', loadEmbedVideo);
-    seasonSelector.addEventListener('change', () => { if (seasonSelector.value) fetchEpisodes(seasonSelector.value); loadEmbedVideo(); });
-    episodeSelector.addEventListener('change', loadEmbedVideo);
-    shareButton.addEventListener('click', () => {
+    seeMoreMoviesBtn.addEventListener("click", () => { currentPageMovies++; loadTrending("movie", currentFilterMovies, currentPageMovies); });
+    seeMoreSeriesBtn.addEventListener("click", () => { currentPageSeries++; loadTrending("tv", currentFilterSeries, currentPageSeries); });
+    seeMoreSearchResultsBtn.addEventListener("click", () => { currentPageSearch++; searchContent(currentQuery, currentSearchType, currentPageSearch); });
+    closeButton.addEventListener("click", () => { embedModal.style.display = "none"; embedIframe.src = ""; backButton.style.display = "none"; });
+    window.addEventListener("click", (e) => { if (e.target === embedModal) { embedModal.style.display = "none"; embedIframe.src = ""; backButton.style.display = "none"; } });
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape" && embedModal.style.display === "flex") { embedModal.style.display = "none"; embedIframe.src = ""; backButton.style.display = "none"; } });
+    appTitle.addEventListener("click", () => { resetSearch(); });
+    apiSelect.addEventListener("change", loadEmbedVideo);
+    seasonSelector.addEventListener("change", () => { if (seasonSelector.value) { fetchEpisodes(seasonSelector.value); } loadEmbedVideo(); });
+    episodeSelector.addEventListener("change", loadEmbedVideo);
+    shareButton.addEventListener("click", () => {
       const url = window.location.href;
       if (navigator.share) {
         navigator.share({ title: currentEmbedItem.title || currentEmbedItem.name, url: url }).catch(console.error);
-      } else { navigator.clipboard.writeText(url).then(() => alert('Link copied to clipboard!')); }
+      } else {
+        navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard!"));
+      }
     });
-    trailerButton.addEventListener('click', loadTrailer);
-    backButton.addEventListener('click', () => { loadEmbedVideo(); backButton.style.display = 'none'; });
-    bookmarksToggle.addEventListener('click', () => {
-      console.log('Switching to bookmarks layout');
-      mainSections.style.display = 'none';
-      bookmarksSection.style.display = 'block';
-      recentlyWatchedSection.style.display = 'none';
-      displayBookmarked();
+    trailerButton.addEventListener("click", loadTrailer);
+    backButton.addEventListener("click", () => { loadEmbedVideo(); backButton.style.display = "none"; });
+    watchedButton.addEventListener("click", () => {
+      if (currentEmbedItem) { markMovieAsWatched(currentEmbedItem.id, currentEmbedItem.title || currentEmbedItem.name); }
     });
-    recentlyWatchedToggle.addEventListener('click', () => {
-      console.log('Switching to recently watched layout');
-      mainSections.style.display = 'none';
-      recentlyWatchedSection.style.display = 'block';
-      bookmarksSection.style.display = 'none';
-      displayRecentlyViewedItems();
-    });
-    backToMainBookmarks.addEventListener('click', () => { console.log('Switching back to main layout from bookmarks'); bookmarksSection.style.display = 'none'; mainSections.style.display = 'block'; resetSearch(); });
-    backToMainRecently.addEventListener('click', () => { console.log('Switching back to main layout from recently watched'); recentlyWatchedSection.style.display = 'none'; mainSections.style.display = 'block'; resetSearch(); });
+    bookmarksToggle.addEventListener("click", async () => { await fetchTraktWatchlist(); });
+    recentlyWatchedToggle.addEventListener("click", async () => { await fetchTraktHistory(); displayRecentlyViewed(); });
+    function displayRecentlyViewed() {
+      recentlyViewedDiv.innerHTML = "";
+      recentlyViewed.forEach(item => {
+        const card = createCard(item, item.media_type);
+        recentlyViewedDiv.appendChild(card);
+      });
+      recentlyViewedSection.style.display = recentlyViewed.length ? "block" : "none";
+    }
+    function displayRecentlyViewedItems() {
+      // This can be used to populate a separate recently viewed list if needed.
+    }
+    function resetSearch() {
+      currentQuery = "";
+      searchInput.value = "";
+      searchResultsDiv.innerHTML = "";
+      searchResultsSection.style.display = "none";
+      document.getElementById("trending-movies-section").style.display = "block";
+      document.getElementById("trending-series-section").style.display = "block";
+      watchlistSection.style.display = "none";
+      recentlyViewedSection.style.display = "none";
+      trendingMoviesDiv.innerHTML = "";
+      trendingSeriesDiv.innerHTML = "";
+      currentPageMovies = 1;
+      currentPageSeries = 1;
+      loadTrending("movie", currentFilterMovies);
+      loadTrending("tv", currentFilterSeries);
+      updateUI();
+    }
     function openEmbedModal(item, type) {
       currentEmbedItem = item;
       currentSearchType = type;
-      embedModal.style.display = 'flex';
-      embedIframe.src = '';
-      backButton.style.display = 'none';
-      apiSelect.value = 'sanu-flix-v2';
-      seasonEpisodeSelectors.style.display = type === 'tv' ? 'flex' : 'none';
-      if (type === 'tv') fetchSeasons(item);
+      embedModal.style.display = "flex";
+      embedIframe.src = "";
+      backButton.style.display = "none";
+      apiSelect.value = "sanu-flix-v2";
+      seasonEpisodeSelectors.style.display = type === "tv" ? "flex" : "none";
+      if (type === "tv") { fetchSeasons(item); }
       addToRecentlyViewed({ ...item, media_type: type });
       loadEmbedVideo();
-    }
-    function resetSearch() {
-      console.log('Resetting search');
-      currentQuery = '';
-      searchInput.value = '';
-      searchResultsDiv.innerHTML = '';
-      searchResultsSection.style.display = 'none';
-      mainSections.querySelector('#trending-movies-section').style.display = 'block';
-      mainSections.querySelector('#trending-series-section').style.display = 'block';
-      trendingMoviesDiv.innerHTML = '';
-      trendingSeriesDiv.innerHTML = '';
-      currentPageMovies = 1;
-      currentPageSeries = 1;
-      loadTrending('movie', currentFilterMovies);
-      loadTrending('tv', currentFilterSeries);
-      updateUI();
+      if (localStorage.getItem("trakt_token")) {
+        fetchTraktHistory().then(() => {
+          if (traktHistory.some(m => m.movie.ids.tmdb == item.id)) {
+            watchedButton.disabled = true;
+            watchedButton.innerText = "Already Watched";
+          } else {
+            watchedButton.disabled = false;
+            watchedButton.innerText = "Mark as Watched";
+          }
+        });
+      }
     }
     updateUI();
   </script>
