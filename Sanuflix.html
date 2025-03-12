@@ -23,7 +23,6 @@
       --font-size-card-text: 0.9em;
       --border-radius: 8px;
     }
-
     .light-mode {
       --background-color: #F5F5F5;
       --surface-color: #FFFFFF;
@@ -32,7 +31,6 @@
       --secondary-color: #03DAC6;
       --card-hover-bg: #E0E0E0;
     }
-
     body {
       margin: 0;
       padding: 0;
@@ -45,7 +43,6 @@
       transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
       overflow-x: hidden;
     }
-
     /* Header Layout */
     header {
       display: flex;
@@ -100,7 +97,7 @@
       cursor: pointer;
       font-size: 1em;
     }
-
+    /* Search Overlay */
     .search-backdrop {
       position: fixed;
       top: 0;
@@ -113,9 +110,7 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-    .search-backdrop.show {
-      opacity: 1;
-    }
+    .search-backdrop.show { opacity: 1; }
     .floating-search {
       position: absolute;
       top: 50%;
@@ -170,9 +165,7 @@
       gap: 5px;
       font-size: 1em;
     }
-    .floating-search button:hover {
-      background-color: var(--secondary-color);
-    }
+    .floating-search button:hover { background-color: var(--secondary-color); }
     .switcher {
       display: flex;
       align-items: center;
@@ -242,9 +235,7 @@
       align-items: center;
       gap: 10px;
     }
-    .trending-section h2 .material-icons {
-      font-size: 1.2em;
-    }
+    .trending-section h2 .material-icons { font-size: 1.2em; }
     .sort-by {
       display: flex;
       align-items: center;
@@ -295,9 +286,7 @@
       object-fit: cover;
       transition: transform var(--transition-speed) ease;
     }
-    .card:hover img {
-      transform: scale(1.05);
-    }
+    .card:hover img { transform: scale(1.05); }
     .card-content {
       padding: 15px;
       flex: 1;
@@ -330,10 +319,8 @@
       font-size: 1.5em;
       transition: color var(--transition-speed) ease;
     }
-    .watchlist-btn:hover {
-      color: var(--primary-color);
-    }
-    /* Overlay tooltip covering entire card */
+    .watchlist-btn:hover { color: var(--primary-color); }
+    /* Overlay tooltip covering the entire card */
     .card-tooltip {
       position: absolute;
       top: 0;
@@ -352,15 +339,9 @@
       transition: opacity 0.3s ease;
       pointer-events: none;
     }
-    .card:hover .card-tooltip {
-      opacity: 1;
-    }
-    .card-tooltip p {
-      margin: 5px 0;
-    }
-    .card-tooltip .rating {
-      font-size: 1.2em;
-    }
+    .card:hover .card-tooltip { opacity: 1; }
+    .card-tooltip p { margin: 5px 0; }
+    .card-tooltip .rating { font-size: 1.2em; }
     .see-more-container {
       text-align: center;
       margin-top: 20px;
@@ -380,9 +361,7 @@
       font-weight: 500;
       font-size: 1em;
     }
-    .see-more-container button:hover {
-      background-color: var(--primary-color);
-    }
+    .see-more-container button:hover { background-color: var(--primary-color); }
     /* Embed modal styling */
     #embed-modal {
       display: none;
@@ -428,9 +407,7 @@
       cursor: pointer;
       transition: color var(--transition-speed) ease;
     }
-    .close-button:hover {
-      color: var(--secondary-color);
-    }
+    .close-button:hover { color: var(--secondary-color); }
     .selectors {
       display: none;
       flex-direction: row;
@@ -483,16 +460,26 @@
       font-weight: 500;
       font-size: 1em;
     }
-    .trailer-button {
+    .trailer-button { background-color: var(--primary-color); }
+    /* New Watched Button in embed modal */
+    .watched-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
       background-color: var(--primary-color);
+      color: var(--on-surface-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background-color var(--transition-speed) ease;
+      box-shadow: 0 2px 4px var(--shadow-color);
+      font-weight: 500;
+      font-size: 1em;
     }
-    .blur {
-      filter: blur(5px);
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    .watched-button:hover { background-color: var(--secondary-color); }
+    .blur { filter: blur(5px); }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -507,31 +494,14 @@
       margin: 50px auto;
     }
     @media (max-width: 800px) {
-      .trending-section .sort-by {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      header {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      #app-title {
-        margin: 10px 0;
-      }
+      .trending-section .sort-by { flex-direction: column; align-items: flex-start; }
+      header { flex-direction: column; align-items: stretch; }
+      #app-title { margin: 10px 0; }
     }
     @media (max-width: 600px) {
-      .header-controls button,
-      .header-controls select {
-        padding: 5px;
-        font-size: 0.9em;
-      }
-      .results-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-      }
-      #embed-content iframe {
-        height: 300px;
-      }
+      .header-controls button, .header-controls select { padding: 5px; font-size: 0.9em; }
+      .results-grid { grid-template-columns: 1fr; gap: 15px; }
+      #embed-content iframe { height: 300px; }
     }
     @keyframes titleAnimation {
       0% { opacity: 0; transform: translateX(-20px); }
@@ -682,80 +652,85 @@
           </select>
         </div>
         <iframe src="" allow="fullscreen; autoplay"></iframe>
-        <button id="share-button" class="share-button">
-          <span class="material-icons">share</span> Share
-        </button>
-        <button id="trailer-button" class="trailer-button">
-          <span class="material-icons">play_circle</span> Trailer
-        </button>
-        <button id="back-button" class="back-button" style="display: none;">
-          <span class="material-icons">arrow_back</span> Back to Content
-        </button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button id="share-button" class="share-button">
+            <span class="material-icons">share</span> Share
+          </button>
+          <button id="watched-button" class="watched-button">
+            <span class="material-icons">check_circle</span> Mark as Watched
+          </button>
+          <button id="trailer-button" class="trailer-button">
+            <span class="material-icons">play_circle</span> Trailer
+          </button>
+          <button id="back-button" class="back-button" style="display: none;">
+            <span class="material-icons">arrow_back</span> Back to Content
+          </button>
+        </div>
       </div>
     </div>
   </main>
 
   <script>
     // -------------------- Trakt API Credentials --------------------
-    // Using provided keys:
     const TRAKT_CLIENT_ID = "eb2d86c63302fde62738f8e599453d0c0198fc82c8ff6d2b2a58e453a7bad85e";
     const TRAKT_CLIENT_SECRET = "25eb850f6cfab1d8a4dc5040e5be4e4ab2aed1e5644db5e3db2bc9eef8a1ed18";
     const TRAKT_REDIRECT_URI = "https://sanuu7.github.io/Projects/Sanuflix.html";
     const TRAKT_AUTH_URL = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKT_CLIENT_ID}&redirect_uri=${TRAKT_REDIRECT_URI}`;
 
     // -------------------- DOM Elements --------------------
-    const searchToggle = document.getElementById('search-toggle');
-    const searchBackdrop = document.getElementById('search-backdrop');
-    const closeSearchBtn = document.querySelector('.close-search');
-    const searchInput = document.getElementById('search-input');
-    const searchButton = document.getElementById('search-button');
-    const searchMovieRadio = document.getElementById('search-movie');
-    const searchSeriesRadio = document.getElementById('search-series');
-    const sortMoviesSelect = document.getElementById('sort-movies');
-    const sortSeriesSelect = document.getElementById('sort-series');
-    const trendingMoviesDiv = document.getElementById('trending-movies');
-    const trendingSeriesDiv = document.getElementById('trending-series');
-    const seeMoreMoviesBtn = document.getElementById('see-more-movies');
-    const seeMoreSeriesBtn = document.getElementById('see-more-series');
-    const loadingSpinner = document.getElementById('loading');
-    const embedModal = document.getElementById('embed-modal');
-    const embedContent = document.getElementById('embed-content');
-    const closeButton = document.querySelector('.close-button');
-    const appTitle = document.getElementById('app-title');
-    const moviesHeading = document.getElementById('movies-heading');
-    const seriesHeading = document.getElementById('series-heading');
-    const watchlistSection = document.getElementById('watchlist-section');
-    const watchlistDiv = document.getElementById('watchlist');
-    const recentlyViewedSection = document.getElementById('recently-viewed-section');
-    const recentlyViewedDiv = document.getElementById('recently-viewed');
-    const searchResultsSection = document.getElementById('search-results-section');
-    const searchResultsDiv = document.getElementById('search-results');
-    const searchResultsHeading = document.getElementById('search-results-heading');
-    const seeMoreSearchResultsBtn = document.getElementById('see-more-search-results');
-    const apiSelect = document.getElementById('api-select');
-    const embedIframe = embedContent.querySelector('iframe');
-    const seasonEpisodeSelectors = document.getElementById('season-episode-selectors');
-    const seasonSelector = document.getElementById('season-selector');
-    const episodeSelector = document.getElementById('episode-selector');
-    const shareButton = document.getElementById('share-button');
-    const trailerButton = document.getElementById('trailer-button');
-    const backButton = document.getElementById('back-button');
-    const languageSelect = document.getElementById('language-select');
-    const bookmarksToggle = document.getElementById('bookmarks-toggle');
-    const recentlyWatchedToggle = document.getElementById('recently-watched-toggle');
-    const mainSections = document.getElementById('main-sections');
-    const bookmarksSection = document.getElementById('bookmarks-section');
-    const recentlyWatchedSection = document.getElementById('recently-watched-section');
-    // Trakt Login Button
-    const traktLoginBtn = document.getElementById('trakt-login');
-    const traktIcon = document.getElementById('trakt-icon');
+    const searchToggle = document.getElementById("search-toggle");
+    const searchBackdrop = document.getElementById("search-backdrop");
+    const closeSearchBtn = document.querySelector(".close-search");
+    const searchInput = document.getElementById("search-input");
+    const searchButton = document.getElementById("search-button");
+    const searchMovieRadio = document.getElementById("search-movie");
+    const searchSeriesRadio = document.getElementById("search-series");
+    const sortMoviesSelect = document.getElementById("sort-movies");
+    const sortSeriesSelect = document.getElementById("sort-series");
+    const trendingMoviesDiv = document.getElementById("trending-movies");
+    const trendingSeriesDiv = document.getElementById("trending-series");
+    const seeMoreMoviesBtn = document.getElementById("see-more-movies");
+    const seeMoreSeriesBtn = document.getElementById("see-more-series");
+    const loadingSpinner = document.getElementById("loading");
+    const embedModal = document.getElementById("embed-modal");
+    const embedContent = document.getElementById("embed-content");
+    const closeButton = document.querySelector(".close-button");
+    const appTitle = document.getElementById("app-title");
+    const moviesHeading = document.getElementById("movies-heading");
+    const seriesHeading = document.getElementById("series-heading");
+    const watchlistSection = document.getElementById("watchlist-section");
+    const watchlistDiv = document.getElementById("watchlist");
+    const recentlyViewedSection = document.getElementById("recently-viewed-section");
+    const recentlyViewedDiv = document.getElementById("recently-viewed");
+    const searchResultsSection = document.getElementById("search-results-section");
+    const searchResultsDiv = document.getElementById("search-results");
+    const searchResultsHeading = document.getElementById("search-results-heading");
+    const seeMoreSearchResultsBtn = document.getElementById("see-more-search-results");
+    const apiSelect = document.getElementById("api-select");
+    const embedIframe = embedContent.querySelector("iframe");
+    const seasonEpisodeSelectors = document.getElementById("season-episode-selectors");
+    const seasonSelector = document.getElementById("season-selector");
+    const episodeSelector = document.getElementById("episode-selector");
+    const shareButton = document.getElementById("share-button");
+    const trailerButton = document.getElementById("trailer-button");
+    const backButton = document.getElementById("back-button");
+    const languageSelect = document.getElementById("language-select");
+    const bookmarksToggle = document.getElementById("bookmarks-toggle");
+    const recentlyWatchedToggle = document.getElementById("recently-watched-toggle");
+    const mainSections = document.getElementById("main-sections");
+    const bookmarksSection = document.getElementById("bookmarks-section");
+    const recentlyWatchedSection = document.getElementById("recently-watched-section");
+    const traktLoginBtn = document.getElementById("trakt-login");
+    const traktIcon = document.getElementById("trakt-icon");
+
+    // New Watched button in embed modal
+    const watchedButton = document.getElementById("watched-button");
 
     // -------------------- Other Variables --------------------
     const API_KEY = "5e38ca50480518c0d1cde63718225f6c";
     const API_BASE_URL = "https://api.themoviedb.org/3";
     const MAIN_SERVER_BASE_URL = "https://embed.su/embed";
     const ALTERNATIVE_SERVER_BASE_URL = "https://vidlink.pro";
-
     let currentPageMovies = 1;
     let currentPageSeries = 1;
     let currentPageSearch = 1;
@@ -847,7 +822,6 @@
 
     // -------------------- Trakt OAuth Functions --------------------
     function traktLogin() {
-      // If not logged in, redirect to Trakt auth page
       window.location.href = TRAKT_AUTH_URL;
     }
     function traktLogout() {
@@ -872,7 +846,7 @@
         if (data.access_token) {
           localStorage.setItem("trakt_token", data.access_token);
           alert("Trakt account linked!");
-          traktIcon.innerText = "verified_user"; // Change icon to indicate success
+          traktIcon.innerText = "verified_user";
         } else {
           alert("Failed to link Trakt account.");
         }
@@ -886,9 +860,7 @@
     if (urlParams.has("code")) {
       exchangeTraktToken(urlParams.get("code"));
     }
-    // Set click event for Trakt Login button
     traktLoginBtn.addEventListener("click", () => {
-      // If token exists, allow logout; otherwise, login
       if (localStorage.getItem("trakt_token")) {
         if (confirm("Log out of Trakt?")) {
           traktLogout();
@@ -898,12 +870,74 @@
       }
     });
 
+    // -------------------- Trakt Sync Functions --------------------
+    async function markMovieAsWatched(movieId, movieTitle) {
+      const token = localStorage.getItem("trakt_token");
+      if (!token) { alert("Please log in to Trakt first!"); return; }
+      try {
+        const response = await fetch("https://api.trakt.tv/sync/history", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "trakt-api-version": "2",
+            "trakt-api-key": TRAKT_CLIENT_ID,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            movies: [{
+              ids: { tmdb: movieId },
+              title: movieTitle,
+              watched_at: new Date().toISOString()
+            }]
+          })
+        });
+        if (response.ok) {
+          alert(`"${movieTitle}" marked as watched on Trakt!`);
+          watchedButton.disabled = true;
+          watchedButton.innerText = "Already Watched";
+        } else {
+          const errorText = await response.text();
+          console.error("Error marking as watched:", errorText);
+          alert("Failed to mark as watched on Trakt.");
+        }
+      } catch (error) {
+        console.error("Error marking as watched:", error);
+        alert("Error marking as watched on Trakt.");
+      }
+    }
+    async function addToTraktWatchlist(movieId, movieTitle) {
+      const token = localStorage.getItem("trakt_token");
+      if (!token) { alert("Please log in to Trakt first!"); return; }
+      try {
+        const response = await fetch("https://api.trakt.tv/sync/watchlist", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "trakt-api-version": "2",
+            "trakt-api-key": TRAKT_CLIENT_ID,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            movies: [{ ids: { tmdb: movieId }, title: movieTitle }]
+          })
+        });
+        if (response.ok) {
+          alert(`"${movieTitle}" added to your Trakt watchlist!`);
+        } else {
+          const errorText = await response.text();
+          console.error("Error adding to watchlist:", errorText);
+          alert("Failed to add to Trakt watchlist.");
+        }
+      } catch (error) {
+        console.error("Error adding to watchlist:", error);
+        alert("Error adding to Trakt watchlist.");
+      }
+    }
+
     // -------------------- TMDb & UI Functions --------------------
     function openSearch() {
       searchBackdrop.style.display = "block";
-      setTimeout(() => {
-        searchBackdrop.classList.add("show");
-      }, 10);
+      setTimeout(() => { searchBackdrop.classList.add("show"); }, 10);
       document.querySelector("header").classList.add("blur");
       mainContent.classList.add("blur");
       setTimeout(() => searchInput.focus(), 100);
@@ -938,13 +972,13 @@
       const index = watchlist.findIndex((w) => w.id === item.id && w.media_type === item.media_type);
       if (index === -1) {
         watchlist.push(item);
+        // Also add to Trakt watchlist
+        addToTraktWatchlist(item.id, item.title || item.name);
       } else {
         watchlist.splice(index, 1);
       }
       localStorage.setItem("watchlist", JSON.stringify(watchlist));
       displayWatchlist();
-      displayBookmarked();
-      // Optionally, call addToTraktWatchlist(item.id, item.title) here to sync with Trakt watchlist.
     }
     function displayWatchlist() {
       watchlistDiv.innerHTML = "";
@@ -958,17 +992,12 @@
         watchlistSection.style.display = "none";
       }
     }
-    function displayBookmarked() {
-      console.log("Displaying bookmarked items:", watchlist.length);
-      // Assuming you have an element for bookmarked items.
-    }
     function addToRecentlyViewed(item) {
       recentlyViewed = recentlyViewed.filter((i) => i.id !== item.id || i.media_type !== item.media_type);
       recentlyViewed.unshift(item);
       recentlyViewed = recentlyViewed.slice(0, 5);
       localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
       displayRecentlyViewed();
-      displayRecentlyViewedItems();
     }
     function displayRecentlyViewed() {
       recentlyViewedDiv.innerHTML = "";
@@ -982,21 +1011,15 @@
         recentlyViewedSection.style.display = "none";
       }
     }
-    function displayRecentlyViewedItems() {
-      console.log("Displaying recently viewed items:", recentlyViewed.length);
-      // Assuming you have an element for recently viewed items.
-    }
     function showLoading(show) {
       loadingSpinner.style.display = show ? "block" : "none";
     }
-    // Create movie/series card with full overlay tooltip for IMDb rating & overview
+    // Create card with full overlay tooltip for IMDb rating and overview
     function createCard(item, type) {
       const card = document.createElement("div");
       card.classList.add("card");
       const img = document.createElement("img");
-      img.src = item.poster_path
-        ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-        : "https://via.placeholder.com/500x750?text=No+Image";
+      img.src = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : "https://via.placeholder.com/500x750?text=No+Image";
       img.alt = item.title || item.name;
       const cardContent = document.createElement("div");
       cardContent.classList.add("card-content");
@@ -1017,7 +1040,6 @@
       cardContent.appendChild(date);
       card.appendChild(img);
       card.appendChild(cardContent);
-      // Overlay tooltip covering whole card
       const tooltip = document.createElement("div");
       tooltip.classList.add("card-tooltip");
       tooltip.innerHTML = `<p class="rating">⭐ ${item.vote_average || "N/A"}</p>
@@ -1083,8 +1105,8 @@
         endpoint = `${API_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&page=${page}&language=${currentLanguage}`;
       } else {
         endpoint = `${API_BASE_URL}/${type}/${
-          sortFilter === "popular" ? "popular" :
-          sortFilter === "top_rated" ? "top_rated" :
+          sortFilter === "popular" ? "popular" : 
+          sortFilter === "top_rated" ? "top_rated" : 
           "popular"
         }?api_key=${API_KEY}&language=${currentLanguage}&page=${page}`;
       }
@@ -1117,7 +1139,6 @@
         const response = await fetch(endpoint);
         if (!response.ok) throw new Error("Failed to fetch search results.");
         const data = await response.json();
-        // For movies, sort search results by popularity (as a proxy for trending)
         if (type === "movie") {
           data.results.sort((a, b) => b.popularity - a.popularity);
         }
@@ -1240,6 +1261,7 @@
         console.error("Error fetching trailer:", error);
       }
     }
+    // -------------------- Event Listeners --------------------
     document.addEventListener("DOMContentLoaded", () => {
       loadTrending("movie", currentFilterMovies);
       loadTrending("tv", currentFilterSeries);
@@ -1249,9 +1271,7 @@
     });
     searchToggle.addEventListener("click", () => { openSearch(); });
     closeSearchBtn.addEventListener("click", () => { closeSearch(); });
-    searchBackdrop.addEventListener("click", (e) => {
-      if (e.target === searchBackdrop) closeSearch();
-    });
+    searchBackdrop.addEventListener("click", (e) => { if (e.target === searchBackdrop) closeSearch(); });
     searchButton.addEventListener("click", () => {
       const query = searchInput.value.trim();
       if (query === "") return;
@@ -1261,9 +1281,7 @@
       searchContent(query, currentSearchType, currentPageSearch);
       closeSearch();
     });
-    searchInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") { searchButton.click(); }
-    });
+    searchInput.addEventListener("keydown", (e) => { if (e.key === "Enter") searchButton.click(); });
     sortMoviesSelect.addEventListener("change", () => {
       currentFilterMovies = sortMoviesSelect.value;
       currentPageMovies = 1;
@@ -1286,56 +1304,42 @@
       embedIframe.src = "";
       backButton.style.display = "none";
     });
-    window.addEventListener("click", (e) => {
-      if (e.target === embedModal) {
-        embedModal.style.display = "none";
-        embedIframe.src = "";
-        backButton.style.display = "none";
-      }
-    });
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && embedModal.style.display === "flex") {
-        embedModal.style.display = "none";
-        embedIframe.src = "";
-        backButton.style.display = "none";
-      }
-    });
+    window.addEventListener("click", (e) => { if (e.target === embedModal) { embedModal.style.display = "none"; embedIframe.src = ""; backButton.style.display = "none"; } });
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape" && embedModal.style.display === "flex") { embedModal.style.display = "none"; embedIframe.src = ""; backButton.style.display = "none"; } });
     appTitle.addEventListener("click", resetSearch);
     apiSelect.addEventListener("change", loadEmbedVideo);
-    seasonSelector.addEventListener("change", () => {
-      if (seasonSelector.value) fetchEpisodes(seasonSelector.value);
-      loadEmbedVideo();
-    });
+    seasonSelector.addEventListener("change", () => { if (seasonSelector.value) fetchEpisodes(seasonSelector.value); loadEmbedVideo(); });
     episodeSelector.addEventListener("change", loadEmbedVideo);
     shareButton.addEventListener("click", () => {
       const url = window.location.href;
       if (navigator.share) {
-        navigator.share({
-          title: currentEmbedItem.title || currentEmbedItem.name,
-          url: url
-        }).catch(console.error);
+        navigator.share({ title: currentEmbedItem.title || currentEmbedItem.name, url: url }).catch(console.error);
       } else {
         navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard!"));
       }
     });
     trailerButton.addEventListener("click", loadTrailer);
     backButton.addEventListener("click", () => { loadEmbedVideo(); backButton.style.display = "none"; });
+    watchedButton.addEventListener("click", () => {
+      if (currentEmbedItem) {
+        markMovieAsWatched(currentEmbedItem.id, currentEmbedItem.title || currentEmbedItem.name);
+      }
+    });
     bookmarksToggle.addEventListener("click", () => {
       mainSections.style.display = "none";
       bookmarksSection.style.display = "block";
     });
     recentlyWatchedToggle.addEventListener("click", () => {
       mainSections.style.display = "none";
-      recentlyWatchedSection.style.display = "block";
+      recentlyViewedSection.style.display = "block";
     });
-    // Back buttons for switching layouts
     document.getElementById("back-to-main-bookmarks")?.addEventListener("click", () => {
       bookmarksSection.style.display = "none";
       mainSections.style.display = "block";
       resetSearch();
     });
     document.getElementById("back-to-main-recently")?.addEventListener("click", () => {
-      recentlyWatchedSection.style.display = "none";
+      recentlyViewedSection.style.display = "none";
       mainSections.style.display = "block";
       resetSearch();
     });
@@ -1351,8 +1355,9 @@
       if (type === "tv") fetchSeasons(item);
       addToRecentlyViewed({ ...item, media_type: type });
       loadEmbedVideo();
-      // Optionally, mark the movie as watched on Trakt here.
-      // markMovieAsWatched(item.id, item.title);
+      // Optionally, you can auto-mark as watched here or let the user press "Mark as Watched".
+      watchedButton.disabled = false;
+      watchedButton.innerText = "Mark as Watched";
     }
     function resetSearch() {
       currentQuery = "";
