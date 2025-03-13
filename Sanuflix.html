@@ -45,9 +45,9 @@
     }
     header {
       display: flex;
-      justify-content: center; /* Center the header content */
+      justify-content: center;
       align-items: center;
-      padding: 10px 20px;
+      padding: 10px 0; /* Remove left/right padding, only top/bottom */
       box-shadow: 0 2px 4px var(--shadow-color);
       background-color: var(--surface-color);
       position: fixed;
@@ -59,11 +59,12 @@
     header.blur { filter: blur(5px); }
     .header-content {
       display: flex;
-      flex-direction: column; /* Stack title and controls vertically */
+      flex-direction: column;
       align-items: center;
       width: 100%;
       max-width: 1200px;
-      gap: 10px; /* Space between title and buttons */
+      padding: 0 calc(2vw + 10px); /* Dynamic padding based on viewport width */
+      gap: 10px;
     }
     #app-title {
       flex: 0 0 auto;
@@ -89,14 +90,14 @@
     #app-title .material-icons {
       opacity: 0;
       animation: iconFadeIn 0.5s ease-in forwards;
-      animation-delay: 2s; /* Icon appears after typewriter effect */
+      animation-delay: 2s;
     }
     .header-controls {
       display: flex;
       align-items: center;
-      justify-content: center; /* Center buttons horizontally */
+      justify-content: center;
       gap: 8px;
-      flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+      flex-wrap: wrap;
     }
     .theme-button, .trakt-login-button {
       background: none;
@@ -233,7 +234,7 @@
     }
     main {
       flex: 1;
-      padding: 120px 20px 20px; /* Increased padding-top to account for taller header */
+      padding: 120px 0 20px; /* Remove left/right padding, only top/bottom */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -245,6 +246,7 @@
       max-width: 1200px;
       margin-top: 20px;
       margin-bottom: 40px;
+      padding: 0 calc(2vw + 10px); /* Dynamic padding based on viewport width */
     }
     .trending-section h2 {
       font-size: 1.5em;
@@ -509,15 +511,19 @@
       .header-content {
         flex-direction: column;
         align-items: center;
+        padding: 0 calc(1.5vw + 8px); /* Slightly smaller padding for medium screens */
       }
       .header-controls { gap: 6px; }
       main { padding-top: 100px; }
+      .trending-section { padding: 0 calc(1.5vw + 8px); }
     }
     @media (max-width: 600px) {
       .header-controls button, .header-controls select { padding: 4px 6px; font-size: 12px; }
       .results-grid { grid-template-columns: 1fr; gap: 15px; }
       #embed-content iframe { height: 300px; }
       main { padding-top: 90px; }
+      .header-content { padding: 0 calc(1vw + 5px); } /* Even smaller padding for small screens */
+      .trending-section { padding: 0 calc(1vw + 5px); }
     }
   </style>
 </head>
@@ -990,7 +996,7 @@
       history.unshift(item);
       history = history.slice(0, 5);
       localStorage.setItem('history', JSON.stringify(history));
-      if (traktAccessToken) syncWatchedToTrakt(item);
+      // Removed automatic syncWatchedToTrakt call
       displayHistory();
       displayHistoryItems();
     }
@@ -1032,7 +1038,7 @@
             alert(translations[currentLanguage].traktSyncFailed);
             return false;
           }
-          await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
         }
       }
     }
@@ -1358,6 +1364,7 @@
         currentSeason = seasonSelector.value || null;
         currentEpisode = episodeSelector.value || null;
         addToHistory({ ...currentEmbedItem, media_type: currentSearchType });
+        syncWatchedToTrakt({ ...currentEmbedItem, media_type: currentSearchType });
       }
     });
 
