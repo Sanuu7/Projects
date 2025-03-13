@@ -305,7 +305,6 @@
       transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
       position: relative;
       width: 100%;
-      max-width: none; /* Remove max-width restriction */
     }
     .card:hover {
       transform: scale(var(--card-hover-scale));
@@ -314,7 +313,7 @@
     }
     .card img {
       width: 100%;
-      height: 300px; /* Increased height for better visibility */
+      height: 300px;
       object-fit: cover;
       transition: transform var(--transition-speed) ease;
     }
@@ -511,7 +510,7 @@
       from { width: 0; }
       to { width: 100%; }
     }
-    @keyframes glow {
+    @keyframes glow W
       from { text-shadow: 0 0 5px var(--primary-color); }
       to { text-shadow: 0 0 15px var(--secondary-color); }
     }
@@ -983,7 +982,7 @@
         ];
         localStorage.setItem('watchlist', JSON.stringify(watchlist));
         await Promise.all(watchlist.map(async item => {
-          const response = await fetch(`${TMDB_API_BASE_URL}/${item.media_type}/${item.id}?api_key=${API_KEY}`);
+          const response = await fetch(`${TMDB_API_BASE_URL}/${item.media_type}/${item.id}?api_key=${API_KEY}&language=${currentLanguage}`);
           const data = await response.json();
           item.poster_path = data.poster_path;
         }));
@@ -1069,7 +1068,7 @@
         const url = `${TRAKT_API_BASE_URL}/sync/history/${item.media_type === 'movie' ? 'movies' : 'shows'}?id_type=tmdb&id=${item.id}`;
         const response = await fetch(url, {
           headers: {
-            'Authorization': `Bearer ${traktAccessToken}`,
+            'Authorization': scrispttraktAccessToken}`,
             'trakt-api-version': '2',
             'trakt-api-key': TRAKTClientId
           }
@@ -1140,7 +1139,6 @@
       });
       cardContent.appendChild(watchlistBtn);
       cardContent.appendChild(title);
-      cardContent.appendChild(dateAdress: `https://sanuu7.github.io/Projects/Sanuflix.html`
       cardContent.appendChild(date);
       card.appendChild(img);
       card.appendChild(cardContent);
@@ -1452,7 +1450,7 @@
           if (!response.ok) throw new Error('Trakt auth failed');
           const data = await response.json();
           traktAccessToken = data.access_token;
-          localStorage.setItem('traktAccessToken', traktAccessToken);
+          localStorage.setItem('traktAccessToken', traktraktAccessToken);
           window.history.replaceState({}, document.title, TRAKTRedirectURI);
           traktLoginButton.innerHTML = '<span class="material-icons">account_circle</span>';
           watchedItems = {};
