@@ -248,10 +248,12 @@
       justify-content: center;
       text-align: center;
     }
+    /* ADDED/CHANGED: Center trending sections with consistent padding */
     .trending-section {
       width: 100%;
       max-width: 1200px;
-      padding: 0 calc((100vw - 1200px) / 2);
+      margin: 0 auto;
+      padding: 0 20px;
       margin-top: 20px;
       margin-bottom: 40px;
     }
@@ -290,11 +292,12 @@
         padding: 0 20px;
       }
     }
+    /* ADDED/CHANGED: Use auto-fill for flexible grid columns */
     .results-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
-      justify-items: center; /* Center cards within grid cells */
+      justify-items: center;
       animation: fadeIn 0.5s ease;
     }
     .card {
@@ -307,7 +310,7 @@
       flex-direction: column;
       transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
       position: relative;
-      margin: 0; /* Reset default margins */
+      margin: 0;
     }
     .card:hover {
       transform: scale(var(--card-hover-scale));
@@ -322,13 +325,13 @@
     }
     .card:hover img { transform: scale(1.05); }
     .card-content {
-      padding: 15px; /* Symmetric padding */
+      padding: 15px;
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      text-align: left; /* Ensure text aligns left within card */
+      text-align: left;
     }
     .card-content h3 {
       margin: 0 0 10px 0;
@@ -530,7 +533,6 @@
     }
     @media (max-width: 600px) {
       .header-controls button, .header-controls select { padding: 4px 6px; font-size: 12px; }
-      .results-grid { grid-template-columns: 1fr; gap: 15px; }
       #embed-content iframe { height: 300px; }
       .header-content { padding: 0 calc(1vw + 5px); }
       .trending-section { padding: 0 15px; }
@@ -1060,7 +1062,7 @@
     async function checkWatchedStatus(item) {
       if (!traktAccessToken) return false;
       try {
-        console.log('Checking watched status for:', item.id, item.media_type, 'Season:', currentSeason, 'Episode:', currentEpisode); // Debug log
+        console.log('Checking watched status for:', item.id, item.media_type, 'Season:', currentSeason, 'Episode:', currentEpisode);
         const url = `${TRAKT_API_BASE_URL}/sync/history/${item.media_type === 'movie' ? 'movies' : 'shows'}?id_type=tmdb&id=${item.id}`;
         const response = await fetch(url, {
           headers: {
@@ -1074,11 +1076,11 @@
           return false;
         }
         const data = await response.json();
-        console.log('Trakt history response:', data); // Debug log
+        console.log('Trakt history response:', data);
         if (item.media_type === 'movie') {
           return data.length > 0;
         } else if (item.media_type === 'tv') {
-          if (!currentSeason || !currentEpisode) return false; // Only check episodes if season and episode are selected
+          if (!currentSeason || !currentEpisode) return false;
           return data.some(entry => 
             entry.episodes && entry.episodes.some(ep => 
               ep.season === parseInt(currentSeason) && ep.number === parseInt(currentEpisode)
@@ -1350,7 +1352,6 @@
     async function loadEmbedVideo() {
       const embedURL = await generateEmbedURL();
       if (embedURL) embedIframe.src = embedURL;
-      // Re-check watched status when video changes (e.g., season/episode switch)
       if (currentEmbedItem && traktAccessToken) {
         currentSeason = seasonSelector.value || null;
         currentEpisode = episodeSelector.value || null;
@@ -1389,7 +1390,6 @@
     // Trakt Integration
     async function handleTraktLogin() {
       if (traktAccessToken) {
-        // Logout functionality
         localStorage.removeItem('traktAccessToken');
         traktAccessToken = null;
         watchlist = [];
@@ -1541,19 +1541,22 @@
       embedIframe.src = '';
       backButton.style.display = 'none';
       apiSelect.value = 'sanu-flix-v2';
-      seasonEpisodeSelectors.style.display = type === 'tv' ? 'flex' : 'none';
-      if (type === 'tv') fetchSeasons(item);
-      // Check watched status before adding to history
+      if (type === 'tv') {
+        seasonEpisodeSelectors.style.display = 'flex';
+        await fetchSeasons(item);
+      } else {
+        seasonEpisodeSelectors.style.display = 'none';
+      }
+      // Reset watched button to default (unwatched)
+      updateWatchedButton(false);
       if (traktAccessToken) {
         currentSeason = seasonSelector.value || null;
         currentEpisode = episodeSelector.value || null;
         const isWatched = await checkWatchedStatus({ ...item, media_type: type });
         updateWatchedButton(isWatched);
-      } else {
-        updateWatchedButton(false); // Default to unwatched if no Trakt
       }
       loadEmbedVideo();
-      addToHistory({ ...item, media_type: type }); // Add to history after checking status
+      addToHistory({ ...item, media_type: type });
     }
 
     function resetSearch() {
