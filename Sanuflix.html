@@ -246,12 +246,12 @@
       max-width: 1200px;
       display: flex;
       justify-content: center;
-      text-align: center; /* Ensure centering */
+      text-align: center;
     }
     .trending-section {
       width: 100%;
       max-width: 1200px;
-      padding: 0 calc((100vw - 1200px) / 2); /* Symmetric padding for large screens */
+      padding: 0 calc((100vw - 1200px) / 2);
       margin-top: 20px;
       margin-bottom: 40px;
     }
@@ -287,13 +287,14 @@
     }
     @media (max-width: 1200px) {
       .trending-section {
-        padding: 0 20px; /* Fixed padding for screens smaller than 1200px */
+        padding: 0 20px;
       }
     }
     .results-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
+      justify-items: center; /* Center cards within grid cells */
       animation: fadeIn 0.5s ease;
     }
     .card {
@@ -306,6 +307,7 @@
       flex-direction: column;
       transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
       position: relative;
+      margin: 0; /* Reset default margins */
     }
     .card:hover {
       transform: scale(var(--card-hover-scale));
@@ -320,12 +322,13 @@
     }
     .card:hover img { transform: scale(1.05); }
     .card-content {
-      padding: 15px;
+      padding: 15px; /* Symmetric padding */
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
+      text-align: left; /* Ensure text aligns left within card */
     }
     .card-content h3 {
       margin: 0 0 10px 0;
@@ -681,7 +684,7 @@
           <span class="material-icons">arrow_back</span> Back to Content
         </button>
         <button id="watched-button" class="watched-button">
-          <span class="material-icons">check_circle</span> Already Watched
+          <span class="material-icons">check_circle</span> Mark as Watched
         </button>
       </div>
     </div>
@@ -1057,7 +1060,7 @@
     async function checkWatchedStatus(item) {
       if (!traktAccessToken) return false;
       try {
-        console.log('Checking watched status for:', item.id, item.media_type); // Debug log
+        console.log('Checking watched status for:', item.id, item.media_type, 'Season:', currentSeason, 'Episode:', currentEpisode); // Debug log
         const url = `${TRAKT_API_BASE_URL}/sync/history/${item.media_type === 'movie' ? 'movies' : 'shows'}?id_type=tmdb&id=${item.id}`;
         const response = await fetch(url, {
           headers: {
@@ -1075,7 +1078,7 @@
         if (item.media_type === 'movie') {
           return data.length > 0;
         } else if (item.media_type === 'tv') {
-          if (!currentSeason || !currentEpisode) return false;
+          if (!currentSeason || !currentEpisode) return false; // Only check episodes if season and episode are selected
           return data.some(entry => 
             entry.episodes && entry.episodes.some(ep => 
               ep.season === parseInt(currentSeason) && ep.number === parseInt(currentEpisode)
@@ -1198,6 +1201,7 @@
       shareButton.innerHTML = `<span class="material-icons">share</span> ${t.shareButton}`;
       trailerButton.innerHTML = `<span class="material-icons">play_circle</span> ${t.trailerButton}`;
       backButton.innerHTML = `<span class="material-icons">arrow_back</span> ${t.backButton}`;
+      watchedButton.innerHTML = `<span class="material-icons">check_circle</span> ${t.markWatchedButton}`;
     }
 
     // Content Loading
@@ -1348,6 +1352,8 @@
       if (embedURL) embedIframe.src = embedURL;
       // Re-check watched status when video changes (e.g., season/episode switch)
       if (currentEmbedItem && traktAccessToken) {
+        currentSeason = seasonSelector.value || null;
+        currentEpisode = episodeSelector.value || null;
         const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
         updateWatchedButton(isWatched);
       }
@@ -1370,11 +1376,11 @@
     function updateWatchedButton(isWatched) {
       const t = translations[currentLanguage];
       if (isWatched) {
-        watchedButton.textContent = `${t.watchedButton} ✔`;
+        watchedButton.innerHTML = `<span class="material-icons">check_circle</span> ${t.watchedButton} ✔`;
         watchedButton.classList.add('watched');
         watchedButton.disabled = true;
       } else {
-        watchedButton.textContent = `${t.markWatchedButton}`;
+        watchedButton.innerHTML = `<span class="material-icons">check_circle</span> ${t.markWatchedButton}`;
         watchedButton.classList.remove('watched');
         watchedButton.disabled = false;
       }
@@ -1442,7 +1448,8 @@
         addToHistory({ ...currentEmbedItem, media_type: currentSearchType });
         const success = await syncWatchedToTrakt({ ...currentEmbedItem, media_type: currentSearchType });
         if (success) {
-          updateWatchedButton(true);
+          const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
+          updateWatchedButton(isWatched);
         }
       }
     });
@@ -1536,7 +1543,7 @@
       apiSelect.value = 'sanu-flix-v2';
       seasonEpisodeSelectors.style.display = type === 'tv' ? 'flex' : 'none';
       if (type === 'tv') fetchSeasons(item);
-      addToHistory({ ...item, media_type: type });
+      // Check watched status before adding to history
       if (traktAccessToken) {
         currentSeason = seasonSelector.value || null;
         currentEpisode = episodeSelector.value || null;
@@ -1546,6 +1553,7 @@
         updateWatchedButton(false); // Default to unwatched if no Trakt
       }
       loadEmbedVideo();
+      addToHistory({ ...item, media_type: type }); // Add to history after checking status
     }
 
     function resetSearch() {
