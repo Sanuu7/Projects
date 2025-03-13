@@ -248,7 +248,6 @@
       justify-content: center;
       text-align: center;
     }
-    /* ADDED/CHANGED: Center trending sections with consistent padding */
     .trending-section {
       width: 100%;
       max-width: 1200px;
@@ -292,12 +291,12 @@
         padding: 0 20px;
       }
     }
-    /* ADDED/CHANGED: Use auto-fill for flexible grid columns */
     .results-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
-      justify-items: center;
+      width: 100%;
+      justify-content: stretch;
       animation: fadeIn 0.5s ease;
     }
     .card {
@@ -310,6 +309,7 @@
       flex-direction: column;
       transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
       position: relative;
+      width: 100%;
       margin: 0;
     }
     .card:hover {
@@ -1352,9 +1352,17 @@
     async function loadEmbedVideo() {
       const embedURL = await generateEmbedURL();
       if (embedURL) embedIframe.src = embedURL;
-      if (currentEmbedItem && traktAccessToken) {
+
+      if (currentEmbedItem && traktAccessToken && currentSearchType === 'tv') {
         currentSeason = seasonSelector.value || null;
         currentEpisode = episodeSelector.value || null;
+        if (currentSeason && currentEpisode) {
+          const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
+          updateWatchedButton(isWatched);
+        } else {
+          updateWatchedButton(false); // Keep button enabled until episode is selected
+        }
+      } else if (currentEmbedItem && traktAccessToken && currentSearchType === 'movie') {
         const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
         updateWatchedButton(isWatched);
       }
@@ -1547,14 +1555,8 @@
       } else {
         seasonEpisodeSelectors.style.display = 'none';
       }
-      // Reset watched button to default (unwatched)
+      // Reset watched button state when modal opens
       updateWatchedButton(false);
-      if (traktAccessToken) {
-        currentSeason = seasonSelector.value || null;
-        currentEpisode = episodeSelector.value || null;
-        const isWatched = await checkWatchedStatus({ ...item, media_type: type });
-        updateWatchedButton(isWatched);
-      }
       loadEmbedVideo();
       addToHistory({ ...item, media_type: type });
     }
