@@ -798,7 +798,7 @@
             id: item.movie.ids.tmdb,
             title: item.movie.title,
             media_type: 'movie',
-            poster_path: null // TMDB poster fetch needed separately if required
+            poster_path: null
           })),
           ...shows.map(item => ({
             id: item.show.ids.tmdb,
@@ -1157,7 +1157,7 @@
         alert('Already logged into Trakt');
         return;
       }
-      const authUrl = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKT_CLIENT_ID}&redirect_uri=${encodeURIComponent(TRAKT_REDIRECT_URI)}&scope=public+private&state=xyz`;
+      const authUrl = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKT_CLIENT_ID}&redirect_uri=${encodeURIComponent(TRAKT_REDIRECT_URI)}&scope=scrobble%20checkin&state=xyz`;
       window.location.href = authUrl;
     }
 
