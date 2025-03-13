@@ -296,7 +296,7 @@
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
       width: 100%;
-      justify-content: stretch;
+      margin: 0 auto;
       animation: fadeIn 0.5s ease;
     }
     .card {
@@ -310,7 +310,8 @@
       transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
       position: relative;
       width: 100%;
-      margin: 0;
+      max-width: 300px;
+      margin: 0 auto;
     }
     .card:hover {
       transform: scale(var(--card-hover-scale));
@@ -743,7 +744,7 @@
     const traktLoginButton = document.getElementById('trakt-login');
 
     // API Constants
-    const API_KEY = '5e38ca50480518c0d1cde63718225f6c'; // Replace with your TMDB API Key
+    const API_KEY = '5e38ca50480518c0d1cde63718225f6c';
     const TMDB_API_BASE_URL = 'https://api.themoviedb.org/3';
     const MAIN_SERVER_BASE_URL = 'https://embed.su/embed';
     const ALTERNATIVE_SERVER_BASE_URL = 'https://vidlink.pro';
@@ -767,6 +768,7 @@
     let traktAccessToken = localStorage.getItem('traktAccessToken') || null;
     let currentSeason = null;
     let currentEpisode = null;
+    let watchedItems = JSON.parse(localStorage.getItem('watchedItems')) || {};
 
     // Translations
     const translations = {
@@ -1062,7 +1064,8 @@
     async function checkWatchedStatus(item) {
       if (!traktAccessToken) return false;
       try {
-        console.log('Checking watched status for:', item.id, item.media_type, 'Season:', currentSeason, 'Episode:', currentEpisode);
+        const key = `${item.media_type}-${item.id}${item.media_type === 'tv' ? `-${currentSeason}-${currentEpisode}` : ''}`;
+        if (watchedItems[key]) return true; // Check local state first
         const url = `${TRAKT_API_BASE_URL}/sync/history/${item.media_type === 'movie' ? 'movies' : 'shows'}?id_type=tmdb&id=${item.id}`;
         const response = await fetch(url, {
           headers: {
@@ -1076,11 +1079,9 @@
           return false;
         }
         const data = await response.json();
-        console.log('Trakt history response:', data);
         if (item.media_type === 'movie') {
           return data.length > 0;
-        } else if (item.media_type === 'tv') {
-          if (!currentSeason || !currentEpisode) return false;
+        } else if (item.media_type === 'tv' && currentSeason && currentEpisode) {
           return data.some(entry => 
             entry.episodes && entry.episodes.some(ep => 
               ep.season === parseInt(currentSeason) && ep.number === parseInt(currentEpisode)
@@ -1353,18 +1354,17 @@
       const embedURL = await generateEmbedURL();
       if (embedURL) embedIframe.src = embedURL;
 
-      if (currentEmbedItem && traktAccessToken && currentSearchType === 'tv') {
-        currentSeason = seasonSelector.value || null;
-        currentEpisode = episodeSelector.value || null;
-        if (currentSeason && currentEpisode) {
-          const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
-          updateWatchedButton(isWatched);
-        } else {
-          updateWatchedButton(false); // Keep button enabled until episode is selected
-        }
-      } else if (currentEmbedItem && traktAccessToken && currentSearchType === 'movie') {
+      const key = `${currentSearchType}-${currentEmbedItem.id}${currentSearchType === 'tv' ? `-${currentSeason || ''}-${currentEpisode || ''}` : ''}`;
+      const isWatchedLocally = watchedItems[key];
+      updateWatchedButton(isWatchedLocally || false);
+
+      if (traktAccessToken) {
         const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
-        updateWatchedButton(isWatched);
+        if (isWatched) {
+          watchedItems[key] = true;
+          localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
+          updateWatchedButton(true);
+        }
       }
     }
 
@@ -1453,11 +1453,13 @@
       if (currentEmbedItem && !watchedButton.disabled) {
         currentSeason = seasonSelector.value || null;
         currentEpisode = episodeSelector.value || null;
+        const key = `${currentSearchType}-${currentEmbedItem.id}${currentSearchType === 'tv' ? `-${currentSeason || ''}-${currentEpisode || ''}` : ''}`;
+        watchedItems[key] = true;
+        localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
+        updateWatchedButton(true);
         addToHistory({ ...currentEmbedItem, media_type: currentSearchType });
-        const success = await syncWatchedToTrakt({ ...currentEmbedItem, media_type: currentSearchType });
-        if (success) {
-          const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
-          updateWatchedButton(isWatched);
+        if (traktAccessToken) {
+          await syncWatchedToTrakt({ ...currentEmbedItem, media_type: currentSearchType });
         }
       }
     });
@@ -1513,10 +1515,14 @@
     appTitle.addEventListener('click', resetSearch);
     apiSelect.addEventListener('change', loadEmbedVideo);
     seasonSelector.addEventListener('change', () => {
-      if (seasonSelector.value) fetchEpisodes(seasonSelector.value);
+      currentSeason = seasonSelector.value;
+      if (currentSeason) fetchEpisodes(currentSeason);
       loadEmbedVideo();
     });
-    episodeSelector.addEventListener('change', loadEmbedVideo);
+    episodeSelector.addEventListener('change', () => {
+      currentEpisode = episodeSelector.value;
+      loadEmbedVideo();
+    });
     shareButton.addEventListener('click', () => {
       const url = window.location.href;
       if (navigator.share) {
@@ -1549,14 +1555,16 @@
       embedIframe.src = '';
       backButton.style.display = 'none';
       apiSelect.value = 'sanu-flix-v2';
+      currentSeason = null;
+      currentEpisode = null;
       if (type === 'tv') {
         seasonEpisodeSelectors.style.display = 'flex';
         await fetchSeasons(item);
       } else {
         seasonEpisodeSelectors.style.display = 'none';
       }
-      // Reset watched button state when modal opens
-      updateWatchedButton(false);
+      const key = `${type}-${item.id}${type === 'tv' ? `-${currentSeason || ''}-${currentEpisode || ''}` : ''}`;
+      updateWatchedButton(watchedItems[key] || false);
       loadEmbedVideo();
       addToHistory({ ...item, media_type: type });
     }
