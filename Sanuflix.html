@@ -811,7 +811,8 @@
         markWatchedButton: 'Mark as Watched',
         watchedButton: 'Already Watched',
         traktSyncSuccess: 'Successfully synced to Trakt watch history!',
-        traktSyncFailed: 'Failed to sync with Trakt. Please try again later.'
+        traktSyncFailed: 'Failed to sync with Trakt. Please try again later.',
+        selectEpisodeFirst: 'Please select a season and episode first.'
       },
       'de-DE': {
         appTitle: 'Sanuu Flix',
@@ -852,7 +853,8 @@
         markWatchedButton: 'Als gesehen markieren',
         watchedButton: 'Bereits gesehen',
         traktSyncSuccess: 'Erfolgreich mit Trakt-Wiedergabeverlauf synchronisiert!',
-        traktSyncFailed: 'Synchronisierung mit Trakt fehlgeschlagen. Bitte später erneut versuchen.'
+        traktSyncFailed: 'Synchronisierung mit Trakt fehlgeschlagen. Bitte später erneut versuchen.',
+        selectEpisodeFirst: 'Bitte wählen Sie zuerst eine Staffel und Episode aus.'
       }
     };
 
@@ -1064,8 +1066,8 @@
     async function checkWatchedStatus(item) {
       if (!traktAccessToken) return false;
       try {
-        const key = `${item.media_type}-${item.id}${item.media_type === 'tv' ? `-${currentSeason}-${currentEpisode}` : ''}`;
-        if (watchedItems[key]) return true; // Check local state first
+        const key = `${item.media_type}-${item.id}${item.media_type === 'tv' && currentSeason && currentEpisode ? `-${currentSeason}-${currentEpisode}` : ''}`;
+        if (watchedItems[key]) return true;
         const url = `${TRAKT_API_BASE_URL}/sync/history/${item.media_type === 'movie' ? 'movies' : 'shows'}?id_type=tmdb&id=${item.id}`;
         const response = await fetch(url, {
           headers: {
@@ -1353,19 +1355,6 @@
     async function loadEmbedVideo() {
       const embedURL = await generateEmbedURL();
       if (embedURL) embedIframe.src = embedURL;
-
-      const key = `${currentSearchType}-${currentEmbedItem.id}${currentSearchType === 'tv' ? `-${currentSeason || ''}-${currentEpisode || ''}` : ''}`;
-      const isWatchedLocally = watchedItems[key];
-      updateWatchedButton(isWatchedLocally || false);
-
-      if (traktAccessToken) {
-        const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
-        if (isWatched) {
-          watchedItems[key] = true;
-          localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
-          updateWatchedButton(true);
-        }
-      }
     }
 
     async function loadTrailer() {
@@ -1392,6 +1381,46 @@
         watchedButton.innerHTML = `<span class="material-icons">check_circle</span> ${t.markWatchedButton}`;
         watchedButton.classList.remove('watched');
         watchedButton.disabled = false;
+      }
+    }
+
+    async function updateWatchedButtonStatus() {
+      if (!currentEmbedItem) return;
+      const key = `${currentSearchType}-${currentEmbedItem.id}${currentSearchType === 'tv' && currentSeason && currentEpisode ? `-${currentSeason}-${currentEpisode}` : ''}`;
+      const isWatchedLocally = watchedItems[key];
+
+      if (currentSearchType === 'movie') {
+        if (isWatchedLocally) {
+          updateWatchedButton(true);
+        } else if (traktAccessToken) {
+          const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
+          if (isWatched) {
+            watchedItems[key] = true;
+            localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
+            updateWatchedButton(true);
+          } else {
+            updateWatchedButton(false);
+          }
+        } else {
+          updateWatchedButton(false);
+        }
+      } else if (currentSearchType === 'tv' && currentSeason && currentEpisode) {
+        if (isWatchedLocally) {
+          updateWatchedButton(true);
+        } else if (traktAccessToken) {
+          const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
+          if (isWatched) {
+            watchedItems[key] = true;
+            localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
+            updateWatchedButton(true);
+          } else {
+            updateWatchedButton(false);
+          }
+        } else {
+          updateWatchedButton(false);
+        }
+      } else {
+        updateWatchedButton(false);
       }
     }
 
@@ -1451,9 +1480,11 @@
     // Event Listeners
     watchedButton.addEventListener('click', async () => {
       if (currentEmbedItem && !watchedButton.disabled) {
-        currentSeason = seasonSelector.value || null;
-        currentEpisode = episodeSelector.value || null;
-        const key = `${currentSearchType}-${currentEmbedItem.id}${currentSearchType === 'tv' ? `-${currentSeason || ''}-${currentEpisode || ''}` : ''}`;
+        if (currentSearchType === 'tv' && (!currentSeason || !currentEpisode)) {
+          alert(translations[currentLanguage].selectEpisodeFirst);
+          return;
+        }
+        const key = `${currentSearchType}-${currentEmbedItem.id}${currentSearchType === 'tv' ? `-${currentSeason}-${currentEpisode}` : ''}`;
         watchedItems[key] = true;
         localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
         updateWatchedButton(true);
@@ -1513,15 +1544,21 @@
     window.addEventListener('click', (e) => { if (e.target === embedModal) { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; } });
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && embedModal.style.display === 'flex') { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; } });
     appTitle.addEventListener('click', resetSearch);
-    apiSelect.addEventListener('change', loadEmbedVideo);
+    apiSelect.addEventListener('change', () => { loadEmbedVideo(); updateWatchedButtonStatus(); });
     seasonSelector.addEventListener('change', () => {
       currentSeason = seasonSelector.value;
-      if (currentSeason) fetchEpisodes(currentSeason);
-      loadEmbedVideo();
+      if (currentSeason) {
+        fetchEpisodes(currentSeason);
+      } else {
+        episodeSelector.value = '';
+        episodeSelector.disabled = true;
+      }
+      updateWatchedButtonStatus();
     });
     episodeSelector.addEventListener('change', () => {
       currentEpisode = episodeSelector.value;
       loadEmbedVideo();
+      updateWatchedButtonStatus();
     });
     shareButton.addEventListener('click', () => {
       const url = window.location.href;
@@ -1563,10 +1600,10 @@
       } else {
         seasonEpisodeSelectors.style.display = 'none';
       }
-      const key = `${type}-${item.id}${type === 'tv' ? `-${currentSeason || ''}-${currentEpisode || ''}` : ''}`;
-      updateWatchedButton(watchedItems[key] || false);
+      updateWatchedButton(false);
       loadEmbedVideo();
       addToHistory({ ...item, media_type: type });
+      updateWatchedButtonStatus();
     }
 
     function resetSearch() {
