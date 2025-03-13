@@ -43,6 +43,9 @@
       transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
       overflow-x: hidden;
     }
+    body.modal-open {
+      overflow: hidden;
+    }
     header {
       display: flex;
       justify-content: center;
@@ -415,6 +418,8 @@
       position: relative;
       width: 100%;
       max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
       box-shadow: 0 4px 8px var(--shadow-color);
       transition: background-color var(--transition-speed) ease;
       display: flex;
@@ -429,13 +434,15 @@
       transition: transform var(--transition-speed) ease;
     }
     .close-button {
-      position: absolute;
+      position: sticky;
       top: 15px;
       right: 20px;
+      align-self: flex-end;
       color: var(--on-surface-color);
       font-size: 2em;
       cursor: pointer;
       transition: color var(--transition-speed) ease;
+      z-index: 2100;
     }
     .close-button:hover { color: var(--secondary-color); }
     .selectors {
@@ -460,6 +467,10 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
+      position: sticky;
+      top: 0;
+      background-color: var(--surface-color);
+      z-index: 2100;
     }
     .api-selector select {
       padding: 8px 12px;
@@ -1173,7 +1184,7 @@
       else if (currentFilterSeries === 'vote_average')
         seriesHeading.innerHTML = `<span class="material-icons">tv</span> ${t.voteAverageSeriesHeading}`;
       document.getElementById('watchlist-heading').innerHTML = `<span class="material-icons">bookmark</span> ${t.watchlistHeading}`;
-      document.getElementById('history-heading').innerHTML = `<span class="material-icons">history</span> ${t.historyHeading}`;
+      Document.getElementById('history-heading').innerHTML = `<span class="material-icons">history</span> ${t.historyHeading}`;
       sortMoviesSelect.options[0].text = t.trendingOption;
       sortMoviesSelect.options[1].text = t.popularOption;
       sortMoviesSelect.options[2].text = t.topRatedOption;
@@ -1514,9 +1525,28 @@
     seeMoreMoviesBtn.addEventListener('click', () => { currentPageMovies++; loadTrending('movie', currentFilterMovies, currentPageMovies); });
     seeMoreSeriesBtn.addEventListener('click', () => { currentPageSeries++; loadTrending('tv', currentFilterSeries, currentPageSeries); });
     seeMoreSearchResultsBtn.addEventListener('click', () => { currentPageSearch++; searchContent(currentQuery, currentSearchType, currentPageSearch); });
-    closeButton.addEventListener('click', () => { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; });
-    window.addEventListener('click', (e) => { if (e.target === embedModal) { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; } });
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && embedModal.style.display === 'flex') { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; } });
+    closeButton.addEventListener('click', () => { 
+      embedModal.style.display = 'none'; 
+      embedIframe.src = ''; 
+      backButton.style.display = 'none'; 
+      document.body.classList.remove('modal-open');
+    });
+    window.addEventListener('click', (e) => { 
+      if (e.target === embedModal) { 
+        embedModal.style.display = 'none'; 
+        embedIframe.src = ''; 
+        backButton.style.display = 'none'; 
+        document.body.classList.remove('modal-open');
+      } 
+    });
+    window.addEventListener('keydown', (e) => { 
+      if (e.key === 'Escape' && embedModal.style.display === 'flex') { 
+        embedModal.style.display = 'none'; 
+        embedIframe.src = ''; 
+        backButton.style.display = 'none'; 
+        document.body.classList.remove('modal-open');
+      } 
+    });
     appTitle.addEventListener('click', resetSearch);
     apiSelect.addEventListener('change', () => { loadEmbedVideo(); updateWatchedButtonStatus(); updateEmbedDetails(); });
     seasonSelector.addEventListener('change', () => {
@@ -1565,6 +1595,7 @@
       currentEmbedItem = item;
       currentSearchType = type;
       embedModal.style.display = 'flex';
+      document.body.classList.add('modal-open');
       embedIframe.src = '';
       backButton.style.display = 'none';
       apiSelect.value = 'sanu-flix-v2';
