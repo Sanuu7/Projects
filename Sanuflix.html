@@ -234,18 +234,23 @@
     }
     main {
       flex: 1;
-      padding: 150px 0 20px; /* Increased padding-top to 150px to prevent header overlap */
+      padding: 150px 0 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       transition: filter var(--transition-speed) ease;
     }
     main.blur { filter: blur(5px); }
+    .content-wrapper {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: center;
+    }
     .trending-section {
       width: 100%;
       max-width: 1200px;
-      margin: 0 auto; /* Center the section */
-      padding: 0 calc(2vw + 10px); /* Dynamic padding based on viewport width */
+      padding: 0 calc(2vw + 10px);
       margin-top: 20px;
       margin-bottom: 40px;
     }
@@ -479,7 +484,9 @@
     }
     .trailer-button { background-color: var(--primary-color); }
     .watched-button { background-color: #4CAF50; }
-    .watched-button:hover { background-color: #45a049; }
+    .watched-button.watched { background-color: #388E3C; }
+    .watched-button:disabled { cursor: not-allowed; opacity: 0.7; }
+    .watched-button:hover:not(:disabled) { background-color: #45a049; }
     .blur { filter: blur(5px); }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes spin {
@@ -560,79 +567,81 @@
   </div>
 
   <main id="main-content">
-    <div id="main-sections">
-      <div class="trending-section" id="search-results-section" style="display: none;">
-        <h2 id="search-results-heading"><span class="material-icons">search</span> Search Results</h2>
-        <div class="results-grid" id="search-results"></div>
-        <div class="see-more-container">
-          <button id="see-more-search-results">
-            <span class="material-icons">expand_more</span> See More Results
-          </button>
+    <div class="content-wrapper">
+      <div id="main-sections">
+        <div class="trending-section" id="search-results-section" style="display: none;">
+          <h2 id="search-results-heading"><span class="material-icons">search</span> Search Results</h2>
+          <div class="results-grid" id="search-results"></div>
+          <div class="see-more-container">
+            <button id="see-more-search-results">
+              <span class="material-icons">expand_more</span> See More Results
+            </button>
+          </div>
+        </div>
+        <div class="trending-section" id="trending-movies-section">
+          <div class="sort-by">
+            <label for="sort-movies">Sort Movies By:</label>
+            <select id="sort-movies">
+              <option value="trending">Trending</option>
+              <option value="popular">Popular</option>
+              <option value="top_rated">Top Rated</option>
+              <option value="release_date">Release Date</option>
+              <option value="vote_average">Rating</option>
+            </select>
+          </div>
+          <h2 id="movies-heading"><span class="material-icons">local_fire_department</span> Trending Movies</h2>
+          <div class="results-grid" id="trending-movies"></div>
+          <div class="see-more-container">
+            <button id="see-more-movies">
+              <span class="material-icons">expand_more</span> See More Movies
+            </button>
+          </div>
+        </div>
+        <div class="trending-section" id="trending-series-section">
+          <div class="sort-by">
+            <label for="sort-series">Sort Series By:</label>
+            <select id="sort-series">
+              <option value="trending">Trending</option>
+              <option value="popular">Popular</option>
+              <option value="top_rated">Top Rated</option>
+              <option value="release_date">Release Date</option>
+              <option value="vote_average">Rating</option>
+            </select>
+          </div>
+          <h2 id="series-heading"><span class="material-icons">tv</span> Trending Series</h2>
+          <div class="results-grid" id="trending-series"></div>
+          <div class="see-more-container">
+            <button id="see-more-series">
+              <span class="material-icons">expand_more</span> See More Series
+            </button>
+          </div>
+        </div>
+        <div class="trending-section" id="watchlist-section" style="display: none;">
+          <h2 id="watchlist-heading"><span class="material-icons">bookmark</span> Watchlist</h2>
+          <div class="results-grid" id="watchlist"></div>
+        </div>
+        <div class="trending-section" id="history-section" style="display: none;">
+          <h2 id="history-heading"><span class="material-icons">history</span> History</h2>
+          <div class="results-grid" id="history"></div>
         </div>
       </div>
-      <div class="trending-section" id="trending-movies-section">
-        <div class="sort-by">
-          <label for="sort-movies">Sort Movies By:</label>
-          <select id="sort-movies">
-            <option value="trending">Trending</option>
-            <option value="popular">Popular</option>
-            <option value="top_rated">Top Rated</option>
-            <option value="release_date">Release Date</option>
-            <option value="vote_average">Rating</option>
-          </select>
-        </div>
-        <h2 id="movies-heading"><span class="material-icons">local_fire_department</span> Trending Movies</h2>
-        <div class="results-grid" id="trending-movies"></div>
-        <div class="see-more-container">
-          <button id="see-more-movies">
-            <span class="material-icons">expand_more</span> See More Movies
-          </button>
+      <div id="watchlist-items-section" style="display: none;">
+        <button id="back-to-main-watchlist" class="back-button">
+          <span class="material-icons">arrow_back</span> Back
+        </button>
+        <div class="trending-section">
+          <h2><span class="material-icons">bookmark</span> Watchlist Items</h2>
+          <div class="results-grid" id="watchlist-items"></div>
         </div>
       </div>
-      <div class="trending-section" id="trending-series-section">
-        <div class="sort-by">
-          <label for="sort-series">Sort Series By:</label>
-          <select id="sort-series">
-            <option value="trending">Trending</option>
-            <option value="popular">Popular</option>
-            <option value="top_rated">Top Rated</option>
-            <option value="release_date">Release Date</option>
-            <option value="vote_average">Rating</option>
-          </select>
+      <div id="history-items-section" style="display: none;">
+        <button id="back-to-main-history" class="back-button">
+          <span class="material-icons">arrow_back</span> Back
+        </button>
+        <div class="trending-section">
+          <h2><span class="material-icons">history</span> History Items</h2>
+          <div class="results-grid" id="history-items"></div>
         </div>
-        <h2 id="series-heading"><span class="material-icons">tv</span> Trending Series</h2>
-        <div class="results-grid" id="trending-series"></div>
-        <div class="see-more-container">
-          <button id="see-more-series">
-            <span class="material-icons">expand_more</span> See More Series
-          </button>
-        </div>
-      </div>
-      <div class="trending-section" id="watchlist-section" style="display: none;">
-        <h2 id="watchlist-heading"><span class="material-icons">bookmark</span> Watchlist</h2>
-        <div class="results-grid" id="watchlist"></div>
-      </div>
-      <div class="trending-section" id="history-section" style="display: none;">
-        <h2 id="history-heading"><span class="material-icons">history</span> History</h2>
-        <div class="results-grid" id="history"></div>
-      </div>
-    </div>
-    <div id="watchlist-items-section" style="display: none;">
-      <button id="back-to-main-watchlist" class="back-button">
-        <span class="material-icons">arrow_back</span> Back
-      </button>
-      <div class="trending-section">
-        <h2><span class="material-icons">bookmark</span> Watchlist Items</h2>
-        <div class="results-grid" id="watchlist-items"></div>
-      </div>
-    </div>
-    <div id="history-items-section" style="display: none;">
-      <button id="back-to-main-history" class="back-button">
-        <span class="material-icons">arrow_back</span> Back
-      </button>
-      <div class="trending-section">
-        <h2><span class="material-icons">history</span> History Items</h2>
-        <div class="results-grid" id="history-items"></div>
       </div>
     </div>
     <div id="loading" class="spinner" style="display: none;"></div>
@@ -786,6 +795,7 @@
         shareButton: 'Share',
         trailerButton: 'Trailer',
         backButton: 'Back to Content',
+        markWatchedButton: 'Mark as Watched',
         watchedButton: 'Already Watched',
         traktSyncSuccess: 'Successfully synced to Trakt watch history!',
         traktSyncFailed: 'Failed to sync with Trakt. Please try again later.'
@@ -826,6 +836,7 @@
         shareButton: 'Teilen',
         trailerButton: 'Trailer',
         backButton: 'Zurück zum Inhalt',
+        markWatchedButton: 'Als gesehen markieren',
         watchedButton: 'Bereits gesehen',
         traktSyncSuccess: 'Erfolgreich mit Trakt-Wiedergabeverlauf synchronisiert!',
         traktSyncFailed: 'Synchronisierung mit Trakt fehlgeschlagen. Bitte später erneut versuchen.'
@@ -990,7 +1001,6 @@
       history.unshift(item);
       history = history.slice(0, 5);
       localStorage.setItem('history', JSON.stringify(history));
-      // Removed automatic syncWatchedToTrakt call
       displayHistory();
       displayHistoryItems();
     }
@@ -1034,6 +1044,36 @@
           }
           await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
         }
+      }
+    }
+
+    async function checkWatchedStatus(item) {
+      if (!traktAccessToken) return false;
+      try {
+        const url = `${TRAKT_API_BASE_URL}/sync/history/${item.media_type === 'movie' ? 'movies' : 'shows'}?id_type=tmdb&id=${item.id}`;
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${traktAccessToken}`,
+            'trakt-api-version': '2',
+            'trakt-api-key': TRAKTClientId
+          }
+        });
+        if (!response.ok) throw new Error('Failed to check watched status');
+        const data = await response.json();
+        if (item.media_type === 'movie') {
+          return data.length > 0;
+        } else if (item.media_type === 'tv') {
+          if (!currentSeason || !currentEpisode) return false;
+          return data.some(entry => 
+            entry.episodes && entry.episodes.some(ep => 
+              ep.season === parseInt(currentSeason) && ep.number === parseInt(currentEpisode)
+            )
+          );
+        }
+        return false;
+      } catch (error) {
+        console.error('Error checking watched status:', error);
+        return false;
       }
     }
 
@@ -1146,7 +1186,6 @@
       shareButton.innerHTML = `<span class="material-icons">share</span> ${t.shareButton}`;
       trailerButton.innerHTML = `<span class="material-icons">play_circle</span> ${t.trailerButton}`;
       backButton.innerHTML = `<span class="material-icons">arrow_back</span> ${t.backButton}`;
-      watchedButton.innerHTML = `<span class="material-icons">check_circle</span> ${t.watchedButton}`;
     }
 
     // Content Loading
@@ -1314,7 +1353,16 @@
     // Trakt Integration
     async function handleTraktLogin() {
       if (traktAccessToken) {
-        alert('Already logged into Trakt');
+        // Logout functionality
+        localStorage.removeItem('traktAccessToken');
+        traktAccessToken = null;
+        watchlist = [];
+        localStorage.setItem('watchlist', JSON.stringify(watchlist));
+        displayWatchlist();
+        displayWatchlistItems();
+        traktLoginButton.innerHTML = '<span class="material-icons">login</span>';
+        traktLoginButton.addEventListener('click', handleTraktLogin);
+        alert('Logged out of Trakt successfully.');
         return;
       }
       const authUrl = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKTClientId}&redirect_uri=${encodeURIComponent(TRAKTRedirectURI)}&scope=public&state=xyz`;
@@ -1344,6 +1392,9 @@
           traktAccessToken = data.access_token;
           localStorage.setItem('traktAccessToken', traktAccessToken);
           window.history.replaceState({}, document.title, TRAKTRedirectURI);
+          traktLoginButton.innerHTML = '<span class="material-icons">account_circle</span>';
+          traktLoginButton.removeEventListener('click', handleTraktLogin);
+          traktLoginButton.addEventListener('click', handleTraktLogin);
           syncWatchlistFromTrakt();
         } catch (error) {
           console.error('Trakt authentication error:', error);
@@ -1353,12 +1404,17 @@
     }
 
     // Event Listeners
-    watchedButton.addEventListener('click', () => {
-      if (currentEmbedItem) {
+    watchedButton.addEventListener('click', async () => {
+      if (currentEmbedItem && !watchedButton.disabled) {
         currentSeason = seasonSelector.value || null;
         currentEpisode = episodeSelector.value || null;
         addToHistory({ ...currentEmbedItem, media_type: currentSearchType });
-        syncWatchedToTrakt({ ...currentEmbedItem, media_type: currentSearchType });
+        const success = await syncWatchedToTrakt({ ...currentEmbedItem, media_type: currentSearchType });
+        if (success) {
+          watchedButton.textContent = `${translations[currentLanguage].watchedButton} ✔`;
+          watchedButton.classList.add('watched');
+          watchedButton.disabled = true;
+        }
       }
     });
 
@@ -1369,7 +1425,12 @@
       displayHistory();
       updateUI();
       handleTraktCallback();
-      if (traktAccessToken) syncWatchlistFromTrakt(); // Fetch Trakt data on page load
+      if (traktAccessToken) {
+        traktLoginButton.innerHTML = '<span class="material-icons">account_circle</span>';
+        traktLoginButton.removeEventListener('click', handleTraktLogin);
+        traktLoginButton.addEventListener('click', handleTraktLogin);
+        syncWatchlistFromTrakt();
+      }
     });
 
     searchToggle.addEventListener('click', openSearch);
@@ -1434,7 +1495,7 @@
     traktLoginButton.addEventListener('click', handleTraktLogin);
 
     // Modal and Reset Functions
-    function openEmbedModal(item, type) {
+    async function openEmbedModal(item, type) {
       currentEmbedItem = item;
       currentSearchType = type;
       embedModal.style.display = 'flex';
@@ -1444,6 +1505,16 @@
       seasonEpisodeSelectors.style.display = type === 'tv' ? 'flex' : 'none';
       if (type === 'tv') fetchSeasons(item);
       addToHistory({ ...item, media_type: type });
+      const isWatched = await checkWatchedStatus({ ...item, media_type: type });
+      if (isWatched) {
+        watchedButton.textContent = `${translations[currentLanguage].watchedButton} ✔`;
+        watchedButton.classList.add('watched');
+        watchedButton.disabled = true;
+      } else {
+        watchedButton.textContent = `${translations[currentLanguage].markWatchedButton}`;
+        watchedButton.classList.remove('watched');
+        watchedButton.disabled = false;
+      }
       loadEmbedVideo();
     }
 
