@@ -1020,7 +1020,7 @@
       displayHistoryItems();
     }
 
-    async function syncWatchedToTrakt(item, retries = 3) {
+    async function syncWatchedToTrakt(item) {
       if (!traktAccessToken) return false;
       const url = `${TRAKT_API_BASE_URL}/sync/history`;
       const body = {
@@ -1035,39 +1035,32 @@
           } : {})
         }]
       };
-      for (let attempt = 1; attempt <= retries; attempt++) {
-        try {
-          const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${traktAccessToken}`,
-              'trakt-api-version': '2',
-              'trakt-api-key': TRAKTClientId
-            },
-            body: JSON.stringify(body)
-          });
-          if (!response.ok) throw new Error(`Trakt watched sync failed: ${response.statusText}`);
-          console.log('Trakt watch history synced:', await response.json());
-          alert(translations[currentLanguage].traktSyncSuccess);
-          return true;
-        } catch (error) {
-          console.error(`Trakt watched sync attempt ${attempt} failed:`, error);
-          if (attempt === retries) {
-            alert(translations[currentLanguage].traktSyncFailed);
-            return false;
-          }
-          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
-        }
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${traktAccessToken}`,
+            'trakt-api-version': '2',
+            'trakt-api-key': TRAKTClientId
+          },
+          body: JSON.stringify(body)
+        });
+        if (!response.ok) throw new Error(`Trakt watched sync failed: ${response.statusText}`);
+        console.log('Trakt watch history synced:', await response.json());
+        alert(translations[currentLanguage].traktSyncSuccess);
+        return true;
+      } catch (error) {
+        console.error('Trakt watched sync failed:', error);
+        alert(translations[currentLanguage].traktSyncFailed);
+        return false;
       }
-      return false;
     }
 
     async function checkWatchedStatus(item) {
+      // Only used for manual sync if needed; not for initial button state
       if (!traktAccessToken) return false;
       try {
-        const key = `${item.media_type}-${item.id}${item.media_type === 'tv' && currentSeason && currentEpisode ? `-${currentSeason}-${currentEpisode}` : ''}`;
-        if (watchedItems[key]) return true;
         const url = `${TRAKT_API_BASE_URL}/sync/history/${item.media_type === 'movie' ? 'movies' : 'shows'}?id_type=tmdb&id=${item.id}`;
         const response = await fetch(url, {
           headers: {
@@ -1076,10 +1069,7 @@
             'trakt-api-key': TRAKTClientId
           }
         });
-        if (!response.ok) {
-          console.error('Trakt history check failed:', response.status, await response.text());
-          return false;
-        }
+        if (!response.ok) return false;
         const data = await response.json();
         if (item.media_type === 'movie') {
           return data.length > 0;
@@ -1384,41 +1374,13 @@
       }
     }
 
-    async function updateWatchedButtonStatus() {
+    function updateWatchedButtonStatus() {
       if (!currentEmbedItem) return;
       const key = `${currentSearchType}-${currentEmbedItem.id}${currentSearchType === 'tv' && currentSeason && currentEpisode ? `-${currentSeason}-${currentEpisode}` : ''}`;
-      const isWatchedLocally = watchedItems[key];
-
-      if (currentSearchType === 'movie') {
-        if (isWatchedLocally) {
-          updateWatchedButton(true);
-        } else if (traktAccessToken) {
-          const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
-          if (isWatched) {
-            watchedItems[key] = true;
-            localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
-            updateWatchedButton(true);
-          } else {
-            updateWatchedButton(false);
-          }
-        } else {
-          updateWatchedButton(false);
-        }
-      } else if (currentSearchType === 'tv' && currentSeason && currentEpisode) {
-        if (isWatchedLocally) {
-          updateWatchedButton(true);
-        } else if (traktAccessToken) {
-          const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
-          if (isWatched) {
-            watchedItems[key] = true;
-            localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
-            updateWatchedButton(true);
-          } else {
-            updateWatchedButton(false);
-          }
-        } else {
-          updateWatchedButton(false);
-        }
+      const isWatchedLocally = !!watchedItems[key];
+      // Only use local storage to determine initial state; Trakt sync happens on mark action
+      if (isWatchedLocally) {
+        updateWatchedButton(true);
       } else {
         updateWatchedButton(false);
       }
@@ -1430,13 +1392,14 @@
         localStorage.removeItem('traktAccessToken');
         traktAccessToken = null;
         watchlist = [];
+        watchedItems = {}; // Clear watched items on logout
         localStorage.setItem('watchlist', JSON.stringify(watchlist));
+        localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
         displayWatchlist();
         displayWatchlistItems();
         traktLoginButton.innerHTML = '<span class="material-icons">login</span>';
-        traktLoginButton.removeEventListener('click', handleTraktLogin);
-        traktLoginButton.addEventListener('click', handleTraktLogin);
         alert('Logged out of Trakt successfully.');
+        updateWatchedButtonStatus(); // Reset button state
         return;
       }
       const authUrl = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKTClientId}&redirect_uri=${encodeURIComponent(TRAKTRedirectURI)}&scope=public&state=xyz`;
@@ -1467,9 +1430,10 @@
           localStorage.setItem('traktAccessToken', traktAccessToken);
           window.history.replaceState({}, document.title, TRAKTRedirectURI);
           traktLoginButton.innerHTML = '<span class="material-icons">account_circle</span>';
-          traktLoginButton.removeEventListener('click', handleTraktLogin);
-          traktLoginButton.addEventListener('click', handleTraktLogin);
+          watchedItems = {}; // Reset watched items on login
+          localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
           syncWatchlistFromTrakt();
+          updateWatchedButtonStatus(); // Reset button state
         } catch (error) {
           console.error('Trakt authentication error:', error);
           alert('Trakt authentication failed. Please try again. Error: ' + error.message);
@@ -1504,8 +1468,6 @@
       handleTraktCallback();
       if (traktAccessToken) {
         traktLoginButton.innerHTML = '<span class="material-icons">account_circle</span>';
-        traktLoginButton.removeEventListener('click', handleTraktLogin);
-        traktLoginButton.addEventListener('click', handleTraktLogin);
         syncWatchlistFromTrakt();
       }
     });
@@ -1600,10 +1562,9 @@
       } else {
         seasonEpisodeSelectors.style.display = 'none';
       }
-      updateWatchedButton(false);
+      updateWatchedButtonStatus(); // Check local storage only
       loadEmbedVideo();
       addToHistory({ ...item, media_type: type });
-      updateWatchedButtonStatus();
     }
 
     function resetSearch() {
