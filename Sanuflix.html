@@ -19,7 +19,7 @@
       --card-hover-scale: 1.05;
       --card-hover-bg: #2C2C2C;
       --font-size-title: 2.2em;
-      --font-size-card-title: 1.1em;
+      --font-size-card-title: 1.2em;
       --font-size-card-text: 0.9em;
       --border-radius: 8px;
     }
@@ -286,14 +286,9 @@
       background-position: right 10px center;
       background-size: 16px 16px;
     }
-    @media (max-width: 1200px) {
-      .trending-section {
-        padding: 0 20px;
-      }
-    }
     .results-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(2, 1fr); /* Fixed 2 columns */
       gap: 20px;
       width: 100%;
       margin: 0 auto;
@@ -310,8 +305,7 @@
       transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
       position: relative;
       width: 100%;
-      max-width: 300px;
-      margin: 0 auto;
+      max-width: none; /* Remove max-width restriction */
     }
     .card:hover {
       transform: scale(var(--card-hover-scale));
@@ -320,7 +314,7 @@
     }
     .card img {
       width: 100%;
-      height: 270px;
+      height: 300px; /* Increased height for better visibility */
       object-fit: cover;
       transition: transform var(--transition-speed) ease;
     }
@@ -500,6 +494,13 @@
     .watched-button.watched { background-color: #388E3C; }
     .watched-button:disabled { cursor: not-allowed; opacity: 0.7; }
     .watched-button:hover:not(:disabled) { background-color: #45a049; }
+    #embed-details {
+      text-align: left;
+      color: var(--on-surface-color);
+      font-size: 0.9em;
+    }
+    #embed-details .rating { font-size: 1.1em; margin-bottom: 5px; }
+    #embed-details p { margin: 0; color: #bbb; }
     .blur { filter: blur(5px); }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes spin {
@@ -530,13 +531,16 @@
     @media (max-width: 800px) {
       .trending-section .sort-by { flex-direction: column; align-items: flex-start; }
       .header-content { padding: 0 calc(1.5vw + 8px); }
-      .trending-section { padding: 0 20px; }
+      .trending-section { padding: 0 15px; }
+      .card img { height: 250px; }
     }
     @media (max-width: 600px) {
       .header-controls button, .header-controls select { padding: 4px 6px; font-size: 12px; }
       #embed-content iframe { height: 300px; }
       .header-content { padding: 0 calc(1vw + 5px); }
-      .trending-section { padding: 0 15px; }
+      .trending-section { padding: 0 10px; }
+      .card img { height: 200px; }
+      .results-grid { gap: 15px; }
     }
   </style>
 </head>
@@ -689,6 +693,7 @@
         <button id="watched-button" class="watched-button">
           <span class="material-icons">check_circle</span> Mark as Watched
         </button>
+        <div id="embed-details"></div>
       </div>
     </div>
   </main>
@@ -730,6 +735,7 @@
     const trailerButton = document.getElementById('trailer-button');
     const backButton = document.getElementById('back-button');
     const watchedButton = document.getElementById('watched-button');
+    const embedDetails = document.getElementById('embed-details');
     const header = document.querySelector('header');
     const mainContent = document.getElementById('main-content');
     const watchlistToggle = document.getElementById('watchlist-toggle');
@@ -1058,7 +1064,6 @@
     }
 
     async function checkWatchedStatus(item) {
-      // Only used for manual sync if needed; not for initial button state
       if (!traktAccessToken) return false;
       try {
         const url = `${TRAKT_API_BASE_URL}/sync/history/${item.media_type === 'movie' ? 'movies' : 'shows'}?id_type=tmdb&id=${item.id}`;
@@ -1135,6 +1140,7 @@
       });
       cardContent.appendChild(watchlistBtn);
       cardContent.appendChild(title);
+      cardContent.appendChild(dateAdress: `https://sanuu7.github.io/Projects/Sanuflix.html`
       cardContent.appendChild(date);
       card.appendChild(img);
       card.appendChild(cardContent);
@@ -1378,12 +1384,31 @@
       if (!currentEmbedItem) return;
       const key = `${currentSearchType}-${currentEmbedItem.id}${currentSearchType === 'tv' && currentSeason && currentEpisode ? `-${currentSeason}-${currentEpisode}` : ''}`;
       const isWatchedLocally = !!watchedItems[key];
-      // Only use local storage to determine initial state; Trakt sync happens on mark action
       if (isWatchedLocally) {
         updateWatchedButton(true);
       } else {
         updateWatchedButton(false);
       }
+    }
+
+    async function updateEmbedDetails() {
+      if (!currentEmbedItem) return;
+      let detailsHTML = `<div class="rating">⭐ ${currentEmbedItem.vote_average || 'N/A'}</div>`;
+      if (currentSearchType === 'movie') {
+        detailsHTML += `<p>${currentEmbedItem.overview ? currentEmbedItem.overview : 'No overview available.'}</p>`;
+      } else if (currentSearchType === 'tv' && currentSeason && currentEpisode) {
+        try {
+          const response = await fetch(`${TMDB_API_BASE_URL}/tv/${currentEmbedItem.id}/season/${currentSeason}/episode/${currentEpisode}?api_key=${API_KEY}&language=${currentLanguage}`);
+          const episodeData = await response.json();
+          detailsHTML += `<p>${episodeData.overview ? episodeData.overview : 'No episode overview available.'}</p>`;
+        } catch (error) {
+          detailsHTML += `<p>No episode overview available.</p>`;
+          console.error('Error fetching episode details:', error);
+        }
+      } else {
+        detailsHTML += `<p>${currentEmbedItem.overview ? currentEmbedItem.overview : 'No overview available.'}</p>`;
+      }
+      embedDetails.innerHTML = detailsHTML;
     }
 
     // Trakt Integration
@@ -1392,14 +1417,14 @@
         localStorage.removeItem('traktAccessToken');
         traktAccessToken = null;
         watchlist = [];
-        watchedItems = {}; // Clear watched items on logout
+        watchedItems = {};
         localStorage.setItem('watchlist', JSON.stringify(watchlist));
         localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
         displayWatchlist();
         displayWatchlistItems();
         traktLoginButton.innerHTML = '<span class="material-icons">login</span>';
         alert('Logged out of Trakt successfully.');
-        updateWatchedButtonStatus(); // Reset button state
+        updateWatchedButtonStatus();
         return;
       }
       const authUrl = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKTClientId}&redirect_uri=${encodeURIComponent(TRAKTRedirectURI)}&scope=public&state=xyz`;
@@ -1430,10 +1455,10 @@
           localStorage.setItem('traktAccessToken', traktAccessToken);
           window.history.replaceState({}, document.title, TRAKTRedirectURI);
           traktLoginButton.innerHTML = '<span class="material-icons">account_circle</span>';
-          watchedItems = {}; // Reset watched items on login
+          watchedItems = {};
           localStorage.setItem('watchedItems', JSON.stringify(watchedItems));
           syncWatchlistFromTrakt();
-          updateWatchedButtonStatus(); // Reset button state
+          updateWatchedButtonStatus();
         } catch (error) {
           console.error('Trakt authentication error:', error);
           alert('Trakt authentication failed. Please try again. Error: ' + error.message);
@@ -1506,7 +1531,7 @@
     window.addEventListener('click', (e) => { if (e.target === embedModal) { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; } });
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && embedModal.style.display === 'flex') { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; } });
     appTitle.addEventListener('click', resetSearch);
-    apiSelect.addEventListener('change', () => { loadEmbedVideo(); updateWatchedButtonStatus(); });
+    apiSelect.addEventListener('change', () => { loadEmbedVideo(); updateWatchedButtonStatus(); updateEmbedDetails(); });
     seasonSelector.addEventListener('change', () => {
       currentSeason = seasonSelector.value;
       if (currentSeason) {
@@ -1516,11 +1541,13 @@
         episodeSelector.disabled = true;
       }
       updateWatchedButtonStatus();
+      updateEmbedDetails();
     });
     episodeSelector.addEventListener('change', () => {
       currentEpisode = episodeSelector.value;
       loadEmbedVideo();
       updateWatchedButtonStatus();
+      updateEmbedDetails();
     });
     shareButton.addEventListener('click', () => {
       const url = window.location.href;
@@ -1529,7 +1556,7 @@
       } else { navigator.clipboard.writeText(url).then(() => alert('Link copied to clipboard!')); }
     });
     trailerButton.addEventListener('click', loadTrailer);
-    backButton.addEventListener('click', () => { loadEmbedVideo(); backButton.style.display = 'none'; });
+    backButton.addEventListener('click', () => { loadEmbedVideo(); backButton.style.display = 'none'; updateEmbedDetails(); });
     watchlistToggle.addEventListener('click', () => {
       mainSections.style.display = 'none';
       watchlistItemsSection.style.display = 'block';
@@ -1562,7 +1589,8 @@
       } else {
         seasonEpisodeSelectors.style.display = 'none';
       }
-      updateWatchedButtonStatus(); // Check local storage only
+      updateWatchedButtonStatus();
+      await updateEmbedDetails();
       loadEmbedVideo();
       addToHistory({ ...item, media_type: type });
     }
