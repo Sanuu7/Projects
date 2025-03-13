@@ -246,11 +246,12 @@
       max-width: 1200px;
       display: flex;
       justify-content: center;
+      text-align: center; /* Ensure centering */
     }
     .trending-section {
       width: 100%;
       max-width: 1200px;
-      padding: 0 calc(2vw + 10px);
+      padding: 0 calc((100vw - 1200px) / 2); /* Symmetric padding for large screens */
       margin-top: 20px;
       margin-bottom: 40px;
     }
@@ -283,6 +284,11 @@
       background-repeat: no-repeat;
       background-position: right 10px center;
       background-size: 16px 16px;
+    }
+    @media (max-width: 1200px) {
+      .trending-section {
+        padding: 0 20px; /* Fixed padding for screens smaller than 1200px */
+      }
     }
     .results-grid {
       display: grid;
@@ -517,14 +523,14 @@
     @media (max-width: 800px) {
       .trending-section .sort-by { flex-direction: column; align-items: flex-start; }
       .header-content { padding: 0 calc(1.5vw + 8px); }
-      .trending-section { padding: 0 calc(1.5vw + 8px); }
+      .trending-section { padding: 0 20px; }
     }
     @media (max-width: 600px) {
       .header-controls button, .header-controls select { padding: 4px 6px; font-size: 12px; }
       .results-grid { grid-template-columns: 1fr; gap: 15px; }
       #embed-content iframe { height: 300px; }
       .header-content { padding: 0 calc(1vw + 5px); }
-      .trending-section { padding: 0 calc(1vw + 5px); }
+      .trending-section { padding: 0 15px; }
     }
   </style>
 </head>
@@ -1006,7 +1012,7 @@
     }
 
     async function syncWatchedToTrakt(item, retries = 3) {
-      if (!traktAccessToken) return;
+      if (!traktAccessToken) return false;
       const url = `${TRAKT_API_BASE_URL}/sync/history`;
       const body = {
         [item.media_type === 'movie' ? 'movies' : 'shows']: [{
@@ -1045,11 +1051,13 @@
           await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
         }
       }
+      return false;
     }
 
     async function checkWatchedStatus(item) {
       if (!traktAccessToken) return false;
       try {
+        console.log('Checking watched status for:', item.id, item.media_type); // Debug log
         const url = `${TRAKT_API_BASE_URL}/sync/history/${item.media_type === 'movie' ? 'movies' : 'shows'}?id_type=tmdb&id=${item.id}`;
         const response = await fetch(url, {
           headers: {
@@ -1058,8 +1066,12 @@
             'trakt-api-key': TRAKTClientId
           }
         });
-        if (!response.ok) throw new Error('Failed to check watched status');
+        if (!response.ok) {
+          console.error('Trakt history check failed:', response.status, await response.text());
+          return false;
+        }
         const data = await response.json();
+        console.log('Trakt history response:', data); // Debug log
         if (item.media_type === 'movie') {
           return data.length > 0;
         } else if (item.media_type === 'tv') {
@@ -1334,6 +1346,11 @@
     async function loadEmbedVideo() {
       const embedURL = await generateEmbedURL();
       if (embedURL) embedIframe.src = embedURL;
+      // Re-check watched status when video changes (e.g., season/episode switch)
+      if (currentEmbedItem && traktAccessToken) {
+        const isWatched = await checkWatchedStatus({ ...currentEmbedItem, media_type: currentSearchType });
+        updateWatchedButton(isWatched);
+      }
     }
 
     async function loadTrailer() {
@@ -1350,6 +1367,19 @@
       } catch (error) { console.error('Error fetching trailer:', error); }
     }
 
+    function updateWatchedButton(isWatched) {
+      const t = translations[currentLanguage];
+      if (isWatched) {
+        watchedButton.textContent = `${t.watchedButton} ✔`;
+        watchedButton.classList.add('watched');
+        watchedButton.disabled = true;
+      } else {
+        watchedButton.textContent = `${t.markWatchedButton}`;
+        watchedButton.classList.remove('watched');
+        watchedButton.disabled = false;
+      }
+    }
+
     // Trakt Integration
     async function handleTraktLogin() {
       if (traktAccessToken) {
@@ -1361,6 +1391,7 @@
         displayWatchlist();
         displayWatchlistItems();
         traktLoginButton.innerHTML = '<span class="material-icons">login</span>';
+        traktLoginButton.removeEventListener('click', handleTraktLogin);
         traktLoginButton.addEventListener('click', handleTraktLogin);
         alert('Logged out of Trakt successfully.');
         return;
@@ -1411,9 +1442,7 @@
         addToHistory({ ...currentEmbedItem, media_type: currentSearchType });
         const success = await syncWatchedToTrakt({ ...currentEmbedItem, media_type: currentSearchType });
         if (success) {
-          watchedButton.textContent = `${translations[currentLanguage].watchedButton} ✔`;
-          watchedButton.classList.add('watched');
-          watchedButton.disabled = true;
+          updateWatchedButton(true);
         }
       }
     });
@@ -1468,7 +1497,10 @@
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && embedModal.style.display === 'flex') { embedModal.style.display = 'none'; embedIframe.src = ''; backButton.style.display = 'none'; } });
     appTitle.addEventListener('click', resetSearch);
     apiSelect.addEventListener('change', loadEmbedVideo);
-    seasonSelector.addEventListener('change', () => { if (seasonSelector.value) fetchEpisodes(seasonSelector.value); loadEmbedVideo(); });
+    seasonSelector.addEventListener('change', () => {
+      if (seasonSelector.value) fetchEpisodes(seasonSelector.value);
+      loadEmbedVideo();
+    });
     episodeSelector.addEventListener('change', loadEmbedVideo);
     shareButton.addEventListener('click', () => {
       const url = window.location.href;
@@ -1505,15 +1537,13 @@
       seasonEpisodeSelectors.style.display = type === 'tv' ? 'flex' : 'none';
       if (type === 'tv') fetchSeasons(item);
       addToHistory({ ...item, media_type: type });
-      const isWatched = await checkWatchedStatus({ ...item, media_type: type });
-      if (isWatched) {
-        watchedButton.textContent = `${translations[currentLanguage].watchedButton} ✔`;
-        watchedButton.classList.add('watched');
-        watchedButton.disabled = true;
+      if (traktAccessToken) {
+        currentSeason = seasonSelector.value || null;
+        currentEpisode = episodeSelector.value || null;
+        const isWatched = await checkWatchedStatus({ ...item, media_type: type });
+        updateWatchedButton(isWatched);
       } else {
-        watchedButton.textContent = `${translations[currentLanguage].markWatchedButton}`;
-        watchedButton.classList.remove('watched');
-        watchedButton.disabled = false;
+        updateWatchedButton(false); // Default to unwatched if no Trakt
       }
       loadEmbedVideo();
     }
