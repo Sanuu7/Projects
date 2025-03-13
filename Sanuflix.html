@@ -45,7 +45,7 @@
     }
     header {
       display: flex;
-      justify-content: flex-start; /* Align to the left */
+      justify-content: center; /* Center the header content */
       align-items: center;
       padding: 10px 20px;
       box-shadow: 0 2px 4px var(--shadow-color);
@@ -59,14 +59,14 @@
     header.blur { filter: blur(5px); }
     .header-content {
       display: flex;
+      flex-direction: column; /* Stack title and controls vertically */
       align-items: center;
       width: 100%;
       max-width: 1200px;
-      padding-left: 20px; /* Shift the layout slightly to the left */
-      gap: 20px; /* Add spacing between title and controls */
+      gap: 10px; /* Space between title and buttons */
     }
     #app-title {
-      flex: 0 0 auto; /* Prevent title from stretching */
+      flex: 0 0 auto;
       text-align: center;
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -81,12 +81,22 @@
       -webkit-text-fill-color: transparent;
       cursor: pointer;
       user-select: none;
-      animation: titleAnimation 1.5s ease-out forwards;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      animation: typewriter 2s steps(40, end) forwards, glow 1.5s ease-in-out infinite alternate;
+    }
+    #app-title .material-icons {
+      opacity: 0;
+      animation: iconFadeIn 0.5s ease-in forwards;
+      animation-delay: 2s; /* Icon appears after typewriter effect */
     }
     .header-controls {
       display: flex;
       align-items: center;
+      justify-content: center; /* Center buttons horizontally */
       gap: 8px;
+      flex-wrap: wrap; /* Allow buttons to wrap on small screens */
     }
     .theme-button, .trakt-login-button {
       background: none;
@@ -223,7 +233,7 @@
     }
     main {
       flex: 1;
-      padding: 80px 20px 20px;
+      padding: 120px 20px 20px; /* Increased padding-top to account for taller header */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -473,19 +483,17 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    @keyframes titleAnimation {
-      0% {
-        opacity: 0;
-        transform: scale(0.8) translateY(20px);
-      }
-      50% {
-        opacity: 0.5;
-        transform: scale(1.1) translateY(-10px);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 5px var(--primary-color); }
+      to { text-shadow: 0 0 15px var(--secondary-color); }
+    }
+    @keyframes iconFadeIn {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
     }
     .spinner {
       border: 6px solid #f3f3f3;
@@ -499,18 +507,17 @@
     @media (max-width: 800px) {
       .trending-section .sort-by { flex-direction: column; align-items: flex-start; }
       .header-content {
-        flex-direction: row;
-        justify-content: flex-start;
-        padding-left: 10px;
+        flex-direction: column;
+        align-items: center;
       }
-      #app-title { margin: 0; }
       .header-controls { gap: 6px; }
+      main { padding-top: 100px; }
     }
     @media (max-width: 600px) {
       .header-controls button, .header-controls select { padding: 4px 6px; font-size: 12px; }
       .results-grid { grid-template-columns: 1fr; gap: 15px; }
       #embed-content iframe { height: 300px; }
-      .header-content { padding-left: 5px; }
+      main { padding-top: 90px; }
     }
   </style>
 </head>
@@ -738,6 +745,8 @@
     let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
     let history = JSON.parse(localStorage.getItem('history')) || [];
     let traktAccessToken = localStorage.getItem('traktAccessToken') || null;
+    let currentSeason = null;
+    let currentEpisode = null;
 
     // Translations
     const translations = {
@@ -777,7 +786,9 @@
         shareButton: 'Share',
         trailerButton: 'Trailer',
         backButton: 'Back to Content',
-        watchedButton: 'Already Watched'
+        watchedButton: 'Already Watched',
+        traktSyncSuccess: 'Successfully synced to Trakt watch history!',
+        traktSyncFailed: 'Failed to sync with Trakt. Please try again later.'
       },
       'de-DE': {
         appTitle: 'Sanuu Flix',
@@ -815,7 +826,9 @@
         shareButton: 'Teilen',
         trailerButton: 'Trailer',
         backButton: 'Zurück zum Inhalt',
-        watchedButton: 'Bereits gesehen'
+        watchedButton: 'Bereits gesehen',
+        traktSyncSuccess: 'Erfolgreich mit Trakt-Wiedergabeverlauf synchronisiert!',
+        traktSyncFailed: 'Synchronisierung mit Trakt fehlgeschlagen. Bitte später erneut versuchen.'
       }
     };
 
@@ -982,27 +995,45 @@
       displayHistoryItems();
     }
 
-    async function syncWatchedToTrakt(item) {
+    async function syncWatchedToTrakt(item, retries = 3) {
       if (!traktAccessToken) return;
       const url = `${TRAKT_API_BASE_URL}/sync/history`;
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${traktAccessToken}`,
-            'trakt-api-version': '2',
-            'trakt-api-key': TRAKTClientId
-          },
-          body: JSON.stringify({
-            [item.media_type === 'movie' ? 'movies' : 'shows']: [{
-              ids: { tmdb: item.id }
+      const body = {
+        [item.media_type === 'movie' ? 'movies' : 'shows']: [{
+          ids: { tmdb: item.id },
+          watched_at: new Date().toISOString(),
+          ...(item.media_type === 'tv' && currentSeason && currentEpisode ? {
+            episodes: [{
+              season: parseInt(currentSeason),
+              number: parseInt(currentEpisode)
             }]
-          })
-        });
-        if (!response.ok) throw new Error('Trakt watched sync failed');
-      } catch (error) {
-        console.error('Trakt watched sync error:', error);
+          } : {})
+        }]
+      };
+      for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${traktAccessToken}`,
+              'trakt-api-version': '2',
+              'trakt-api-key': TRAKTClientId
+            },
+            body: JSON.stringify(body)
+          });
+          if (!response.ok) throw new Error(`Trakt watched sync failed: ${response.statusText}`);
+          console.log('Trakt watch history synced:', await response.json());
+          alert(translations[currentLanguage].traktSyncSuccess);
+          return true;
+        } catch (error) {
+          console.error(`Trakt watched sync attempt ${attempt} failed:`, error);
+          if (attempt === retries) {
+            alert(translations[currentLanguage].traktSyncFailed);
+            return false;
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+        }
       }
     }
 
@@ -1286,7 +1317,7 @@
         alert('Already logged into Trakt');
         return;
       }
-      const authUrl = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKTClientId}&redirect_uri=${encodeURIComponent(TRAKTRedirectURI)}&scope=public&state=xyz`; // Changed to 'public' scope
+      const authUrl = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKTClientId}&redirect_uri=${encodeURIComponent(TRAKTRedirectURI)}&scope=public&state=xyz`;
       window.location.href = authUrl;
     }
 
@@ -1324,8 +1355,9 @@
     // Event Listeners
     watchedButton.addEventListener('click', () => {
       if (currentEmbedItem) {
+        currentSeason = seasonSelector.value || null;
+        currentEpisode = episodeSelector.value || null;
         addToHistory({ ...currentEmbedItem, media_type: currentSearchType });
-        alert('Marked as watched on Trakt and History');
       }
     });
 
