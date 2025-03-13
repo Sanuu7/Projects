@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Sanuu Flix</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet"> <!-- Poppins Font -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     :root {
@@ -18,7 +18,7 @@
       --transition-speed: 0.3s;
       --card-hover-scale: 1.05;
       --card-hover-bg: #2C2C2C;
-      --font-size-title: 2em;
+      --font-size-title: 2.2em;
       --font-size-card-title: 1.1em;
       --font-size-card-text: 0.9em;
       --border-radius: 8px;
@@ -45,7 +45,7 @@
     }
     header {
       display: flex;
-      justify-content: space-between;
+      justify-content: center; /* Center the entire header content */
       align-items: center;
       padding: 10px 20px;
       box-shadow: 0 2px 4px var(--shadow-color);
@@ -57,11 +57,19 @@
       transition: filter var(--transition-speed) ease;
     }
     header.blur { filter: blur(5px); }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px; /* Limit header width for better centering */
+    }
     .header-spacer { flex: 1; }
     #app-title {
-      flex: 2;
+      flex: 0 0 auto; /* Prevent title from stretching */
       text-align: center;
       margin: 0;
+      font-family: 'Poppins', sans-serif; /* Cool, modern font */
       font-size: var(--font-size-title);
       display: flex;
       align-items: center;
@@ -73,21 +81,20 @@
       -webkit-text-fill-color: transparent;
       cursor: pointer;
       user-select: none;
-      animation: titleAnimation 1.5s ease-out;
+      animation: titleAnimation 1.5s ease-out forwards;
     }
     .header-controls {
       flex: 1;
-      text-align: right;
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 8px;
     }
     .theme-button, .trakt-login-button {
       background: none;
       border: none;
       cursor: pointer;
-      padding: 5px 10px;
-      font-size: 16px;
+      padding: 4px 8px; /* Reduced padding for smaller size */
+      font-size: 14px; /* Smaller font size */
       color: var(--on-surface-color);
       border-radius: 5px;
       transition: background-color var(--transition-speed) ease;
@@ -96,7 +103,7 @@
       background-color: var(--card-hover-bg);
     }
     #language-select {
-      padding: 5px 10px;
+      padding: 4px 8px;
       border: none;
       border-radius: 5px;
       background-color: var(--surface-color);
@@ -104,11 +111,12 @@
       outline: none;
       box-shadow: 0 2px 4px var(--shadow-color);
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
     }
     .trakt-login-button {
       background-color: #ed1c24;
       color: #fff;
+      padding: 4px 8px; /* Consistent with other buttons */
     }
     .search-backdrop {
       position: fixed;
@@ -466,6 +474,20 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    @keyframes titleAnimation {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1.1) translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
     .spinner {
       border: 6px solid #f3f3f3;
       border-top: 6px solid var(--primary-color);
@@ -477,34 +499,34 @@
     }
     @media (max-width: 800px) {
       .trending-section .sort-by { flex-direction: column; align-items: flex-start; }
-      header { flex-direction: column; align-items: stretch; }
+      header { flex-direction: column; align-items: center; }
+      .header-content { flex-direction: column; text-align: center; }
       #app-title { margin: 10px 0; }
+      .header-controls { justify-content: center; margin-top: 10px; }
     }
     @media (max-width: 600px) {
-      .header-controls button, .header-controls select { padding: 5px; font-size: 14px; }
+      .header-controls button, .header-controls select { padding: 4px 6px; font-size: 12px; }
       .results-grid { grid-template-columns: 1fr; gap: 15px; }
       #embed-content iframe { height: 300px; }
-    }
-    @keyframes titleAnimation {
-      0% { opacity: 0; transform: translateX(-20px); }
-      100% { opacity: 1; transform: translateX(0); }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="header-spacer"></div>
-    <h1 id="app-title"><span class="material-icons">movie</span> Sanuu Flix</h1>
-    <div class="header-controls">
-      <button id="search-toggle" class="theme-button"><span class="material-icons">search</span></button>
-      <button id="watchlist-toggle" class="theme-button"><span class="material-icons">bookmark</span></button>
-      <button id="history-toggle" class="theme-button"><span class="material-icons">history</span></button>
-      <select id="language-select">
-        <option value="en-US">English</option>
-        <option value="de-DE">German</option>
-      </select>
-      <button id="theme-toggle" class="theme-button"><span class="material-icons">brightness_6</span></button>
-      <button id="trakt-login" class="trakt-login-button"><span class="material-icons">login</span> Trakt</button>
+    <div class="header-content">
+      <div class="header-spacer"></div>
+      <h1 id="app-title"><span class="material-icons">movie</span> Sanuu Flix</h1>
+      <div class="header-controls">
+        <button id="search-toggle" class="theme-button"><span class="material-icons">search</span></button>
+        <button id="watchlist-toggle" class="theme-button"><span class="material-icons">bookmark</span></button>
+        <button id="history-toggle" class="theme-button"><span class="material-icons">history</span></button>
+        <select id="language-select">
+          <option value="en-US">English</option>
+          <option value="de-DE">German</option>
+        </select>
+        <button id="theme-toggle" class="theme-button"><span class="material-icons">brightness_6</span></button>
+        <button id="trakt-login" class="trakt-login-button"><span class="material-icons">login</span> Trakt</button>
+      </div>
     </div>
   </header>
 
@@ -1262,7 +1284,7 @@
         alert('Already logged into Trakt');
         return;
       }
-      const authUrl = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKTClientId}&redirect_uri=${encodeURIComponent(TRAKTRedirectURI)}&scope=private&state=xyz`;
+      const authUrl = `https://trakt.tv/oauth/authorize?response_type=code&client_id=${TRAKTClientId}&redirect_uri=${encodeURIComponent(TRAKTRedirectURI)}&scope=scrobble&state=xyz`; // Changed to 'scrobble' scope
       window.location.href = authUrl;
     }
 
@@ -1292,7 +1314,7 @@
           syncWatchlistFromTrakt();
         } catch (error) {
           console.error('Trakt authentication error:', error);
-          alert('Trakt authentication failed. Please try again.');
+          alert('Trakt authentication failed. Please try again. Error: ' + error.message);
         }
       }
     }
