@@ -564,6 +564,7 @@
         <button id="history-toggle" class="theme-button"><span class="material-icons">history</span></button>
         <select id="language-select">
           <option value="en-US">English</option>
+          <option value="fil-PH">Filipino</option>
           <option value="de-DE">German</option>
         </select>
         <button id="theme-toggle" class="theme-button"><span class="material-icons">brightness_6</span></button>
@@ -679,6 +680,7 @@
           <select id="api-select">
             <option value="sanu-flix-v2" selected>SanuFlix V2 Server</option>
             <option value="embed-su">SanuuFlix Server (Premium)</option>
+            <option value="se-server">SE Server (Use only if needed)</option>
             <option value="vidlink">Alternative server (Might contain ads)</option>
           </select>
         </div>
@@ -764,6 +766,7 @@
     const TMDB_API_BASE_URL = 'https://api.themoviedb.org/3';
     const MAIN_SERVER_BASE_URL = 'https://embed.su/embed';
     const ALTERNATIVE_SERVER_BASE_URL = 'https://vidlink.pro';
+    const SE_SERVER_BASE_URL = 'https://multiembed.mov/directstream.php';
     const TRAKT_API_BASE_URL = 'https://api.trakt.tv';
     const TRAKTClientId = 'eb2d86c63302fde62738f8e599453d0c0198fc82c8ff6d2b2a58e453a7bad85e';
     const TRAKTClientSecret = '25eb850f6cfab1d8a4dc5040e5be4e4ab2aed1e5644db5e3db2bc9eef8a1ed18';
@@ -829,6 +832,48 @@
         traktSyncSuccess: 'Successfully synced to Trakt watch history!',
         traktSyncFailed: 'Failed to sync with Trakt. Please try again later.',
         selectEpisodeFirst: 'Please select a season and episode first.'
+      },
+      'fil-PH': {
+        appTitle: 'Sanuu Flix',
+        searchPlaceholder: 'Maghanap ng mga pelikula o serye...',
+        searchButton: 'Maghanap',
+        movieLabel: 'Pelikula',
+        seriesLabel: 'Serye',
+        sortByLabel: 'Iayos Ayon Sa:',
+        trendingOption: 'Trending',
+        popularOption: 'Sikat',
+        topRatedOption: 'Pinakamataas na Rate',
+        releaseDateOption: 'Petsa ng Paglabas',
+        ratingOption: 'Rating',
+        searchResultsHeading: 'Mga Resulta ng Paghahanap',
+        trendingMoviesHeading: 'Trending na mga Pelikula',
+        popularMoviesHeading: 'Sikat na mga Pelikula',
+        topRatedMoviesHeading: 'Pinakamataas na Rated na mga Pelikula',
+        releaseDateMoviesHeading: 'Mga Pelikula ayon sa Petsa ng Paglabas',
+        voteAverageMoviesHeading: 'Mga Pelikula ayon sa Rating',
+        trendingSeriesHeading: 'Trending na mga Serye',
+        popularSeriesHeading: 'Sikat na mga Serye',
+        topRatedSeriesHeading: 'Pinakamataas na Rated na mga Serye',
+        releaseDateSeriesHeading: 'Mga Serye ayon sa Petsa ng Paglabas',
+        voteAverageSeriesHeading: 'Mga Serye ayon sa Rating',
+        watchlistHeading: 'Listahan ng Panoorin',
+        historyHeading: 'Kasaysayan',
+        noResults: 'Walang nahanap na resulta.',
+        errorFetching: 'Error sa pagkuha ng data.',
+        seeMoreResults: 'Tingnan ang Higit pang Resulta',
+        seeMoreMovies: 'Tingnan ang Higit pang Pelikula',
+        seeMoreSeries: 'Tingnan ang Higit pang Serye',
+        embedProviderLabel: 'Pumili ng Embed Provider:',
+        seasonPlaceholder: 'Pumili ng Season',
+        episodePlaceholder: 'Pumili ng Episode',
+        shareButton: 'Ibahagi',
+        trailerButton: 'Trailer',
+        backButton: 'Bumalik sa Nilalaman',
+        markWatchedButton: 'Markahan bilang Napanood',
+        watchedButton: 'Napanood Na',
+        traktSyncSuccess: 'Matagumpay na na-sync sa kasaysayan ng panonood ng Trakt!',
+        traktSyncFailed: 'Hindi matagumpay ang pag-sync sa Trakt. Subukang muli mamaya.',
+        selectEpisodeFirst: 'Mangyaring pumili muna ng season at episode.'
       },
       'de-DE': {
         appTitle: 'Sanuu Flix',
@@ -1184,7 +1229,7 @@
       else if (currentFilterSeries === 'vote_average')
         seriesHeading.innerHTML = `<span class="material-icons">tv</span> ${t.voteAverageSeriesHeading}`;
       document.getElementById('watchlist-heading').innerHTML = `<span class="material-icons">bookmark</span> ${t.watchlistHeading}`;
-      Document.getElementById('history-heading').innerHTML = `<span class="material-icons">history</span> ${t.historyHeading}`;
+      document.getElementById('history-heading').innerHTML = `<span class="material-icons">history</span> ${t.historyHeading}`;
       sortMoviesSelect.options[0].text = t.trendingOption;
       sortMoviesSelect.options[1].text = t.popularOption;
       sortMoviesSelect.options[2].text = t.topRatedOption;
@@ -1335,6 +1380,14 @@
           embedURL += `/${season}/${episode}`;
         }
         return embedURL;
+      } else if (selectedProvider === 'se-server') {
+        if (currentSearchType === 'movie') {
+          return `${SE_SERVER_BASE_URL}?video_id=${currentEmbedItem.id}&tmdb=1`;
+        } else if (currentSearchType === 'tv') {
+          const season = seasonSelector.value || 1;
+          const episode = episodeSelector.value || 1;
+          return `${SE_SERVER_BASE_URL}?video_id=${currentEmbedItem.id}&tmdb=1&s=${season}&e=${episode}`;
+        }
       } else if (selectedProvider === 'vidlink') {
         if (currentSearchType === 'movie') {
           return `${ALTERNATIVE_SERVER_BASE_URL}/movie/${currentEmbedItem.id}`;
@@ -1625,11 +1678,13 @@
       currentPageMovies = 1;
       currentPageSeries = 1;
       loadTrending('movie', currentFilterMovies);
-      loadTrending('tv', currentFilterSeries);
-      updateUI();
-    }
+  loadTrending('tv', currentFilterSeries);
+  updateUI();
+}
 
-    updateUI();
-  </script>
-</body>
+updateUI();
+
+
+
+  </script></body>
 </html>
