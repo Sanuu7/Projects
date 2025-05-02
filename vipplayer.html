@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Access Area</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <style>
+        :root {
+            --hotpink: #FF69B4;
+            --gold: #ffd700;
+            --dark-grey: #333;
+            --light-grey: #CCCCCC;
+            --black: #000000;
+            --white: #FFFFFF;
+            --plyr-color-main: var(--hotpink);
+            --plyr-range-thumb-height: 18px;
+            --plyr-range-track-height: 10px;
+        }
+
+        body {
+            background-color: var(--black);
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Prevent background scroll when content is short */
+            overflow-y: auto;
+        }
+
+        .header-container {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--hotpink);
+            margin: 0 0 5px 0;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: var(--light-grey);
+            font-size: 1.2em;
+            margin: 5px 0 20px 0;
+            font-weight: normal;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            /* Default to centering, JS will change if needed */
+            justify-content: center;
+            align-items: center;
+            padding: 20px; /* Adjusted padding for mobile */
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        #access-prompt {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.1);
+            /* Removed margin-top/bottom auto to rely on flexbox centering */
+        }
+
+        #access-key-input {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid var(--light-grey);
+            border-radius: 8px;
+            background-color: var(--dark-grey);
+            color: var(--white);
+            font-size: 1em;
+            width: 90%;
+            text-align: center;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #access-key-input:focus {
+            outline: none;
+            border-color: var(--hotpink);
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+        }
+
+        #access-key-input.error {
+            border-color: red;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        #enter-button {
+            padding: 12px 30px;
+            background-color: var(--hotpink);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #enter-button:hover {
+            background-color: #e0559d;
+            transform: scale(1.05);
+        }
+
+        #error-message {
+            color: red;
+            margin-top: 15px;
+            font-size: 0.9em;
+            height: 1.2em; /* Reserve space */
+            text-align: center;
+        }
+
+        #vip-content {
+            /* Initially hidden */
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1280px; /* Max width for large screens */
+            margin-top: 20px; /* Add some space above VIP content */
+        }
+
+        .vip-area-box {
+            background: linear-gradient(145deg, var(--gold), #f0c400);
+            color: var(--dark-grey);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            display: inline-block;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            animation: pulseGlow 2s infinite alternate;
+            border: 1px solid #e6c300;
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
+            to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
+        }
+
+        #player {
+             width: 100%;
+             /* Default aspect ratio for larger screens */
+             aspect-ratio: 16 / 9;
+             border-radius: 8px;
+             box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+             --plyr-control-spacing: 10px; /* Adjust spacing for controls */
+        }
+
+        /* --- Custom Plyr Seek Bar Styles --- */
+        .plyr--video .plyr__progress__container {
+            height: var(--plyr-range-track-height);
+            margin-bottom: 5px;
+        }
+        .plyr__progress input[type=range] {
+            height: var(--plyr-range-track-height);
+            cursor: pointer;
+        }
+        .plyr__progress input[type=range]::-webkit-slider-runnable-track,
+        .plyr__progress input[type=range]::-moz-range-track,
+        .plyr__progress input[type=range]::-ms-track {
+            height: var(--plyr-range-track-height);
+            border-radius: calc(var(--plyr-range-track-height) / 2);
+        }
+        .plyr__progress input[type=range]::-webkit-slider-thumb,
+        .plyr__progress input[type=range]::-moz-range-thumb,
+        .plyr__progress input[type=range]::-ms-thumb {
+            height: var(--plyr-range-thumb-height);
+            width: var(--plyr-range-thumb-height);
+        }
+        .plyr__progress input[type=range]::-webkit-slider-thumb {
+             margin-top: calc((var(--plyr-range-track-height) - var(--plyr-range-thumb-height)) / 2);
+        }
+         .plyr__progress input[type=range]::-ms-thumb {
+             margin-top: 0;
+        }
+        .plyr__progress__buffer,
+        .plyr__progress__played {
+           height: var(--plyr-range-track-height);
+           border-radius: calc(var(--plyr-range-track-height) / 2);
+           transform: translateY(0); /* Reset transform */
+        }
+
+        .plyr--video .plyr__controls .plyr__control.plyr__tab-focus,
+        .plyr--video .plyr__controls .plyr__control:hover,
+        .plyr--video .plyr__controls .plyr__control[aria-expanded=true] {
+            background: var(--plyr-color-main);
+        }
+
+        /* --- Media Query for Mobile Devices --- */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em; /* Slightly smaller heading on mobile */
+            }
+            h2 {
+                font-size: 1em; /* Smaller subheading */
+            }
+            .main-content {
+                 padding: 15px; /* Reduce padding */
+            }
+            #access-prompt {
+                 padding: 20px; /* Reduce padding */
+            }
+            #player {
+                /* Change aspect ratio for a taller player on narrow screens */
+                aspect-ratio: 4 / 3;
+            }
+            /* Reduce control spacing slightly on mobile */
+            #player {
+                 --plyr-control-spacing: 8px;
+            }
+            /* Optionally make seek bar slightly less tall on mobile */
+            /*
+            :root {
+                --plyr-range-thumb-height: 16px;
+                --plyr-range-track-height: 8px;
+            }
+            */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1>Special Access Area</h1>
+        <h2>Access granted to invited guests only</h2>
+    </div>
+
+    <div class="main-content">
+        <div id="access-prompt">
+            <input type="password" id="access-key-input" placeholder="Enter Access Key">
+            <button id="enter-button">Enter</button>
+            <div id="error-message"></div>
+        </div>
+
+        <div id="vip-content">
+            <div class="vip-area-box">
+                VIP Area
+            </div>
+            <video id="player" playsinline controls></video>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script>
+        const accessKey = "RamonaC";
+        const accessPrompt = document.getElementById('access-prompt');
+        const vipContent = document.getElementById('vip-content');
+        const keyInput = document.getElementById('access-key-input');
+        const enterButton = document.getElementById('enter-button');
+        const errorMessage = document.getElementById('error-message');
+        const video = document.getElementById('player');
+        const source = 'https://hfs303.serversicuro.cc/hls/dnzpfhvn5xg4a3gyvaxx5ilys4l3mz7bjvcoywdmui6edqueub2nkfpw2qpq/index-v1-a1.m3u8';
+        let player;
+        let hls; // Keep HLS instance accessible
+
+        function initializePlayer() {
+             const defaultOptions = {
+                controls: [
+                    'play-large',
+                    'restart',
+                    'play',
+                    'progress',
+                    'current-time',
+                    'duration',
+                    'mute',
+                    'captions',
+                    'settings',
+                    'pip',
+                    'airplay',
+                    'fullscreen'
+                ],
+                 settings: ['captions', 'quality', 'speed', 'loop'],
+                 // Let CSS handle aspect ratio
+                 // ratio: '16:9' // Removed from here
+            };
+
+            if (Hls.isSupported()) {
+                hls = new Hls({
+                    // Optional HLS configurations
+                    // capLevelToPlayerSize: true, // Automatically choose quality based on player size
+                    // maxBufferLength: 30, // Max buffer length in seconds
+                });
+                hls.loadSource(source);
+                hls.attachMedia(video);
+                window.hls = hls; // For debugging or external control
+
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                    const availableQualities = hls.levels.map((l) => l.height);
+                    if (availableQualities.length > 1) {
+                        defaultOptions.quality = {
+                            default: availableQualities[0],
+                            options: availableQualities,
+                            forced: true,
+                            onChange: (e) => updateQuality(e),
+                        };
+                    } else if (availableQualities.length === 1) {
+                         // If only one quality, remove 'quality' from settings
+                         const settingsIndex = defaultOptions.settings.indexOf('quality');
+                         if (settingsIndex > -1) {
+                             defaultOptions.settings.splice(settingsIndex, 1);
+                         }
+                    }
+                    player = new Plyr(video, defaultOptions);
+                    window.player = player;
+                });
+
+                 hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.error("HLS Error:", data);
+                    if (data.fatal) {
+                        switch(data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            console.warn("Network error - trying to recover...");
+                            hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            console.warn("Media error - trying to recover...");
+                            hls.recoverMediaError();
+                            break;
+                        default:
+                            console.error("Unrecoverable HLS error - destroying HLS instance.");
+                            if (hls) {
+                                hls.destroy();
+                                hls = null; // Clear the instance
+                            }
+                            // Optionally show user message
+                            errorMessage.textContent = "Stream error. Please try again later.";
+                            // Re-initialize Plyr in an error state? Or hide player?
+                            // For now, just log and show message.
+                            break;
+                        }
+                    }
+                });
+
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = source;
+                 video.addEventListener('loadedmetadata', () => {
+                     // Remove 'quality' setting for native HLS as it's usually handled by the browser
+                     const settingsIndex = defaultOptions.settings.indexOf('quality');
+                     if (settingsIndex > -1) {
+                         defaultOptions.settings.splice(settingsIndex, 1);
+                     }
+                    player = new Plyr(video, defaultOptions);
+                    window.player = player;
+                });
+                 video.addEventListener('error', (e) => {
+                    console.error("Native HLS playback error:", e);
+                    errorMessage.textContent = "Could not load the stream.";
+                });
+            } else {
+                console.error("HLS is not supported in this browser.");
+                errorMessage.textContent = "Sorry, live streaming is not supported in your browser.";
+                // Initialize Plyr to show a disabled state
+                player = new Plyr(video, defaultOptions);
+                window.player = player;
+                player.elements.wrapper.classList.add('plyr--disabled');
+            }
+        }
+
+        function updateQuality(newQuality) {
+            if (hls && hls.levels) {
+                const newLevelIndex = hls.levels.findIndex(level => level.height === newQuality);
+                if (newLevelIndex !== -1) {
+                    console.log(`Switching HLS quality to: ${newQuality}p (level index ${newLevelIndex})`);
+                    hls.currentLevel = newLevelIndex; // Switch quality immediately
+                    // hls.nextLevel = newLevelIndex; // Use if you prefer switching at the next segment boundary
+                } else {
+                     console.warn(`Could not find HLS level for quality: ${newQuality}p`);
+                }
+            }
+        }
+
+        function checkAccessKey() {
+            const enteredKey = keyInput.value;
+            errorMessage.textContent = '';
+            keyInput.classList.remove('error');
+
+            if (enteredKey === accessKey) {
+                accessPrompt.style.display = 'none';
+                document.querySelector('.main-content').style.justifyContent = 'flex-start';
+                vipContent.style.display = 'flex';
+                initializePlayer();
+            } else {
+                errorMessage.textContent = 'Incorrect Access Key';
+                keyInput.classList.add('error');
+                keyInput.value = '';
+                // Ensure main content goes back to centered if access fails
+                // and VIP content is hidden
+                vipContent.style.display = 'none';
+                document.querySelector('.main-content').style.justifyContent = 'center';
+
+                // Destroy player instances if they exist from a previous attempt
+                 if (player) {
+                    try {
+                        player.destroy();
+                        player = null;
+                    } catch (e) { console.error("Error destroying Plyr:", e); }
+                }
+                 if (hls) {
+                     try {
+                        hls.destroy();
+                        hls = null;
+                     } catch (e) { console.error("Error destroying HLS:", e); }
+                }
+            }
+        }
+
+        enterButton.addEventListener('click', checkAccessKey);
+
+        keyInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                checkAccessKey();
+            }
+        });
+
+        // Set initial justification based on whether prompt is visible
+        // (It should be visible on load, so center it)
+        document.querySelector('.main-content').style.justifyContent = 'center';
+
+
+    </script>
+</body>
+</html>
+
